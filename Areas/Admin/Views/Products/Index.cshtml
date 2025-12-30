@@ -6,100 +6,149 @@
     var culture = new CultureInfo("vi-VN");
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-        <h2 class="fw-bold text-dark mb-1">Danh sách sản phẩm</h2>
-        <p class="text-muted mb-0">Quản lý kho hàng và thông tin sản phẩm</p>
-    </div>
-    <a asp-action="Create" class="btn btn-primary fw-bold rounded-3 shadow-sm">
-        <i class="bi bi-plus-lg me-2"></i>Thêm sản phẩm
-    </a>
-</div>
+<style>
+    .product-img-col {
+        width: 70px;
+    }
 
-@if (TempData["success"] != null)
-{
-    <div class="alert alert-success alert-dismissible fade show rounded-3 shadow-sm" role="alert">
-        <i class="bi bi-check-circle-fill me-2"></i> @TempData["success"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-}
+    .action-col {
+        width: 160px;
+    }
 
-<div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-    <div class="table-responsive">
-        <table class="table align-middle mb-0 table-hover">
-            <thead class="bg-light">
-                <tr>
-                    <th class="ps-4 py-3 text-secondary small fw-bold">Sản phẩm</th>
-                    <th class="py-3 text-secondary small fw-bold">Danh mục</th>
-                    <th class="py-3 text-secondary small fw-bold">Khoảng giá</th>
-                    <th class="py-3 text-secondary small fw-bold text-center">Biến thể</th>
-                    <th class="pe-4 py-3 text-secondary small fw-bold text-end">Thao tác</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
+    .badge-soft-primary {
+        background-color: rgba(79, 70, 229, 0.1);
+        color: #4f46e5;
+    }
+
+    .badge-soft-warning {
+        background-color: rgba(245, 158, 11, 0.1);
+        color: #b45309;
+    }
+</style>
+
+<div class="container-fluid px-0">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-dark mb-1">Kho Sản phẩm</h2>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="#" class="text-decoration-none text-muted small">Admin</a></li>
+                    <li class="breadcrumb-item active small" aria-current="page">Danh sách sản phẩm</li>
+                </ol>
+            </nav>
+        </div>
+        <a asp-action="Create" class="btn btn-primary fw-bold rounded-3 shadow-sm px-4 py-2" style="background-color: #4f46e5; border:none;">
+            <i class="bi bi-plus-lg me-2"></i>Thêm sản phẩm
+        </a>
+    </div>
+
+    @if (TempData["success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show rounded-3 shadow-sm border-0 border-start border-success border-4 bg-white" role="alert">
+            <i class="bi bi-check-circle-fill text-success me-2"></i> @TempData["success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+        <div class="card-header bg-white border-bottom py-3 px-4 d-flex justify-content-between align-items-center">
+            <h6 class="fw-bold m-0 text-secondary"><i class="bi bi-box-seam me-2"></i>Tất cả sản phẩm</h6>
+            <div class="input-group" style="max-width: 300px;">
+                <span class="input-group-text bg-light border-0"><i class="bi bi-search text-muted"></i></span>
+                <input type="text" class="form-control bg-light border-0 small" placeholder="Tìm tên, mã sản phẩm...">
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table align-middle mb-0 table-hover">
+                <thead class="bg-light">
                     <tr>
-                        <td class="ps-4">
-                            <div class="d-flex align-items-center">
-                                <img src="@item.ImageUrl" class="rounded-3 border me-3 object-fit-cover"
-                                     style="width: 50px; height: 50px;"
-                                     onerror="this.src='https://via.placeholder.com/50'" />
-                                <div>
-                                    <div class="fw-bold text-dark">@item.Name</div>
-                                    <small class="text-muted">ID: #@item.Id</small>
+                        <th class="ps-4 py-3 text-secondary small fw-bold text-uppercase">Sản phẩm</th>
+                        <th class="py-3 text-secondary small fw-bold text-uppercase">Danh mục</th>
+                        <th class="py-3 text-secondary small fw-bold text-uppercase">Khoảng giá</th>
+                        <th class="py-3 text-secondary small fw-bold text-center text-uppercase">Biến thể</th>
+                        <th class="pe-4 py-3 text-secondary small fw-bold text-end text-uppercase">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="ps-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="position-relative me-3">
+                                        <img src="@item.ImageUrl" class="rounded-3 border object-fit-cover shadow-sm"
+                                             style="width: 56px; height: 56px;"
+                                             onerror="this.src='https://via.placeholder.com/56'" />
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold text-dark text-truncate" style="max-width: 200px;">@item.Name</div>
+                                        <small class="text-muted font-monospace">ID: #@item.Id</small>
+                                    </div>
                                 </div>
-                            </div>
-                        </td>
-                        <td>
-                            <span class="badge bg-light text-dark border">@item.Category?.Name</span>
-                        </td>
-                        <td class="fw-bold text-primary">
-                            @if (item.ProductDetails != null && item.ProductDetails.Any())
-                            {
-                                var minPrice = item.ProductDetails.Min(x => x.Price);
-                                var maxPrice = item.ProductDetails.Max(x => x.Price);
-
-                                if (minPrice == maxPrice)
+                            </td>
+                            <td>
+                                <span class="badge bg-light text-dark border px-2 py-1 fw-normal">
+                                    <i class="bi bi-folder2 me-1 text-muted"></i>@(item.Category?.Name ?? "N/A")
+                                </span>
+                            </td>
+                            <td>
+                                @if (item.ProductDetails != null && item.ProductDetails.Any())
                                 {
-                                    <span>@minPrice.ToString("#,##0", culture) ₫</span>
+                                    var minPrice = item.ProductDetails.Min(x => x.Price);
+                                    var maxPrice = item.ProductDetails.Max(x => x.Price);
+
+                                    <div class="d-flex flex-column">
+                                        @if (minPrice == maxPrice)
+                                        {
+                                            <span class="fw-bold text-primary">@minPrice.ToString("#,##0", culture) ₫</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="fw-bold text-primary">@minPrice.ToString("#,##0", culture) ₫</span>
+                                            <small class="text-muted" style="font-size: 0.75rem;">đến @maxPrice.ToString("#,##0", culture) ₫</small>
+                                        }
+                                    </div>
                                 }
                                 else
                                 {
-                                    <span>@minPrice.ToString("#,##0") - @maxPrice.ToString("#,##0", culture) ₫</span>
+                                    <span class="badge bg-secondary bg-opacity-10 text-secondary border-0">Chưa có giá</span>
                                 }
-                            }
-                            else
-                            {
-                                <span class="text-muted small fst-italic">Chưa có cấu hình</span>
-                            }
-                        </td>
-                        <td class="text-center">
-                            <span class="badge bg-info bg-opacity-10 text-info">
-                                @(item.ProductDetails?.Count ?? 0) loại
-                            </span>
-                        </td>
-                        <td class="pe-4 text-end">
-                            <div class="btn-group">
-                                <a asp-controller="ProductDetails" asp-action="Index" asp-route-productId="@item.Id"
-                                   class="btn btn-sm btn-light text-dark border" title="Quản lý biến thể">
-                                    <i class="bi bi-gear-fill me-1"></i> Cấu hình
-                                </a>
-                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-light text-primary" title="Sửa">
-                                    <i class="bi bi-pencil-square"></i>
-                                </a>
-                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-light text-danger" title="Xóa">
-                                    <i class="bi bi-trash"></i>
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+                            </td>
+                            <td class="text-center">
+                                @{
+                                    var count = item.ProductDetails?.Count ?? 0;
+                                }
+                                <span class="badge rounded-pill @(count > 0 ? "badge-soft-primary" : "bg-light text-muted") px-3 py-2">
+                                    @count phiên bản
+                                </span>
+                            </td>
+                            <td class="pe-4 text-end">
+                                <div class="btn-group" role="group">
+                                    <a asp-controller="ProductDetails" asp-action="Index" asp-route-productId="@item.Id"
+                                       class="btn btn-sm btn-outline-primary border-0 bg-primary bg-opacity-10 fw-bold me-1 rounded-2"
+                                       data-bs-toggle="tooltip" title="Cấu hình biến thể (Màu/ROM)">
+                                        <i class="bi bi-gear-wide-connected me-1"></i> Cấu hình
+                                    </a>
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-light text-secondary rounded-2 me-1" title="Sửa thông tin">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-light text-danger rounded-2" title="Xóa sản phẩm">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        @if (!Model.Any())
+        {
+            <div class="text-center py-5">
+                <i class="bi bi-box2 text-muted opacity-25" style="font-size: 3rem;"></i>
+                <p class="text-muted mt-3">Chưa có sản phẩm nào trong kho.</p>
+            </div>
+        }
     </div>
-    @if (!Model.Any())
-    {
-        <div class="text-center py-5 text-muted">Chưa có sản phẩm nào.</div>
-    }
 </div>
