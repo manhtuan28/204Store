@@ -1,31 +1,63 @@
 ﻿@page
 @model DeletePersonalDataModel
 @{
-    ViewData["Title"] = "Delete Personal Data";
+    ViewData["Title"] = "Xóa tài khoản";
     ViewData["ActivePage"] = ManageNavPages.PersonalData;
 }
 
-<h3>@ViewData["Title"]</h3>
+<h4 class="fw-bold text-danger mb-4 border-bottom pb-2">
+    <i class="bi bi-trash3-fill me-2"></i>@ViewData["Title"]
+</h4>
 
-<div class="alert alert-warning" role="alert">
-    <p>
-        <strong>Deleting this data will permanently remove your account, and this cannot be recovered.</strong>
-    </p>
-</div>
-
-<div>
-    <form id="delete-user" method="post">
-        <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-        @if (Model.RequirePassword)
-        {
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="Please enter your password." />
-                <label asp-for="Input.Password" class="form-label"></label>
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
+<div class="row">
+    <div class="col-md-7">
+        <div class="alert alert-danger bg-danger bg-opacity-10 border-danger border-opacity-25 rounded-4 p-4 mb-4">
+            <div class="d-flex">
+                <div class="flex-shrink-0">
+                    <i class="bi bi-exclamation-triangle-fill text-danger fs-3"></i>
+                </div>
+                <div class="ms-3">
+                    <h5 class="alert-heading fw-bold text-danger">Cảnh báo nghiêm trọng!</h5>
+                    <p class="mb-0 text-danger opacity-75">
+                        Hành động này sẽ <strong>xóa vĩnh viễn</strong> tài khoản của bạn khỏi hệ thống. Dữ liệu này không thể khôi phục lại được.
+                    </p>
+                </div>
             </div>
-        }
-        <button class="w-100 btn btn-lg btn-danger" type="submit">Delete data and close my account</button>
-    </form>
+        </div>
+
+        <form id="delete-user" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger small mb-3" role="alert"></div>
+
+            @if (Model.RequirePassword)
+            {
+                <div class="form-floating mb-4">
+                    <input asp-for="Input.Password" class="form-control bg-light border-0" autocomplete="current-password" aria-required="true" placeholder="Nhập mật khẩu xác nhận" />
+                    <label asp-for="Input.Password" class="text-muted">Nhập mật khẩu của bạn để xác nhận</label>
+                    <span asp-validation-for="Input.Password" class="text-danger small ms-1"></span>
+                </div>
+            }
+
+            <div class="d-grid gap-2">
+                <button class="btn btn-danger btn-lg rounded-pill fw-bold shadow-sm" type="submit">
+                    <i class="bi bi-x-circle me-2"></i>Xác nhận xóa vĩnh viễn
+                </button>
+                <a asp-page="PersonalData" class="btn btn-light btn-lg rounded-pill fw-bold text-muted mt-2">
+                    <i class="bi bi-arrow-left me-2"></i>Hủy bỏ, quay lại
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <div class="col-md-5 d-none d-md-block border-start ps-4">
+        <div class="text-center mt-5">
+            <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm" style="width: 140px; height: 140px;">
+                <i class="bi bi-person-x-fill text-danger opacity-50" style="font-size: 5rem;"></i>
+            </div>
+            <p class="text-muted small mt-4 px-3">
+                Chúng tôi rất tiếc khi bạn rời đi. Nếu bạn gặp vấn đề gì, hãy liên hệ với đội ngũ hỗ trợ trước khi quyết định xóa tài khoản.
+            </p>
+        </div>
+    </div>
 </div>
 
 @section Scripts {

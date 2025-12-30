@@ -1,25 +1,72 @@
 ﻿@page
 @model ShowRecoveryCodesModel
 @{
-    ViewData["Title"] = "Recovery codes";
-    ViewData["ActivePage"] = "TwoFactorAuthentication";
+    ViewData["Title"] = "Mã khôi phục";
+    ViewData["ActivePage"] = ManageNavPages.TwoFactorAuthentication;
 }
 
+<h4 class="fw-bold text-primary mb-4 border-bottom pb-2">
+    <i class="bi bi-file-earmark-lock-fill me-2"></i>@ViewData["Title"]
+</h4>
+
 <partial name="_StatusMessage" for="StatusMessage" />
-<h3>@ViewData["Title"]</h3>
-<div class="alert alert-warning" role="alert">
-    <p>
-        <strong>Put these codes in a safe place.</strong>
-    </p>
-    <p>
-        If you lose your device and don't have the recovery codes you will lose access to your account.
-    </p>
-</div>
+
 <div class="row">
-    <div class="col-md-12">
-        @for (var row = 0; row < Model.RecoveryCodes.Length; row += 2)
-        {
-            <code class="recovery-code">@Model.RecoveryCodes[row]</code><text>&nbsp;</text><code class="recovery-code">@Model.RecoveryCodes[row + 1]</code><br />
-        }
+    <div class="col-md-7">
+        <div class="alert alert-warning bg-warning bg-opacity-10 border-warning border-opacity-25 rounded-4 p-4 mb-4">
+            <div class="d-flex">
+                <div class="flex-shrink-0">
+                    <i class="bi bi-exclamation-triangle-fill text-warning fs-3"></i>
+                </div>
+                <div class="ms-3">
+                    <h5 class="alert-heading fw-bold text-dark">Lưu trữ an toàn!</h5>
+                    <p class="mb-0 text-dark opacity-75">
+                        Hãy lưu lại các mã này ở nơi an toàn. Nếu bạn mất thiết bị và không có mã khôi phục, bạn sẽ <strong>mất quyền truy cập</strong> vào tài khoản vĩnh viễn.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm rounded-4 bg-light">
+            <div class="card-body p-4">
+                <div class="row g-3">
+                    @for (var row = 0; row < Model.RecoveryCodes.Length; row += 2)
+                    {
+                        <div class="col-6">
+                            <div class="p-3 bg-white border rounded-3 text-center h-100 d-flex align-items-center justify-content-center">
+                                <code class="text-primary fw-bold fs-5 font-monospace tracking-wide">@Model.RecoveryCodes[row]</code>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-3 bg-white border rounded-3 text-center h-100 d-flex align-items-center justify-content-center">
+                                <code class="text-primary fw-bold fs-5 font-monospace tracking-wide">@Model.RecoveryCodes[row + 1]</code>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4 d-grid gap-2 d-md-block">
+            <button onclick="window.print()" class="btn btn-outline-secondary rounded-pill fw-bold px-4 shadow-sm">
+                <i class="bi bi-printer-fill me-2"></i>In mã
+            </button>
+            <a asp-page="./TwoFactorAuthentication" class="btn btn-primary rounded-pill fw-bold px-4 shadow-sm">
+                <i class="bi bi-check-lg me-2"></i>Đã lưu, quay lại
+            </a>
+        </div>
+    </div>
+
+    <div class="col-md-5 d-none d-md-block border-start ps-4">
+        <div class="text-center mt-5">
+            <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm" style="width: 120px; height: 120px;">
+                <i class="bi bi-safe2-fill text-warning opacity-50" style="font-size: 4rem;"></i>
+            </div>
+            <h6 class="fw-bold mt-4 text-dark">Lưu ý sử dụng</h6>
+            <p class="text-muted small px-3">
+                Mỗi mã khôi phục chỉ sử dụng được <strong>một lần duy nhất</strong>. <br>
+                Hãy đánh dấu hoặc gạch bỏ những mã bạn đã sử dụng để tránh nhầm lẫn.
+            </p>
+        </div>
     </div>
 </div>
