@@ -1,4 +1,4 @@
-﻿using _204Store.Data;
+using _204Store.Data;
 using _204Store.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
