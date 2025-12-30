@@ -4,64 +4,128 @@
     ViewData["Title"] = "Quản lý Danh mục";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-        <h2 class="fw-bold text-dark mb-1">Danh mục sản phẩm</h2>
-        <p class="text-muted mb-0">Quản lý các loại sản phẩm trong cửa hàng</p>
-    </div>
-    <a asp-action="Create" class="btn btn-primary fw-bold rounded-3 shadow-sm">
-        <i class="bi bi-plus-lg me-2"></i>Thêm mới
-    </a>
-</div>
+<style>
+    .text-theme {
+        color: #4f46e5;
+    }
 
-@if (TempData["success"] != null)
-{
-    <div class="alert alert-success alert-dismissible fade show rounded-3 shadow-sm" role="alert">
-        <i class="bi bi-check-circle-fill me-2"></i> @TempData["success"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-}
+    .bg-theme {
+        background-color: #4f46e5;
+    }
 
-<div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-    <div class="table-responsive">
-        <table class="table align-middle mb-0 table-hover">
-            <thead class="bg-light">
-                <tr>
-                    <th class="ps-4 py-3 text-uppercase text-secondary small fw-bold" style="width: 50px;">ID</th>
-                    <th class="py-3 text-uppercase text-secondary small fw-bold">Tên Danh Mục</th>
-                    <th class="py-3 text-uppercase text-secondary small fw-bold text-center">Thứ tự</th>
-                    <th class="pe-4 py-3 text-uppercase text-secondary small fw-bold text-end" style="width: 150px;">Thao tác</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td class="ps-4 fw-bold text-muted">#@item.Id</td>
-                        <td>
-                            <span class="fw-bold text-dark">@item.Name</span>
-                        </td>
-                        <td class="text-center">
-                            <span class="badge bg-light text-dark border rounded-pill px-3">@item.DisplayOrder</span>
-                        </td>
-                        <td class="pe-4 text-end">
-                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-light text-primary me-2 rounded-2" title="Sửa">
-                                <i class="bi bi-pencil-square"></i>
-                            </a>
-                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-light text-danger rounded-2" title="Xóa">
-                                <i class="bi bi-trash"></i>
-                            </a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+    .btn-theme {
+        background-color: #4f46e5;
+        color: white;
+        border: none;
+    }
+
+        .btn-theme:hover {
+            background-color: #4338ca;
+            color: white;
+        }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(79, 70, 229, 0.04);
+    }
+</style>
+
+<div class="container-fluid px-0">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-dark mb-1">Danh mục sản phẩm</h2>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="#" class="text-decoration-none text-muted small">Admin</a></li>
+                    <li class="breadcrumb-item"><a href="#" class="text-decoration-none text-muted small">Kho hàng</a></li>
+                    <li class="breadcrumb-item active small" aria-current="page">Danh mục</li>
+                </ol>
+            </nav>
+        </div>
+        <a asp-action="Create" class="btn btn-theme fw-bold rounded-3 shadow-sm px-4 py-2">
+            <i class="bi bi-plus-lg me-2"></i>Thêm danh mục
+        </a>
     </div>
-    @if (!Model.Any())
+
+    @if (TempData["success"] != null)
     {
-        <div class="text-center py-5 text-muted">
-            <i class="bi bi-inbox fs-1 d-block mb-2"></i>
-            Chưa có danh mục nào.
+        <div class="alert alert-success alert-dismissible fade show rounded-3 shadow-sm border-0 border-start border-success border-4 bg-white" role="alert">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-check-circle-fill text-success fs-4 me-3"></i>
+                <div>
+                    <h6 class="fw-bold mb-0 text-success">Thành công!</h6>
+                    <small class="text-muted">@TempData["success"]</small>
+                </div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     }
+
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+        <div class="card-header bg-white border-bottom py-3 px-4 d-flex justify-content-between align-items-center">
+            <h6 class="fw-bold m-0 text-secondary"><i class="bi bi-list-ul me-2"></i>Danh sách hiện có</h6>
+            <div class="input-group" style="max-width: 250px;">
+                <span class="input-group-text bg-light border-0"><i class="bi bi-search text-muted"></i></span>
+                <input type="text" class="form-control bg-light border-0 small" placeholder="Tìm kiếm...">
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table align-middle mb-0 table-hover">
+                <thead class="bg-light">
+                    <tr>
+                        <th class="ps-4 py-3 text-uppercase text-secondary small fw-bold" style="width: 80px;">ID</th>
+                        <th class="py-3 text-uppercase text-secondary small fw-bold">Tên Danh Mục</th>
+                        <th class="py-3 text-uppercase text-secondary small fw-bold text-center">Thứ tự hiển thị</th>
+                        <th class="pe-4 py-3 text-uppercase text-secondary small fw-bold text-end" style="width: 150px;">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="ps-4 text-muted small">#@item.Id</td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-light rounded p-2 me-3 text-theme">
+                                        <i class="bi bi-folder-fill fs-5"></i>
+                                    </div>
+                                    <div>
+                                        <span class="fw-bold text-dark d-block">@item.Name</span>
+                                        <span class="small text-muted">Cập nhật lần cuối: Vừa xong</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge bg-light text-dark border fw-normal px-3 py-2 rounded-pill">
+                                    Ưu tiên: <strong>@item.DisplayOrder</strong>
+                                </span>
+                            </td>
+                            <td class="pe-4 text-end">
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-light text-primary btn-sm rounded-2 me-1" data-bs-toggle="tooltip" title="Chỉnh sửa">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-light text-danger btn-sm rounded-2" data-bs-toggle="tooltip" title="Xóa">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div class="text-center py-5">
+                <div class="mb-3">
+                    <i class="bi bi-inbox text-muted opacity-25" style="font-size: 4rem;"></i>
+                </div>
+                <h5 class="fw-bold text-secondary">Chưa có dữ liệu</h5>
+                <p class="text-muted mb-4">Hiện chưa có danh mục nào được tạo.</p>
+                <a asp-action="Create" class="btn btn-outline-primary rounded-3 px-4">
+                    Tạo ngay danh mục đầu tiên
+                </a>
+            </div>
+        }
+    </div>
 </div>
