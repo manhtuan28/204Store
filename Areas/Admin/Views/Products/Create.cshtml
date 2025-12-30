@@ -4,56 +4,88 @@
     ViewData["Title"] = "Thêm sản phẩm";
 }
 
-<div class="row justify-content-center">
-    <div class="col-lg-8">
-        <div class="card border-0 shadow-sm rounded-4">
-            <div class="card-header bg-white border-bottom-0 pt-4 px-4">
-                <h5 class="fw-bold mb-0">Thêm sản phẩm mới</h5>
-            </div>
-            <div class="card-body p-4">
-                <form asp-action="Create" method="post" enctype="multipart/form-data">
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div class="mb-3">
-                                <label asp-for="Name" class="form-label fw-semibold small text-uppercase text-secondary">Tên sản phẩm</label>
-                                <input asp-for="Name" class="form-control" placeholder="Nhập tên sản phẩm..." />
-                                <span asp-validation-for="Name" class="text-danger small"></span>
+<div class="row justify-content-center mt-3">
+    <div class="col-lg-10">
+        <div class="mb-3">
+            <a asp-action="Index" class="text-decoration-none text-muted small fw-bold hover-primary">
+                <i class="bi bi-arrow-left me-1"></i>Quay lại danh sách
+            </a>
+        </div>
+
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
+            <div class="row g-4">
+                <div class="col-lg-8">
+                    <div class="card border-0 shadow-sm rounded-4 h-100">
+                        <div class="card-header bg-white border-bottom py-3 px-4">
+                            <h6 class="fw-bold mb-0 text-dark"><i class="bi bi-info-circle me-2 text-primary"></i>Thông tin chung</h6>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="mb-4">
+                                <label asp-for="Name" class="form-label fw-semibold text-secondary small text-uppercase">Tên sản phẩm <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-0"><i class="bi bi-tag-fill text-muted"></i></span>
+                                    <input asp-for="Name" class="form-control bg-light border-0 py-2" placeholder="Ví dụ: iPhone 15 Pro Max..." />
+                                </div>
+                                <span asp-validation-for="Name" class="text-danger small mt-1 d-block"></span>
                             </div>
 
                             <div class="mb-3">
-                                <label asp-for="Description" class="form-label fw-semibold small text-uppercase text-secondary">Mô tả</label>
-                                <textarea asp-for="Description" class="form-control" rows="4" placeholder="Mô tả chi tiết..."></textarea>
-                                <span asp-validation-for="Description" class="text-danger small"></span>
+                                <label asp-for="Description" class="form-label fw-semibold text-secondary small text-uppercase">Mô tả chi tiết</label>
+                                <textarea asp-for="Description" class="form-control bg-light border-0" rows="6" placeholder="Nhập thông tin chi tiết về sản phẩm..."></textarea>
+                                <span asp-validation-for="Description" class="text-danger small mt-1 d-block"></span>
                             </div>
                         </div>
+                    </div>
+                </div>
 
-                        <div class="col-md-4">
+                <div class="col-lg-4">
+                    <div class="card border-0 shadow-sm rounded-4 mb-4">
+                        <div class="card-header bg-white border-bottom py-3 px-4">
+                            <h6 class="fw-bold mb-0 text-dark"><i class="bi bi-sliders me-2 text-primary"></i>Phân loại</h6>
+                        </div>
+                        <div class="card-body p-4">
                             <div class="mb-3">
-                                <label asp-for="CategoryId" class="form-label fw-semibold small text-uppercase text-secondary">Danh mục</label>
-                                <select asp-for="CategoryId" class="form-select" asp-items="ViewBag.CategoryId">
+                                <label asp-for="CategoryId" class="form-label fw-semibold text-secondary small text-uppercase">Danh mục</label>
+                                <select asp-for="CategoryId" class="form-select bg-light border-0 py-2" asp-items="ViewBag.CategoryId">
                                     <option disabled selected>-- Chọn danh mục --</option>
                                 </select>
-                                <span asp-validation-for="CategoryId" class="text-danger small"></span>
+                                <span asp-validation-for="CategoryId" class="text-danger small mt-1 d-block"></span>
                             </div>
+                        </div>
+                    </div>
 
-                            <div class="mb-3">
-                                <label class="form-label fw-semibold small text-uppercase text-secondary">Hình ảnh</label>
-                                <input type="file" name="file" class="form-control" accept="image/*" onchange="previewImage(event)" />
-                                <div class="mt-3 text-center p-3 bg-light rounded-3 border border-dashed">
-                                    <img id="imagePreview" src="https://via.placeholder.com/150" class="img-fluid rounded shadow-sm" style="max-height: 150px; display: none;" />
-                                    <span id="placeholderText" class="text-muted small">Chưa chọn ảnh</span>
+                    <div class="card border-0 shadow-sm rounded-4">
+                        <div class="card-header bg-white border-bottom py-3 px-4">
+                            <h6 class="fw-bold mb-0 text-dark"><i class="bi bi-image me-2 text-primary"></i>Hình ảnh đại diện</h6>
+                        </div>
+                        <div class="card-body p-4">
+                            <input type="file" name="file" id="fileInput" class="d-none" accept="image/*" onchange="previewImage(event)" />
+
+                            <div class="text-center p-4 bg-light rounded-3 border-2 border-dashed" style="border-style: dashed; border-color: #cbd5e1; cursor: pointer;" onclick="document.getElementById('fileInput').click()">
+                                <img id="imagePreview" src="#" class="img-fluid rounded shadow-sm mb-2" style="max-height: 180px; display: none;" />
+                                <div id="placeholderContent">
+                                    <i class="bi bi-cloud-arrow-up text-primary fs-1"></i>
+                                    <p class="small text-muted mb-0 mt-2">Nhấn để tải ảnh lên</p>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <div class="border-top pt-3 mt-3 d-flex gap-2">
-                        <button type="submit" class="btn btn-primary fw-bold px-4">Lưu sản phẩm</button>
-                        <a asp-action="Index" class="btn btn-light px-4">Hủy</a>
-                    </div>
-                </form>
+                </div>
             </div>
-        </div>
+
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card border-0 shadow-sm rounded-4 p-3">
+                        <div class="d-flex justify-content-end gap-3">
+                            <a asp-action="Index" class="btn btn-light fw-bold px-4 py-2">Hủy bỏ</a>
+                            <button type="submit" class="btn btn-primary fw-bold px-5 py-2 shadow-sm" style="background-color: #4f46e5; border: none;">
+                                <i class="bi bi-check-lg me-2"></i>Tạo sản phẩm
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -66,12 +98,14 @@
             var reader = new FileReader();
             reader.onload = function(){
                 var output = document.getElementById('imagePreview');
-                var placeholder = document.getElementById('placeholderText');
+                var placeholder = document.getElementById('placeholderContent');
                 output.src = reader.result;
                 output.style.display = 'block';
                 placeholder.style.display = 'none';
             };
-            reader.readAsDataURL(event.target.files[0]);
+            if(event.target.files[0]) {
+                reader.readAsDataURL(event.target.files[0]);
+            }
         }
     </script>
 }
