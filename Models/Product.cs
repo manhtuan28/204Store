@@ -9,18 +9,18 @@ namespace _204Store.Models
         [Key]
         public int Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Vui lòng nhập tên sản phẩm")]
         [Display(Name = "Tên sản phẩm")]
         public string Name { get; set; }
 
-        public string Description { get; set; }
-        public string ImageUrl { get; set; }
+        public string? Description { get; set; }
+        public string? ImageUrl { get; set; }
 
         [Display(Name = "Danh mục")]
         public int CategoryId { get; set; }
         [ForeignKey("CategoryId")]
-        public virtual Category Category { get; set; }
+        public virtual Category? Category { get; set; }
 
-        public virtual ICollection<ProductDetail> ProductDetails { get; set; }
+        public virtual ICollection<ProductDetail>? ProductDetails { get; set; }
     }
 }
