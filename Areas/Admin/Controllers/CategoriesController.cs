@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using _204Store.Data;
+﻿using _204Store.Data;
 using _204Store.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace _204Store.Areas.Admin.Controllers
 {
@@ -23,6 +24,7 @@ namespace _204Store.Areas.Admin.Controllers
         }
         public IActionResult Create()
         {
+            ViewData["ParentId"] = new SelectList(_context.Categories.Where(c => c.ParentId == null), "Id", "Name");
             return View();
         }
 
@@ -42,9 +44,11 @@ namespace _204Store.Areas.Admin.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
-
             var category = await _context.Categories.FindAsync(id);
             if (category == null) return NotFound();
+
+            var categories = _context.Categories.Where(c => c.Id != id && c.ParentId == null);
+            ViewData["ParentId"] = new SelectList(categories, "Id", "Name", category.ParentId);
 
             return View(category);
         }

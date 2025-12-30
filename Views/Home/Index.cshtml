@@ -1,35 +1,126 @@
 ﻿@using System.Globalization
-@model IEnumerable<_204Store.Models.Product>
-
+@model _204Store.Models.ViewModels.HomeViewModel
 @{
     ViewData["Title"] = "Trang chủ";
     var culture = new CultureInfo("vi-VN");
 }
 
-<div id="mainCarousel" class="carousel slide shadow rounded-4 overflow-hidden mb-5" data-bs-ride="carousel">
+<div id="mainCarousel" class="carousel slide shadow-sm rounded-4 overflow-hidden mb-5" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="0" class="active"></button>
+        <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="1"></button>
+    </div>
     <div class="carousel-inner">
         <div class="carousel-item active" data-bs-interval="3000">
-            <img src="https://placehold.co/1200x400/4f46e5/white?text=iPhone+15+Pro+Max+-+Titan+Tu+Nhien" class="d-block w-100" alt="Banner 1">
+            <img src="https://placehold.co/1200x400/4f46e5/white?text=Sieu+Sale+Cong+Nghe" class="d-block w-100" alt="Banner 1">
         </div>
         <div class="carousel-item" data-bs-interval="3000">
-            <img src="https://placehold.co/1200x400/10b981/white?text=Macbook+Air+M3+-+Sieu+Mong+Nhe" class="d-block w-100" alt="Banner 2">
+            <img src="https://placehold.co/1200x400/10b981/white?text=Giam+Gia+Soc+50%" class="d-block w-100" alt="Banner 2">
+        </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    </button>
+</div>
+
+<section class="mb-5">
+    <h4 class="fw-bold mb-4 text-uppercase text-secondary" style="letter-spacing: 1px;">Danh mục</h4>
+    <div class="d-flex gap-3 overflow-auto pb-3" style="white-space: nowrap;">
+        @foreach (var cat in Model.Categories.Where(c => c.ParentId == null))
+        {
+            <a href="#" class="btn btn-outline-dark rounded-pill px-4 fw-bold border-2">
+                @cat.Name
+            </a>
+        }
+    </div>
+</section>
+
+@if (Model.FeaturedProducts.Any())
+{
+    <section class="mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="fw-bold text-dark"><i class="bi bi-star-fill text-warning me-2"></i>Nổi Bật Nhất</h3>
+            <a href="#" class="text-decoration-none fw-bold small">Xem tất cả <i class="bi bi-arrow-right"></i></a>
+        </div>
+        <div class="row row-cols-2 row-cols-md-4 g-3">
+            @foreach (var item in Model.FeaturedProducts)
+            {
+                await RenderProductCard(item);
+            }
+        </div>
+    </section>
+}
+
+@if (Model.BestSellerProducts.Any())
+{
+    <section class="mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="fw-bold text-dark"><i class="bi bi-lightning-fill text-warning me-2"></i>Bán Chạy</h3>
+            <a href="#" class="text-decoration-none fw-bold small">Xem top 100 <i class="bi bi-arrow-right"></i></a>
+        </div>
+        <div class="row row-cols-2 row-cols-md-4 g-3">
+            @foreach (var item in Model.BestSellerProducts)
+            {
+                await RenderProductCard(item);
+            }
+        </div>
+    </section>
+}
+
+@if (Model.SaleProducts.Any())
+{
+    <section class="mb-5 bg-danger bg-opacity-10 p-4 rounded-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="fw-bold text-danger"><i class="bi bi-tag-fill me-2"></i>Đang Giảm Giá Sốc</h3>
+        </div>
+        <div class="row row-cols-2 row-cols-md-4 g-3">
+            @foreach (var item in Model.SaleProducts)
+            {
+                await RenderProductCard(item);
+            }
+        </div>
+    </section>
+}
+
+<div class="row g-4 mb-5">
+    <div class="col-lg-6">
+        <div class="bg-light p-4 rounded-4 h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="fw-bold m-0"><i class="bi bi-apple me-2"></i>Apple</h4>
+                <span class="badge bg-dark">Authorized Reseller</span>
+            </div>
+            <div class="row row-cols-2 g-3">
+                @foreach (var item in Model.AppleProducts)
+                {
+                    await RenderProductCard(item, true);
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="bg-light p-4 rounded-4 h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="fw-bold m-0 text-primary">Samsung</h4>
+                <span class="badge bg-primary">Official Partner</span>
+            </div>
+            <div class="row row-cols-2 g-3">
+                @foreach (var item in Model.SamsungProducts)
+                {
+                    await RenderProductCard(item, true);
+                }
+            </div>
         </div>
     </div>
 </div>
 
-<div class="d-flex justify-content-between align-items-end mb-4 px-2">
-    <div>
-        <h3 class="fw-bold text-dark m-0">Sản phẩm nổi bật</h3>
-        <p class="text-muted small m-0">Săn sale giá sốc mỗi ngày</p>
-    </div>
-    <a href="#" class="text-decoration-none fw-bold small text-primary">
-        Xem tất cả <i class="bi bi-arrow-right"></i>
-    </a>
-</div>
-
-<div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-3 mb-5">
-    @foreach (var item in Model)
+@{
+    async Task RenderProductCard(_204Store.Models.Product item, bool isMini = false)
     {
+        var culture = new CultureInfo("vi-VN");
         double minPrice = 0;
         double maxPrice = 0;
         bool hasPrice = false;
@@ -41,19 +132,34 @@
             hasPrice = true;
         }
 
+        double discountRate = item.DiscountRate;
+        double finalMinPrice = minPrice * (1 - discountRate / 100);
+
         <div class="col">
-            <div class="card h-100 product-card rounded-3 border-0">
-                <div class="product-image-container">
-                    <span class="badge-sale">-15%</span>
+            <div class="card h-100 product-card rounded-3 border-0 bg-white">
+                <div class="product-image-container position-relative" style="@(isMini ? "height: 180px;" : "")">
+
+                    @if (discountRate > 0)
+                    {
+                        <span class="badge-sale position-absolute top-0 start-0 m-2">-@discountRate%</span>
+                    }
+
+                    @if (item.IsFeatured)
+                    {
+                        <span class="position-absolute top-0 end-0 m-2 badge bg-warning text-dark shadow-sm border border-light">Hot</span>
+                    }
+
                     <a asp-controller="Home" asp-action="Details" asp-route-productId="@item.Id">
                         <img src="@item.ImageUrl" alt="@item.Name" onerror="this.src='https://placehold.co/200x200?text=No+Image'" />
                     </a>
                 </div>
 
                 <div class="card-body p-3 d-flex flex-column">
-                    <div class="small text-muted mb-1" style="font-size: 0.75rem;">@item.Category?.Name</div>
+                    <div class="small text-muted mb-1 text-uppercase" style="font-size: 0.7rem;">
+                        @item.Category?.Name
+                    </div>
 
-                    <h6 class="product-title" title="@item.Name">
+                    <h6 class="product-title small fw-bold mb-2" title="@item.Name">
                         <a asp-controller="Home" asp-action="Details" asp-route-productId="@item.Id" class="text-dark text-decoration-none">
                             @item.Name
                         </a>
@@ -62,27 +168,31 @@
                     <div class="mt-auto">
                         @if (hasPrice)
                         {
-                            <div class="product-price">
-                                @minPrice.ToString("#,##0", culture)₫
+                            <div class="product-price text-danger fw-bold" style="@(isMini ? "font-size: 0.9rem;" : "")">
+                                @finalMinPrice.ToString("#,##0", culture)₫
                             </div>
-                            @if (minPrice != maxPrice)
+                            @if (discountRate > 0)
                             {
-                                <div class="text-muted small" style="font-size: 0.8rem;">
-                                    Đến: @maxPrice.ToString("#,##0", culture)₫
+                                <div class="text-muted text-decoration-line-through" style="font-size: 0.75rem;">
+                                    @minPrice.ToString("#,##0", culture)₫
                                 </div>
                             }
                         }
                         else
                         {
-                            <div class="text-muted fst-italic small">Liên hệ</div>
+                            <span class="badge bg-secondary">Liên hệ</span>
+                        }
+
+                        @if (item.Sold > 0)
+                        {
+                            <div class="progress mt-2" style="height: 4px;">
+                                <div class="progress-bar bg-warning" role="progressbar" style="width: 80%"></div>
+                            </div>
+                            <small class="text-muted" style="font-size: 0.7rem;">Đã bán: @item.Sold</small>
                         }
                     </div>
                 </div>
             </div>
         </div>
     }
-</div>
-
-@if (!Model.Any())
-{
 }

@@ -45,7 +45,12 @@
                         <span asp-validation-for="DisplayOrder" class="text-danger small mt-1 d-block ms-1"></span>
                         <div class="form-text small ms-1">Số càng nhỏ sẽ hiển thị càng cao.</div>
                     </div>
-
+                    <div class="mb-3">
+                        <label asp-for="ParentId" class="form-label fw-semibold text-secondary">Danh mục cha (Tùy chọn)</label>
+                        <select asp-for="ParentId" class="form-select" asp-items="ViewBag.ParentId">
+                            <option value="">-- Là danh mục gốc --</option>
+                        </select>
+                    </div>
                     <div class="pt-2">
                         <button type="submit" class="btn btn-primary w-100 fw-bold rounded-3 py-3 mb-2 shadow-sm" style="background-color: #4f46e5; border-color: #4f46e5;">
                             <i class="bi bi-check-lg me-2"></i>Hoàn tất tạo mới

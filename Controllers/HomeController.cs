@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using _204Store.Data;
 using _204Store.Models;
+using _204Store.Models.ViewModels;
 using System.Diagnostics;
 
 namespace _204Store.Controllers
@@ -19,12 +20,51 @@ namespace _204Store.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var products = await _context.Products
+            var allProducts = _context.Products
                 .Include(p => p.Category)
                 .Include(p => p.ProductDetails)
-                .ToListAsync();
+                .AsQueryable();
 
-            return View(products);
+            var viewModel = new HomeViewModel
+            {
+                // Danh mục
+                Categories = await _context.Categories.OrderBy(c => c.DisplayOrder).ToListAsync(),
+
+                // Sản phẩm Nổi bật
+                FeaturedProducts = await allProducts
+                    .Where(p => p.IsFeatured)
+                    .Take(8)
+                    .ToListAsync(),
+
+                // Sản phẩm Bán chạy
+                BestSellerProducts = await allProducts
+                    .OrderByDescending(p => p.Sold)
+                    .Take(8)
+                    .ToListAsync(),
+
+                // Sản phẩm Giảm giá
+                SaleProducts = await allProducts
+                    .Where(p => p.DiscountRate > 0)
+                    .OrderByDescending(p => p.DiscountRate)
+                    .Take(8)
+                    .ToListAsync(),
+
+                // Apple
+                AppleProducts = await allProducts
+                    .Where(p => p.Category.Name.Contains("Apple") || p.Category.Name.Contains("iPhone"))
+                    .OrderByDescending(p => p.Id)
+                    .Take(2)
+                    .ToListAsync(),
+
+                // Samsung
+                SamsungProducts = await allProducts
+                    .Where(p => p.Category.Name.Contains("Samsung") || p.Category.Name.Contains("Galaxy"))
+                    .OrderByDescending(p => p.Id)
+                    .Take(2)
+                    .ToListAsync()
+            };
+
+            return View(viewModel);
         }
 
         public IActionResult Privacy()
