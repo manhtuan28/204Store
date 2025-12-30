@@ -5,47 +5,91 @@
     var culture = new CultureInfo("vi-VN");
 }
 
-<div id="mainCarousel" class="carousel slide shadow-sm rounded-4 overflow-hidden mb-5" data-bs-ride="carousel">
-    <div class="carousel-indicators">
-        <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="0" class="active"></button>
-        <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="1"></button>
-    </div>
-    <div class="carousel-inner">
-        <div class="carousel-item active" data-bs-interval="3000">
-            <img src="https://placehold.co/1200x400/4f46e5/white?text=Sieu+Sale+Cong+Nghe" class="d-block w-100" alt="Banner 1">
+<section class="container mb-5 mt-3">
+    <div id="mainCarousel" class="carousel slide shadow-lg rounded-4 overflow-hidden" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="0" class="active"></button>
+            <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="1"></button>
+            <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="2"></button>
         </div>
-        <div class="carousel-item" data-bs-interval="3000">
-            <img src="https://placehold.co/1200x400/10b981/white?text=Giam+Gia+Soc+50%" class="d-block w-100" alt="Banner 2">
+        <div class="carousel-inner">
+            <div class="carousel-item active" data-bs-interval="4000">
+                <img src="https://placehold.co/1200x450/4f46e5/white?text=Sieu+Pham+iPhone+15+Pro+Max" class="d-block w-100 object-fit-cover" alt="Banner 1">
+            </div>
+            <div class="carousel-item" data-bs-interval="4000">
+                <img src="https://placehold.co/1200x450/1e293b/white?text=Macbook+M3+Hieu+Nang+Dinh+Cao" class="d-block w-100 object-fit-cover" alt="Banner 2">
+            </div>
+            <div class="carousel-item" data-bs-interval="4000">
+                <img src="https://placehold.co/1200x450/d70018/white?text=Xa+Kho+Giam+Toi+50%" class="d-block w-100 object-fit-cover" alt="Banner 3">
+            </div>
         </div>
-    </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    </button>
-</div>
-
-<section class="mb-5">
-    <h4 class="fw-bold mb-4 text-uppercase text-secondary" style="letter-spacing: 1px;">Danh mục</h4>
-    <div class="d-flex gap-3 overflow-auto pb-3" style="white-space: nowrap;">
-        @foreach (var cat in Model.Categories.Where(c => c.ParentId == null))
-        {
-            <a href="#" class="btn btn-outline-dark rounded-pill px-4 fw-bold border-2">
-                @cat.Name
-            </a>
-        }
+        <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon rounded-circle bg-dark bg-opacity-25 p-3"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon rounded-circle bg-dark bg-opacity-25 p-3"></span>
+        </button>
     </div>
 </section>
 
+<section class="container mb-5">
+    <div class="d-flex align-items-center gap-4 overflow-auto py-3 px-1 no-scrollbar">
+        @foreach (var cat in Model.Categories.Where(c => c.ParentId == null))
+        {
+            <a href="#" class="category-item text-decoration-none">
+                <div class="cat-icon-box">
+                    <i class="bi bi-phone fs-4"></i>
+                </div>
+                <span class="cat-name">@cat.Name</span>
+            </a>
+        }
+        <a href="#" class="category-item text-decoration-none">
+            <div class="cat-icon-box"><i class="bi bi-laptop fs-4"></i></div>
+            <span class="cat-name">Laptop</span>
+        </a>
+        <a href="#" class="category-item text-decoration-none">
+            <div class="cat-icon-box"><i class="bi bi-smartwatch fs-4"></i></div>
+            <span class="cat-name">Đồng hồ</span>
+        </a>
+        <a href="#" class="category-item text-decoration-none">
+            <div class="cat-icon-box"><i class="bi bi-headphones fs-4"></i></div>
+            <span class="cat-name">Phụ kiện</span>
+        </a>
+    </div>
+</section>
+
+@if (Model.SaleProducts.Any())
+{
+    <section class="container mb-5">
+        <div class="bg-white rounded-4 shadow-sm border p-4 position-relative overflow-hidden">
+            <div class="position-absolute top-0 start-0 w-100 h-100 bg-danger opacity-10" style="z-index: 0;"></div>
+
+            <div class="section-header border-bottom-0 position-relative" style="z-index: 1;">
+                <div class="d-flex align-items-center gap-3">
+                    <h3 class="section-title text-white fst-italic"><i class="bi bi-lightning-charge-fill me-1"></i>FLASH SALE</h3>
+                    <span class="badge bg-dark px-3 py-2 rounded-pill">Kết thúc sau 12:00:00</span>
+                </div>
+                <a href="#" class="btn btn-sm btn-outline-danger rounded-pill fw-bold">Xem tất cả <i class="bi bi-arrow-right"></i></a>
+            </div>
+
+            <div class="row row-cols-2 row-cols-md-4 row-cols-lg-5 g-3 position-relative" style="z-index: 1;">
+                @foreach (var item in Model.SaleProducts.Take(5))
+                {
+                    await RenderProductCard(item);
+                }
+            </div>
+        </div>
+    </section>
+}
+
 @if (Model.FeaturedProducts.Any())
 {
-    <section class="mb-5">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h3 class="fw-bold text-dark"><i class="bi bi-star-fill text-warning me-2"></i>Nổi Bật Nhất</h3>
-            <a href="#" class="text-decoration-none fw-bold small">Xem tất cả <i class="bi bi-arrow-right"></i></a>
+    <section class="container mb-5">
+        <div class="section-header">
+            <h3 class="section-title">Sản phẩm nổi bật</h3>
+            <a href="#" class="text-primary fw-semibold small text-decoration-none">Xem thêm <i class="bi bi-chevron-right"></i></a>
         </div>
-        <div class="row row-cols-2 row-cols-md-4 g-3">
+        <div class="row row-cols-2 row-cols-md-4 row-cols-lg-4 g-4">
             @foreach (var item in Model.FeaturedProducts)
             {
                 await RenderProductCard(item);
@@ -54,14 +98,53 @@
     </section>
 }
 
+<section class="container mb-5">
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div class="brand-box apple-theme shadow">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h2 class="fw-bold mb-0"><i class="bi bi-apple me-2"></i>Apple Store</h2>
+                        <small class="opacity-75">Authorized Reseller</small>
+                    </div>
+                    <button class="btn btn-light rounded-pill btn-sm fw-bold px-3">Xem tất cả</button>
+                </div>
+                <div class="row row-cols-2 g-3">
+                    @foreach (var item in Model.AppleProducts.Take(2))
+                    {
+                        await RenderProductCard(item, isMini: true);
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="brand-box samsung-theme shadow">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h2 class="fw-bold mb-0">SAMSUNG</h2>
+                        <small class="opacity-75">Đối tác chiến lược</small>
+                    </div>
+                    <button class="btn btn-light rounded-pill btn-sm fw-bold px-3 text-primary">Khám phá</button>
+                </div>
+                <div class="row row-cols-2 g-3">
+                    @foreach (var item in Model.SamsungProducts.Take(2))
+                    {
+                        await RenderProductCard(item, isMini: true);
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 @if (Model.BestSellerProducts.Any())
 {
-    <section class="mb-5">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h3 class="fw-bold text-dark"><i class="bi bi-lightning-fill text-warning me-2"></i>Bán Chạy</h3>
-            <a href="#" class="text-decoration-none fw-bold small">Xem top 100 <i class="bi bi-arrow-right"></i></a>
+    <section class="container mb-5">
+        <div class="section-header">
+            <h3 class="section-title">Bán chạy nhất tháng</h3>
         </div>
-        <div class="row row-cols-2 row-cols-md-4 g-3">
+        <div class="row row-cols-2 row-cols-md-4 row-cols-lg-4 g-4">
             @foreach (var item in Model.BestSellerProducts)
             {
                 await RenderProductCard(item);
@@ -70,53 +153,7 @@
     </section>
 }
 
-@if (Model.SaleProducts.Any())
-{
-    <section class="mb-5 bg-danger bg-opacity-10 p-4 rounded-4">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h3 class="fw-bold text-danger"><i class="bi bi-tag-fill me-2"></i>Đang Giảm Giá Sốc</h3>
-        </div>
-        <div class="row row-cols-2 row-cols-md-4 g-3">
-            @foreach (var item in Model.SaleProducts)
-            {
-                await RenderProductCard(item);
-            }
-        </div>
-    </section>
-}
-
-<div class="row g-4 mb-5">
-    <div class="col-lg-6">
-        <div class="bg-light p-4 rounded-4 h-100">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h4 class="fw-bold m-0"><i class="bi bi-apple me-2"></i>Apple</h4>
-                <span class="badge bg-dark">Authorized Reseller</span>
-            </div>
-            <div class="row row-cols-2 g-3">
-                @foreach (var item in Model.AppleProducts)
-                {
-                    await RenderProductCard(item, true);
-                }
-            </div>
-        </div>
-    </div>
-
-    <div class="col-lg-6">
-        <div class="bg-light p-4 rounded-4 h-100">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h4 class="fw-bold m-0 text-primary">Samsung</h4>
-                <span class="badge bg-primary">Official Partner</span>
-            </div>
-            <div class="row row-cols-2 g-3">
-                @foreach (var item in Model.SamsungProducts)
-                {
-                    await RenderProductCard(item, true);
-                }
-            </div>
-        </div>
-    </div>
-</div>
-
+@* --- LOCAL FUNCTION: Render Product Card --- *@
 @{
     async Task RenderProductCard(_204Store.Models.Product item, bool isMini = false)
     {
@@ -132,35 +169,35 @@
             hasPrice = true;
         }
 
-        double discountRate = item.DiscountRate;
-        double finalMinPrice = minPrice * (1 - discountRate / 100);
+        double discountRate = item.DiscountRate; // Ví dụ: 15.0
+        double finalPrice = minPrice * (1 - discountRate / 100);
 
         <div class="col">
-            <div class="card h-100 product-card rounded-3 border-0 bg-white">
-                <div class="product-image-container position-relative" style="@(isMini ? "height: 180px;" : "")">
+            <div class="product-card shadow-sm h-100">
+                <div class="product-image-wrapper">
+                    <a asp-controller="Home" asp-action="Details" asp-route-productId="@item.Id">
+                        <img src="@item.ImageUrl" alt="@item.Name" loading="lazy" onerror="this.src='https://placehold.co/300x300?text=No+Image'" />
+                    </a>
 
                     @if (discountRate > 0)
                     {
-                        <span class="badge-sale position-absolute top-0 start-0 m-2">-@discountRate%</span>
+                        <span class="badge-custom badge-sale">-@discountRate%</span>
                     }
-
                     @if (item.IsFeatured)
                     {
-                        <span class="position-absolute top-0 end-0 m-2 badge bg-warning text-dark shadow-sm border border-light">Hot</span>
+                        <span class="badge-custom badge-hot"><i class="bi bi-fire me-1"></i>Hot</span>
                     }
-
-                    <a asp-controller="Home" asp-action="Details" asp-route-productId="@item.Id">
-                        <img src="@item.ImageUrl" alt="@item.Name" onerror="this.src='https://placehold.co/200x200?text=No+Image'" />
-                    </a>
                 </div>
 
                 <div class="card-body p-3 d-flex flex-column">
-                    <div class="small text-muted mb-1 text-uppercase" style="font-size: 0.7rem;">
-                        @item.Category?.Name
+                    <div class="mb-1">
+                        <span class="badge bg-light text-secondary border fw-normal" style="font-size: 0.65rem;">
+                            @(item.Category?.Name ?? "Sản phẩm")
+                        </span>
                     </div>
 
-                    <h6 class="product-title small fw-bold mb-2" title="@item.Name">
-                        <a asp-controller="Home" asp-action="Details" asp-route-productId="@item.Id" class="text-dark text-decoration-none">
+                    <h6 class="product-title">
+                        <a asp-controller="Home" asp-action="Details" asp-route-productId="@item.Id" class="text-dark text-decoration-none" title="@item.Name">
                             @item.Name
                         </a>
                     </h6>
@@ -168,28 +205,31 @@
                     <div class="mt-auto">
                         @if (hasPrice)
                         {
-                            <div class="product-price text-danger fw-bold" style="@(isMini ? "font-size: 0.9rem;" : "")">
-                                @finalMinPrice.ToString("#,##0", culture)₫
+                            <div class="price-box">
+                                <span class="current-price">@finalPrice.ToString("#,##0", culture)₫</span>
+                                @if (discountRate > 0)
+                                {
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="original-price">@minPrice.ToString("#,##0", culture)₫</span>
+                                    </div>
+                                }
                             </div>
-                            @if (discountRate > 0)
-                            {
-                                <div class="text-muted text-decoration-line-through" style="font-size: 0.75rem;">
-                                    @minPrice.ToString("#,##0", culture)₫
-                                </div>
-                            }
                         }
                         else
                         {
-                            <span class="badge bg-secondary">Liên hệ</span>
+                            <span class="text-primary fw-bold">Liên hệ giá</span>
                         }
 
-                        @if (item.Sold > 0)
-                        {
-                            <div class="progress mt-2" style="height: 4px;">
-                                <div class="progress-bar bg-warning" role="progressbar" style="width: 80%"></div>
+                        <div class="d-flex align-items-center mt-2 pt-2 border-top">
+                            <div class="text-warning small me-1">
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
                             </div>
-                            <small class="text-muted" style="font-size: 0.7rem;">Đã bán: @item.Sold</small>
-                        }
+                            <small class="text-muted ms-auto" style="font-size: 0.75rem;">Đã bán @(item.Sold > 999 ? "999+" : item.Sold)</small>
+                        </div>
                     </div>
                 </div>
             </div>
