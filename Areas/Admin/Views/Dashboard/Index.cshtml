@@ -1,59 +1,303 @@
 ﻿@{
-    ViewData["Title"] = "Admin Dashboard";
+    ViewData["Title"] = "Tổng quan";
 }
 
-<div class="container-fluid px-4">
-    <h1 class="mt-4">👑 Tổng Quan Hệ Thống</h1>
-    <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item active">Chào mừng Admin quay trở lại!</li>
-    </ol>
+<style>
+    /* Card Styles */
+    .card-dashboard {
+        border: none;
+        border-radius: 16px; /* Bo góc lớn hơn */
+        background: #fff;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.03), 0 4px 6px -2px rgba(0, 0, 0, 0.01);
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s;
+    }
 
-    <div class="row">
-        <div class="col-xl-4 col-md-6">
-            <div class="card bg-primary text-white mb-4">
-                <div class="card-body d-flex align-items-center justify-content-between">
-                    <div>
-                        <h5>Sản Phẩm</h5>
-                        <div class="small text-white-50">Quản lý kho hàng</div>
-                    </div>
-                    <i class="bi bi-box-seam fa-2x"></i>
+        .card-dashboard:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.01);
+        }
+
+    /* Icon Box Styles */
+    .icon-box {
+        width: 54px;
+        height: 54px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.6rem;
+    }
+
+    /* Custom Colors */
+    .bg-indigo-subtle {
+        background-color: #e0e7ff;
+        color: #4338ca;
+    }
+
+    .bg-emerald-subtle {
+        background-color: #d1fae5;
+        color: #059669;
+    }
+
+    .bg-amber-subtle {
+        background-color: #fef3c7;
+        color: #d97706;
+    }
+
+    .bg-rose-subtle {
+        background-color: #ffe4e6;
+        color: #e11d48;
+    }
+
+    /* Action Links */
+    .action-card {
+        transition: all 0.2s;
+        border: 1px solid #f3f4f6;
+    }
+
+        .action-card:hover {
+            background-color: #f8fafc;
+            border-color: #4f46e5;
+        }
+
+    /* Table Styles */
+    .table-modern th {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        color: #6b7280;
+        background-color: #f9fafb;
+        border-bottom: 1px solid #e5e7eb;
+        padding: 12px 16px;
+    }
+
+    .table-modern td {
+        padding: 16px;
+        vertical-align: middle;
+        border-bottom: 1px solid #f3f4f6;
+        color: #374151;
+        font-weight: 500;
+    }
+
+    .avatar-initial {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 0.85rem;
+    }
+</style>
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-4 mb-4">
+    <div>
+        <h1 class="h3 fw-bold text-dark mb-1">
+            Xin chào, Admin! 👋
+        </h1>
+        <p class="text-muted mb-0">Đây là báo cáo tổng quan tình hình kinh doanh hôm nay.</p>
+    </div>
+    <div class="d-flex gap-2">
+        <button class="btn btn-white bg-white border shadow-sm fw-semibold text-secondary">
+            <i class="bi bi-download me-1"></i> Xuất Excel
+        </button>
+        <button class="btn btn-primary shadow-sm fw-semibold" style="background-color: #4f46e5; border:none;">
+            <i class="bi bi-plus-lg me-1"></i> Tạo đơn mới
+        </button>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-xl-3 col-md-6">
+        <div class="card card-dashboard h-100 p-3">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <p class="text-muted fw-bold small text-uppercase mb-1">Doanh thu tháng</p>
+                    <h3 class="fw-bold mb-2">150.0M ₫</h3>
+                    <span class="badge bg-emerald-subtle px-2 py-1 rounded-pill fw-bold">
+                        <i class="bi bi-arrow-up"></i> 12.5%
+                    </span>
+                    <span class="text-muted small ms-1">vs tháng trước</span>
                 </div>
-                <div class="card-footer d-flex align-items-center justify-content-between">
-                    <a class="small text-white stretched-link" asp-area="Admin" asp-controller="Products" asp-action="Index">Xem chi tiết</a>
-                    <div class="small text-white"><i class="bi bi-chevron-right"></i></div>
+                <div class="icon-box bg-indigo-subtle">
+                    <i class="bi bi-currency-dollar"></i>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="col-xl-4 col-md-6">
-            <div class="card bg-warning text-white mb-4">
-                <div class="card-body d-flex align-items-center justify-content-between">
-                    <div>
-                        <h5>Danh Mục</h5>
-                        <div class="small text-white-50">Phân loại hàng hóa</div>
-                    </div>
-                    <i class="bi bi-tags fa-2x"></i>
+    <div class="col-xl-3 col-md-6">
+        <div class="card card-dashboard h-100 p-3">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <p class="text-muted fw-bold small text-uppercase mb-1">Đơn hàng mới</p>
+                    <h3 class="fw-bold mb-2">24</h3>
+                    <span class="badge bg-emerald-subtle px-2 py-1 rounded-pill fw-bold">
+                        <i class="bi bi-arrow-up"></i> 3
+                    </span>
+                    <span class="text-muted small ms-1">vs hôm qua</span>
                 </div>
-                <div class="card-footer d-flex align-items-center justify-content-between">
-                    <a class="small text-white stretched-link" asp-area="Admin" asp-controller="Categories" asp-action="Index">Xem chi tiết</a>
-                    <div class="small text-white"><i class="bi bi-chevron-right"></i></div>
+                <div class="icon-box bg-emerald-subtle">
+                    <i class="bi bi-bag-check"></i>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="col-xl-4 col-md-6">
-            <div class="card bg-success text-white mb-4">
-                <div class="card-body d-flex align-items-center justify-content-between">
-                    <div>
-                        <h5>Đơn Hàng</h5>
-                        <div class="small text-white-50">Đơn mới cần xử lý</div>
-                    </div>
-                    <i class="bi bi-cart-check fa-2x"></i>
+    <div class="col-xl-3 col-md-6">
+        <div class="card card-dashboard h-100 p-3">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <p class="text-muted fw-bold small text-uppercase mb-1">Tổng sản phẩm</p>
+                    <h3 class="fw-bold mb-2">120</h3>
+                    <span class="text-danger small fw-bold">
+                        <i class="bi bi-exclamation-circle"></i> 10 sắp hết hàng
+                    </span>
                 </div>
-                <div class="card-footer d-flex align-items-center justify-content-between">
-                    <a class="small text-white stretched-link" href="#">Xem chi tiết</a>
-                    <div class="small text-white"><i class="bi bi-chevron-right"></i></div>
+                <div class="icon-box bg-amber-subtle">
+                    <i class="bi bi-box-seam"></i>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+        <div class="card card-dashboard h-100 p-3">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <p class="text-muted fw-bold small text-uppercase mb-1">Khách hàng</p>
+                    <h3 class="fw-bold mb-2">58</h3>
+                    <span class="badge bg-rose-subtle px-2 py-1 rounded-pill fw-bold">
+                        <i class="bi bi-arrow-down"></i> 1.2%
+                    </span>
+                    <span class="text-muted small ms-1">vs tuần trước</span>
+                </div>
+                <div class="icon-box bg-rose-subtle">
+                    <i class="bi bi-people"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-4">
+        <div class="card card-dashboard h-100">
+            <div class="card-header bg-transparent border-0 pt-4 px-4">
+                <h6 class="fw-bold mb-0">Truy cập nhanh</h6>
+            </div>
+            <div class="card-body px-3">
+                <div class="d-grid gap-3">
+                    <a asp-area="Admin" asp-controller="Products" asp-action="Index" class="action-card p-3 rounded-3 text-decoration-none d-flex align-items-center bg-white shadow-sm">
+                        <div class="rounded-circle bg-primary bg-opacity-10 p-2 me-3 text-primary">
+                            <i class="bi bi-box-fill fs-5"></i>
+                        </div>
+                        <div>
+                            <div class="fw-bold text-dark">Quản lý Sản phẩm</div>
+                            <div class="small text-muted">Thêm sửa xóa sản phẩm</div>
+                        </div>
+                        <i class="bi bi-chevron-right ms-auto text-muted"></i>
+                    </a>
+
+                    <a href="#" class="action-card p-3 rounded-3 text-decoration-none d-flex align-items-center bg-white shadow-sm">
+                        <div class="rounded-circle bg-warning bg-opacity-10 p-2 me-3 text-warning">
+                            <i class="bi bi-file-text-fill fs-5"></i>
+                        </div>
+                        <div>
+                            <div class="fw-bold text-dark">Đơn hàng cần xử lý</div>
+                            <div class="small text-muted">3 đơn đang chờ duyệt</div>
+                        </div>
+                        <span class="badge bg-danger rounded-pill ms-auto">3</span>
+                    </a>
+
+                    <a href="#" class="action-card p-3 rounded-3 text-decoration-none d-flex align-items-center bg-white shadow-sm">
+                        <div class="rounded-circle bg-info bg-opacity-10 p-2 me-3 text-info">
+                            <i class="bi bi-person-badge-fill fs-5"></i>
+                        </div>
+                        <div>
+                            <div class="fw-bold text-dark">Quản lý User</div>
+                            <div class="small text-muted">Phân quyền tài khoản</div>
+                        </div>
+                        <i class="bi bi-chevron-right ms-auto text-muted"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-8">
+        <div class="card card-dashboard h-100 overflow-hidden">
+            <div class="card-header bg-white border-0 pt-4 px-4 pb-3 d-flex justify-content-between align-items-center">
+                <h6 class="fw-bold mb-0">Đơn hàng vừa đặt</h6>
+                <a href="#" class="btn btn-sm btn-light text-primary fw-bold">Xem tất cả</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-modern align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Mã Đơn</th>
+                            <th>Khách hàng</th>
+                            <th>Tổng tiền</th>
+                            <th>Trạng thái</th>
+                            <th class="text-end">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="fw-bold text-dark">#DH001</span></td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar-initial bg-primary bg-opacity-10 text-primary me-3">A</div>
+                                    <div>
+                                        <div class="fw-bold">Nguyễn Văn A</div>
+                                        <div class="small text-muted">0987***123</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="fw-bold">30.000.000 ₫</td>
+                            <td><span class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 px-3 py-2 rounded-pill">Chờ duyệt</span></td>
+                            <td class="text-end">
+                                <button class="btn btn-sm btn-light text-secondary"><i class="bi bi-pencil"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="fw-bold text-dark">#DH002</span></td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar-initial bg-success bg-opacity-10 text-success me-3">B</div>
+                                    <div>
+                                        <div class="fw-bold">Trần Thị B</div>
+                                        <div class="small text-muted">0912***456</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="fw-bold">15.500.000 ₫</td>
+                            <td><span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-3 py-2 rounded-pill">Đã giao</span></td>
+                            <td class="text-end">
+                                <button class="btn btn-sm btn-light text-secondary"><i class="bi bi-pencil"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="fw-bold text-dark">#DH003</span></td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar-initial bg-secondary bg-opacity-10 text-secondary me-3">C</div>
+                                    <div>
+                                        <div class="fw-bold">Lê Văn C</div>
+                                        <div class="small text-muted">0909***789</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="fw-bold text-decoration-line-through text-muted">5.000.000 ₫</td>
+                            <td><span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 px-3 py-2 rounded-pill">Đã hủy</span></td>
+                            <td class="text-end">
+                                <button class="btn btn-sm btn-light text-secondary"><i class="bi bi-pencil"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
