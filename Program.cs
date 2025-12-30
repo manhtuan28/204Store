@@ -1,4 +1,4 @@
-using _204Store.Data;
+﻿using _204Store.Data;
 using _204Store.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -32,6 +32,7 @@ else
 }
 
 app.UseHttpsRedirection();
+app.UseStatusCodePagesWithReExecute("/Home/PageNotFound");
 app.UseStaticFiles();
 
 app.UseRouting();

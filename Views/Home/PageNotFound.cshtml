@@ -1,0 +1,39 @@
+﻿@{
+    ViewData["Title"] = "404 - Không tìm thấy trang";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container" style="margin-top: 80px; margin-bottom: 100px;">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden text-center">
+
+                <div class="pt-5 pb-4">
+                    <div class="bg-secondary bg-opacity-10 text-secondary rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm" style="width: 130px; height: 130px;">
+                        <i class="bi bi-robot display-3"></i>
+                    </div>
+                </div>
+
+                <div class="card-body p-4 p-md-5 pt-0">
+                    <h1 class="fw-bold text-dark" style="font-size: 5rem; letter-spacing: -2px; line-height: 1;">404</h1>
+                    <h4 class="fw-bold text-secondary mb-3">Không tìm thấy trang</h4>
+
+                    <p class="text-muted mb-4">
+                        Rất tiếc! Có vẻ như trang bạn đang tìm kiếm đã bị xóa, thay đổi tên hoặc tạm thời không khả dụng.
+                    </p>
+
+                    <div class="d-grid gap-2 col-10 mx-auto">
+                        <a href="/" class="btn btn-primary btn-lg rounded-pill fw-bold shadow-sm" style="background-color: #4f46e5; border: none;">
+                            <i class="bi bi-house-door-fill me-2"></i>Về Trang Chủ
+                        </a>
+
+                        <a href="javascript:history.back()" class="btn btn-light btn-lg rounded-pill fw-bold text-muted mt-2">
+                            <i class="bi bi-arrow-left me-2"></i>Quay lại trang trước
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
