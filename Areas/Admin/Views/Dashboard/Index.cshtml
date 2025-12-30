@@ -3,242 +3,175 @@
 }
 
 <style>
-    /* Card Styles */
-    .card-dashboard {
-        border: none;
-        border-radius: 16px; /* Bo góc lớn hơn */
-        background: #fff;
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.03), 0 4px 6px -2px rgba(0, 0, 0, 0.01);
-        transition: transform 0.2s ease-in-out, box-shadow 0.2s;
+    /* Stats Card Enhancement */
+    .card-stats {
+        border: 1px solid rgba(0,0,0,0.05);
+        border-radius: 20px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-        .card-dashboard:hover {
+        .card-stats:hover {
             transform: translateY(-5px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.01);
+            box-shadow: 0 15px 30px -5px rgba(0,0,0,0.08);
         }
 
-    /* Icon Box Styles */
-    .icon-box {
-        width: 54px;
-        height: 54px;
-        border-radius: 12px;
+    .icon-shape {
+        width: 48px;
+        height: 48px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.6rem;
+        border-radius: 14px;
     }
 
-    /* Custom Colors */
-    .bg-indigo-subtle {
-        background-color: #e0e7ff;
-        color: #4338ca;
+    /* Table Styling */
+    .table-container {
+        background: #fff;
+        border-radius: 20px;
+        border: 1px solid rgba(0,0,0,0.05);
+        overflow: hidden;
     }
 
-    .bg-emerald-subtle {
-        background-color: #d1fae5;
-        color: #059669;
-    }
-
-    .bg-amber-subtle {
-        background-color: #fef3c7;
-        color: #d97706;
-    }
-
-    .bg-rose-subtle {
-        background-color: #ffe4e6;
-        color: #e11d48;
-    }
-
-    /* Action Links */
-    .action-card {
-        transition: all 0.2s;
-        border: 1px solid #f3f4f6;
-    }
-
-        .action-card:hover {
-            background-color: #f8fafc;
-            border-color: #4f46e5;
-        }
-
-    /* Table Styles */
-    .table-modern th {
-        font-size: 0.75rem;
+    .table thead th {
+        background: #f8fafc;
         text-transform: uppercase;
-        font-weight: 700;
+        font-size: 11px;
         letter-spacing: 0.05em;
-        color: #6b7280;
-        background-color: #f9fafb;
-        border-bottom: 1px solid #e5e7eb;
-        padding: 12px 16px;
+        font-weight: 700;
+        padding: 1.25rem 1rem;
+        border-top: none;
     }
 
-    .table-modern td {
-        padding: 16px;
-        vertical-align: middle;
-        border-bottom: 1px solid #f3f4f6;
-        color: #374151;
-        font-weight: 500;
+    .table tbody td {
+        padding: 1.25rem 1rem;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 0.9rem;
     }
 
-    .avatar-initial {
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        font-size: 0.85rem;
+    /* Status Badges */
+    .badge-soft {
+        font-weight: 600;
+        padding: 0.5em 1em;
+        border-radius: 8px;
+    }
+
+    .badge-soft-success {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .badge-soft-warning {
+        background: #fef9c3;
+        color: #854d0e;
+    }
+
+    .badge-soft-danger {
+        background: #fee2e2;
+        color: #991b1b;
     }
 </style>
 
-<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-4 mb-4">
-    <div>
-        <h1 class="h3 fw-bold text-dark mb-1">
-            Xin chào, Admin! 👋
-        </h1>
-        <p class="text-muted mb-0">Đây là báo cáo tổng quan tình hình kinh doanh hôm nay.</p>
+<div class="row align-items-center mb-4">
+    <div class="col">
+        <h2 class="fw-bold text-slate-900 mb-1">Tổng quan hệ thống</h2>
+        <p class="text-muted mb-0">Chào mừng trở lại! Dưới đây là thông số bán hàng hôm nay.</p>
     </div>
-    <div class="d-flex gap-2">
-        <button class="btn btn-white bg-white border shadow-sm fw-semibold text-secondary">
-            <i class="bi bi-download me-1"></i> Xuất Excel
-        </button>
-        <button class="btn btn-primary shadow-sm fw-semibold" style="background-color: #4f46e5; border:none;">
-            <i class="bi bi-plus-lg me-1"></i> Tạo đơn mới
-        </button>
+    <div class="col-auto">
+        <div class="d-flex gap-2">
+            <button class="btn btn-white bg-white border shadow-sm px-3 rounded-3 fw-600">
+                <i class="bi bi-calendar3 me-2"></i> 30 ngày qua
+            </button>
+            <button class="btn btn-primary px-3 rounded-3 fw-600 shadow-sm" style="background: #4f46e5; border:none;">
+                <i class="bi bi-plus-lg me-2"></i> Tạo đơn mới
+            </button>
+        </div>
     </div>
 </div>
 
 <div class="row g-4 mb-4">
-    <div class="col-xl-3 col-md-6">
-        <div class="card card-dashboard h-100 p-3">
-            <div class="d-flex justify-content-between align-items-start">
+    <div class="col-md-6 col-xl-3">
+        <div class="card card-stats p-4 bg-white">
+            <div class="d-flex align-items-center mb-3">
+                <div class="icon-shape bg-primary bg-opacity-10 text-primary me-3">
+                    <i class="bi bi-currency-dollar fs-4"></i>
+                </div>
                 <div>
-                    <p class="text-muted fw-bold small text-uppercase mb-1">Doanh thu tháng</p>
-                    <h3 class="fw-bold mb-2">150.0M ₫</h3>
-                    <span class="badge bg-emerald-subtle px-2 py-1 rounded-pill fw-bold">
-                        <i class="bi bi-arrow-up"></i> 12.5%
-                    </span>
-                    <span class="text-muted small ms-1">vs tháng trước</span>
+                    <p class="text-muted small fw-bold mb-0">DOANH THU</p>
+                    <h4 class="fw-800 mb-0">150.0M ₫</h4>
                 </div>
-                <div class="icon-box bg-indigo-subtle">
-                    <i class="bi bi-currency-dollar"></i>
-                </div>
+            </div>
+            <div class="small">
+                <span class="text-success fw-bold"><i class="bi bi-arrow-up-short"></i>12%</span>
+                <span class="text-muted ms-1">so với tháng trước</span>
             </div>
         </div>
     </div>
-
-    <div class="col-xl-3 col-md-6">
-        <div class="card card-dashboard h-100 p-3">
-            <div class="d-flex justify-content-between align-items-start">
+    <div class="col-md-6 col-xl-3">
+        <div class="card card-stats p-4 bg-white">
+            <div class="d-flex align-items-center mb-3">
+                <div class="icon-shape bg-success bg-opacity-10 text-success me-3">
+                    <i class="bi bi-bag-heart fs-4"></i>
+                </div>
                 <div>
-                    <p class="text-muted fw-bold small text-uppercase mb-1">Đơn hàng mới</p>
-                    <h3 class="fw-bold mb-2">24</h3>
-                    <span class="badge bg-emerald-subtle px-2 py-1 rounded-pill fw-bold">
-                        <i class="bi bi-arrow-up"></i> 3
-                    </span>
-                    <span class="text-muted small ms-1">vs hôm qua</span>
+                    <p class="text-muted small fw-bold mb-0">ĐƠN HÀNG</p>
+                    <h4 class="fw-800 mb-0">1,240</h4>
                 </div>
-                <div class="icon-box bg-emerald-subtle">
-                    <i class="bi bi-bag-check"></i>
-                </div>
+            </div>
+            <div class="small">
+                <span class="text-success fw-bold"><i class="bi bi-arrow-up-short"></i>5.4%</span>
+                <span class="text-muted ms-1">từ hôm qua</span>
             </div>
         </div>
     </div>
-
-    <div class="col-xl-3 col-md-6">
-        <div class="card card-dashboard h-100 p-3">
-            <div class="d-flex justify-content-between align-items-start">
+    <div class="col-md-6 col-xl-3">
+        <div class="card card-stats p-4 bg-white">
+            <div class="d-flex align-items-center mb-3">
+                <div class="icon-shape bg-warning bg-opacity-10 text-warning me-3">
+                    <i class="bi bi-box-seam fs-4"></i>
+                </div>
                 <div>
-                    <p class="text-muted fw-bold small text-uppercase mb-1">Tổng sản phẩm</p>
-                    <h3 class="fw-bold mb-2">120</h3>
-                    <span class="text-danger small fw-bold">
-                        <i class="bi bi-exclamation-circle"></i> 10 sắp hết hàng
-                    </span>
+                    <p class="text-muted small fw-bold mb-0">SẢN PHẨM</p>
+                    <h4 class="fw-800 mb-0">458</h4>
                 </div>
-                <div class="icon-box bg-amber-subtle">
-                    <i class="bi bi-box-seam"></i>
-                </div>
+            </div>
+            <div class="small text-danger fw-600">
+                <i class="bi bi-exclamation-triangle-fill me-1"></i> 12 sản phẩm sắp hết
             </div>
         </div>
     </div>
-
-    <div class="col-xl-3 col-md-6">
-        <div class="card card-dashboard h-100 p-3">
-            <div class="d-flex justify-content-between align-items-start">
+    <div class="col-md-6 col-xl-3">
+        <div class="card card-stats p-4 bg-white">
+            <div class="d-flex align-items-center mb-3">
+                <div class="icon-shape bg-info bg-opacity-10 text-info me-3">
+                    <i class="bi bi-people fs-4"></i>
+                </div>
                 <div>
-                    <p class="text-muted fw-bold small text-uppercase mb-1">Khách hàng</p>
-                    <h3 class="fw-bold mb-2">58</h3>
-                    <span class="badge bg-rose-subtle px-2 py-1 rounded-pill fw-bold">
-                        <i class="bi bi-arrow-down"></i> 1.2%
-                    </span>
-                    <span class="text-muted small ms-1">vs tuần trước</span>
+                    <p class="text-muted small fw-bold mb-0">KHÁCH HÀNG</p>
+                    <h4 class="fw-800 mb-0">8,920</h4>
                 </div>
-                <div class="icon-box bg-rose-subtle">
-                    <i class="bi bi-people"></i>
-                </div>
+            </div>
+            <div class="small">
+                <span class="text-success fw-bold"><i class="bi bi-arrow-up-short"></i>10.2%</span>
+                <span class="text-muted ms-1">tuần này</span>
             </div>
         </div>
     </div>
 </div>
 
 <div class="row g-4">
-    <div class="col-lg-4">
-        <div class="card card-dashboard h-100">
-            <div class="card-header bg-transparent border-0 pt-4 px-4">
-                <h6 class="fw-bold mb-0">Truy cập nhanh</h6>
-            </div>
-            <div class="card-body px-3">
-                <div class="d-grid gap-3">
-                    <a asp-area="Admin" asp-controller="Products" asp-action="Index" class="action-card p-3 rounded-3 text-decoration-none d-flex align-items-center bg-white shadow-sm">
-                        <div class="rounded-circle bg-primary bg-opacity-10 p-2 me-3 text-primary">
-                            <i class="bi bi-box-fill fs-5"></i>
-                        </div>
-                        <div>
-                            <div class="fw-bold text-dark">Quản lý Sản phẩm</div>
-                            <div class="small text-muted">Thêm sửa xóa sản phẩm</div>
-                        </div>
-                        <i class="bi bi-chevron-right ms-auto text-muted"></i>
-                    </a>
-
-                    <a href="#" class="action-card p-3 rounded-3 text-decoration-none d-flex align-items-center bg-white shadow-sm">
-                        <div class="rounded-circle bg-warning bg-opacity-10 p-2 me-3 text-warning">
-                            <i class="bi bi-file-text-fill fs-5"></i>
-                        </div>
-                        <div>
-                            <div class="fw-bold text-dark">Đơn hàng cần xử lý</div>
-                            <div class="small text-muted">3 đơn đang chờ duyệt</div>
-                        </div>
-                        <span class="badge bg-danger rounded-pill ms-auto">3</span>
-                    </a>
-
-                    <a href="#" class="action-card p-3 rounded-3 text-decoration-none d-flex align-items-center bg-white shadow-sm">
-                        <div class="rounded-circle bg-info bg-opacity-10 p-2 me-3 text-info">
-                            <i class="bi bi-person-badge-fill fs-5"></i>
-                        </div>
-                        <div>
-                            <div class="fw-bold text-dark">Quản lý User</div>
-                            <div class="small text-muted">Phân quyền tài khoản</div>
-                        </div>
-                        <i class="bi bi-chevron-right ms-auto text-muted"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="col-lg-8">
-        <div class="card card-dashboard h-100 overflow-hidden">
-            <div class="card-header bg-white border-0 pt-4 px-4 pb-3 d-flex justify-content-between align-items-center">
-                <h6 class="fw-bold mb-0">Đơn hàng vừa đặt</h6>
-                <a href="#" class="btn btn-sm btn-light text-primary fw-bold">Xem tất cả</a>
+        <div class="table-container shadow-sm">
+            <div class="p-4 d-flex justify-content-between align-items-center border-bottom">
+                <h5 class="fw-bold mb-0">Đơn hàng mới nhất</h5>
+                <button class="btn btn-sm btn-light rounded-2 fw-bold text-primary">Xem tất cả</button>
             </div>
             <div class="table-responsive">
-                <table class="table table-modern align-middle mb-0">
+                <table class="table align-middle mb-0">
                     <thead>
                         <tr>
-                            <th>Mã Đơn</th>
+                            <th>Mã đơn</th>
                             <th>Khách hàng</th>
+                            <th>Ngày đặt</th>
                             <th>Tổng tiền</th>
                             <th>Trạng thái</th>
                             <th class="text-end">Hành động</th>
@@ -246,59 +179,65 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td><span class="fw-bold text-dark">#DH001</span></td>
+                            <td class="fw-bold">#ORD-9921</td>
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <div class="avatar-initial bg-primary bg-opacity-10 text-primary me-3">A</div>
-                                    <div>
-                                        <div class="fw-bold">Nguyễn Văn A</div>
-                                        <div class="small text-muted">0987***123</div>
-                                    </div>
+                                    <div class="avatar-sm bg-light rounded-circle p-2 me-2 text-center" style="width:32px; height:32px; line-height:16px; font-size:12px;">NV</div>
+                                    <span class="fw-600">Nguyễn Văn A</span>
                                 </div>
                             </td>
-                            <td class="fw-bold">30.000.000 ₫</td>
-                            <td><span class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 px-3 py-2 rounded-pill">Chờ duyệt</span></td>
+                            <td class="text-muted">30/12/2023</td>
+                            <td class="fw-bold">1,250,000 ₫</td>
+                            <td><span class="badge-soft badge-soft-warning">Chờ xử lý</span></td>
                             <td class="text-end">
-                                <button class="btn btn-sm btn-light text-secondary"><i class="bi bi-pencil"></i></button>
+                                <button class="btn btn-icon btn-light btn-sm rounded-circle"><i class="bi bi-three-dots"></i></button>
                             </td>
                         </tr>
                         <tr>
-                            <td><span class="fw-bold text-dark">#DH002</span></td>
+                            <td class="fw-bold">#ORD-8820</td>
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <div class="avatar-initial bg-success bg-opacity-10 text-success me-3">B</div>
-                                    <div>
-                                        <div class="fw-bold">Trần Thị B</div>
-                                        <div class="small text-muted">0912***456</div>
-                                    </div>
+                                    <div class="avatar-sm bg-light rounded-circle p-2 me-2 text-center" style="width:32px; height:32px; line-height:16px; font-size:12px;">LT</div>
+                                    <span class="fw-600">Lê Thị B</span>
                                 </div>
                             </td>
-                            <td class="fw-bold">15.500.000 ₫</td>
-                            <td><span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-3 py-2 rounded-pill">Đã giao</span></td>
+                            <td class="text-muted">29/12/2023</td>
+                            <td class="fw-bold">5,400,000 ₫</td>
+                            <td><span class="badge-soft badge-soft-success">Đã giao</span></td>
                             <td class="text-end">
-                                <button class="btn btn-sm btn-light text-secondary"><i class="bi bi-pencil"></i></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><span class="fw-bold text-dark">#DH003</span></td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <div class="avatar-initial bg-secondary bg-opacity-10 text-secondary me-3">C</div>
-                                    <div>
-                                        <div class="fw-bold">Lê Văn C</div>
-                                        <div class="small text-muted">0909***789</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="fw-bold text-decoration-line-through text-muted">5.000.000 ₫</td>
-                            <td><span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 px-3 py-2 rounded-pill">Đã hủy</span></td>
-                            <td class="text-end">
-                                <button class="btn btn-sm btn-light text-secondary"><i class="bi bi-pencil"></i></button>
+                                <button class="btn btn-icon btn-light btn-sm rounded-circle"><i class="bi bi-three-dots"></i></button>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm rounded-4 p-4">
+            <h5 class="fw-bold mb-4">Sản phẩm bán chạy</h5>
+            <div class="d-flex align-items-center mb-4">
+                <img src="https://via.placeholder.com/50" class="rounded-3 me-3" alt="">
+                <div class="flex-grow-1">
+                    <h6 class="mb-0 fw-bold">iPhone 15 Pro Max</h6>
+                    <small class="text-muted">45 lượt bán</small>
+                </div>
+                <div class="text-end">
+                    <span class="fw-bold text-primary">32.5M</span>
+                </div>
+            </div>
+            <div class="d-flex align-items-center mb-4">
+                <img src="https://via.placeholder.com/50" class="rounded-3 me-3" alt="">
+                <div class="flex-grow-1">
+                    <h6 class="mb-0 fw-bold">Macbook M3 Air</h6>
+                    <small class="text-muted">28 lượt bán</small>
+                </div>
+                <div class="text-end">
+                    <span class="fw-bold text-primary">28.9M</span>
+                </div>
+            </div>
+            <button class="btn btn-outline-primary w-100 rounded-3 fw-bold py-2 mt-2">Xem báo cáo chi tiết</button>
         </div>
     </div>
 </div>
