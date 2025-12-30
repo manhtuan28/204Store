@@ -1,23 +1,56 @@
 ﻿@page
 @model ErrorModel
 @{
-    ViewData["Title"] = "Error";
+    ViewData["Title"] = "Lỗi hệ thống";
 }
 
-<h1 class="text-danger">Error.</h1>
-<h2 class="text-danger">An error occurred while processing your request.</h2>
+<div class="container" style="margin-top: 80px; margin-bottom: 100px;">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden text-center">
 
-@if (Model.ShowRequestId)
-{
-    <p>
-        <strong>Request ID:</strong> <code>@Model.RequestId</code>
-    </p>
-}
+                <div class="bg-danger bg-opacity-10 p-5">
+                    <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm text-danger animate__animated animate__pulse animate__infinite" style="width: 100px; height: 100px;">
+                        <i class="bi bi-exclamation-triangle-fill display-3"></i>
+                    </div>
+                </div>
 
-<h3>Development Mode</h3>
-<p>
-    Swapping to <strong>Development</strong> environment will display more detailed information about the error that occurred.
-</p>
-<p>
-    <strong>Development environment should not be enabled in deployed applications</strong>, as it can result in sensitive information from exceptions being displayed to end users. For local debugging, development environment can be enabled by setting the <strong>ASPNETCORE_ENVIRONMENT</strong> environment variable to <strong>Development</strong>, and restarting the application.
-</p>
+                <div class="card-body p-4 p-md-5">
+                    <h3 class="fw-bold text-dark mb-3">Đã xảy ra sự cố!</h3>
+                    <p class="text-muted mb-4">
+                        Hệ thống gặp lỗi không mong muốn trong quá trình xử lý yêu cầu của bạn. Đội ngũ kỹ thuật đã được thông báo về vấn đề này.
+                    </p>
+
+                    @if (Model.ShowRequestId)
+                    {
+                        <div class="alert alert-light border border-secondary border-opacity-25 rounded-3 d-inline-block text-start px-4 py-2 mb-4">
+                            <small class="text-muted text-uppercase fw-bold" style="font-size: 0.7rem;">Mã hỗ trợ (Request ID):</small>
+                            <div class="d-flex align-items-center mt-1">
+                                <code class="fs-5 fw-bold text-danger me-2">@Model.RequestId</code>
+                            </div>
+                        </div>
+                    }
+
+                    <div class="d-grid gap-2 col-10 mx-auto">
+                        <a href="/" class="btn btn-primary btn-lg rounded-pill fw-bold shadow-sm" style="background-color: #4f46e5; border: none;">
+                            <i class="bi bi-house-door-fill me-2"></i>Về trang chủ
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card-footer bg-light border-top p-3">
+                    <details class="text-start">
+                        <summary class="small text-muted fw-bold cursor-pointer">Thông tin dành cho nhà phát triển (Development Mode)</summary>
+                        <div class="mt-2 small text-muted text-start">
+                            <p class="mb-1">Việc chuyển sang môi trường <strong>Development</strong> sẽ hiển thị chi tiết lỗi.</p>
+                            <p class="mb-0">
+                                <strong>Lưu ý:</strong> Không nên bật môi trường Development trên ứng dụng đã triển khai (Deployed App) vì lý do bảo mật.
+                                Để bật, hãy set biến môi trường <strong>ASPNETCORE_ENVIRONMENT</strong> thành <strong>Development</strong> và khởi động lại ứng dụng.
+                            </p>
+                        </div>
+                    </details>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
