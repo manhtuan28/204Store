@@ -1,24 +1,56 @@
 ﻿@page
 @model ResetAuthenticatorModel
 @{
-    ViewData["Title"] = "Reset authenticator key";
+    ViewData["Title"] = "Đặt lại ứng dụng xác thực";
     ViewData["ActivePage"] = ManageNavPages.TwoFactorAuthentication;
 }
 
+<h4 class="fw-bold text-primary mb-4 border-bottom pb-2">
+    <i class="bi bi-arrow-counterclockwise me-2"></i>@ViewData["Title"]
+</h4>
+
 <partial name="_StatusMessage" for="StatusMessage" />
-<h3>@ViewData["Title"]</h3>
-<div class="alert alert-warning" role="alert">
-    <p>
-        <span class="glyphicon glyphicon-warning-sign"></span>
-        <strong>If you reset your authenticator key your authenticator app will not work until you reconfigure it.</strong>
-    </p>
-    <p>
-        This process disables 2FA until you verify your authenticator app.
-        If you do not complete your authenticator app configuration you may lose access to your account.
-    </p>
-</div>
-<div>
-    <form id="reset-authenticator-form" method="post">
-        <button id="reset-authenticator-button" class="btn btn-danger" type="submit">Reset authenticator key</button>
-    </form>
+
+<div class="row">
+    <div class="col-md-7">
+        <div class="alert alert-warning bg-warning bg-opacity-10 border-warning border-opacity-25 rounded-4 p-4 mb-4">
+            <div class="d-flex">
+                <div class="flex-shrink-0">
+                    <i class="bi bi-exclamation-triangle-fill text-warning fs-3"></i>
+                </div>
+                <div class="ms-3">
+                    <h5 class="alert-heading fw-bold text-dark">Cảnh báo quan trọng!</h5>
+                    <p class="mb-2 text-dark opacity-75">
+                        Nếu bạn đặt lại khóa này, ứng dụng xác thực hiện tại (Google/Microsoft Authenticator) sẽ <strong>ngừng hoạt động</strong> ngay lập tức.
+                    </p>
+                    <hr class="border-warning opacity-25">
+                    <p class="mb-0 small text-dark opacity-75">
+                        Bạn sẽ cần phải quét lại mã QR mới để kích hoạt lại tính năng bảo mật 2 lớp. Trong thời gian chưa cấu hình lại, tài khoản của bạn sẽ tạm thời không được bảo vệ bởi 2FA.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <form id="reset-authenticator-form" method="post">
+            <div class="d-grid gap-2 d-md-block">
+                <button id="reset-authenticator-button" class="btn btn-danger rounded-pill fw-bold px-4 py-2 shadow-sm" type="submit">
+                    <i class="bi bi-arrow-repeat me-2"></i>Xác nhận đặt lại
+                </button>
+                <a asp-page="./TwoFactorAuthentication" class="btn btn-light rounded-pill fw-bold px-4 py-2 text-muted ms-md-2">
+                    Hủy bỏ
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <div class="col-md-5 d-none d-md-block border-start ps-4">
+        <div class="text-center mt-4">
+            <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm" style="width: 120px; height: 120px;">
+                <i class="bi bi-key text-warning opacity-75" style="font-size: 4rem;"></i>
+            </div>
+            <p class="text-muted small mt-4 px-3">
+                Chỉ thực hiện thao tác này khi bạn bị mất thiết bị, đổi điện thoại mới hoặc nghi ngờ khóa bảo mật bị lộ.
+            </p>
+        </div>
+    </div>
 </div>

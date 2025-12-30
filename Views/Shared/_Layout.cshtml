@@ -90,8 +90,8 @@
     <header class="sticky-top">
         <nav class="navbar navbar-expand-lg navbar-light py-3">
             <div class="container">
-                <a class="navbar-brand brand-logo fs-3 d-flex align-items-center me-4" asp-controller="Home" asp-action="Index">
-                    <i class="bi bi-bag-heart-fill me-2"></i>204Store
+                <a class="navbar-brand fw-bolder fs-3 text-primary" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-shop-window me-2"></i>204Store
                 </a>
 
                 <div class="d-flex align-items-center gap-3 order-lg-3 ms-auto ms-lg-0">
@@ -115,7 +115,7 @@
 
                     <ul class="navbar-nav mb-2 mb-lg-0 align-items-lg-center gap-2 ms-lg-3">
                         <li class="nav-item">
-                            <a class="nav-link active" asp-controller="Home" asp-action="Index">Trang chủ</a>
+                            <a class="nav-link fw-semibold" asp-area="" asp-controller="Home" asp-action="Index">Trang chủ</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Danh mục</a>
@@ -217,6 +217,8 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+    @{
+        await RenderSectionAsync("Scripts", required: false);
+    }
 </body>
 </html>
