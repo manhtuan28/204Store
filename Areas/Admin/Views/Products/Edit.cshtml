@@ -39,6 +39,24 @@
                                 <span asp-validation-for="Description" class="text-danger small"></span>
                             </div>
                         </div>
+                        <div class="card bg-light border-0 p-3 mb-3">
+                            <h6 class="fw-bold small text-muted text-uppercase mb-3">Thiết lập Marketing</h6>
+
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" asp-for="IsFeatured" id="featuredSwitch">
+                                <label class="form-check-label fw-bold" for="featuredSwitch">Đánh dấu Nổi bật</label>
+                                <div class="form-text small">Sản phẩm sẽ hiện ở đầu trang chủ.</div>
+                            </div>
+
+                            <div class="mb-0">
+                                <label asp-for="DiscountRate" class="form-label fw-semibold small text-secondary">Giảm giá (%)</label>
+                                <div class="input-group">
+                                    <input asp-for="DiscountRate" class="form-control" type="number" min="0" max="100" />
+                                    <span class="input-group-text">%</span>
+                                </div>
+                                <span asp-validation-for="DiscountRate" class="text-danger small"></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

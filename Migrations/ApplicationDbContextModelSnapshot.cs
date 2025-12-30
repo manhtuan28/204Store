@@ -248,7 +248,12 @@ namespace _204Store.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ParentId");
 
                     b.ToTable("Categories");
                 });
@@ -354,15 +359,21 @@ namespace _204Store.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<double>("DiscountRate")
+                        .HasColumnType("float");
+
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsFeatured")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
+                    b.Property<int>("Sold")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -490,6 +501,15 @@ namespace _204Store.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("_204Store.Models.Category", b =>
+                {
+                    b.HasOne("_204Store.Models.Category", "ParentCategory")
+                        .WithMany("ChildCategories")
+                        .HasForeignKey("ParentId");
+
+                    b.Navigation("ParentCategory");
+                });
+
             modelBuilder.Entity("_204Store.Models.OrderDetail", b =>
                 {
                     b.HasOne("_204Store.Models.OrderHeader", "OrderHeader")
@@ -540,6 +560,11 @@ namespace _204Store.Migrations
                         .IsRequired();
 
                     b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("_204Store.Models.Category", b =>
+                {
+                    b.Navigation("ChildCategories");
                 });
 
             modelBuilder.Entity("_204Store.Models.Product", b =>
