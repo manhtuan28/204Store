@@ -1,0 +1,67 @@
+﻿@model IEnumerable<_204Store.Models.Category>
+
+@{
+    ViewData["Title"] = "Quản lý Danh mục";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold text-dark mb-1">Danh mục sản phẩm</h2>
+        <p class="text-muted mb-0">Quản lý các loại sản phẩm trong cửa hàng</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary fw-bold rounded-3 shadow-sm">
+        <i class="bi bi-plus-lg me-2"></i>Thêm mới
+    </a>
+</div>
+
+@if (TempData["success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show rounded-3 shadow-sm" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i> @TempData["success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+    <div class="table-responsive">
+        <table class="table align-middle mb-0 table-hover">
+            <thead class="bg-light">
+                <tr>
+                    <th class="ps-4 py-3 text-uppercase text-secondary small fw-bold" style="width: 50px;">ID</th>
+                    <th class="py-3 text-uppercase text-secondary small fw-bold">Tên Danh Mục</th>
+                    <th class="py-3 text-uppercase text-secondary small fw-bold text-center">Thứ tự</th>
+                    <th class="pe-4 py-3 text-uppercase text-secondary small fw-bold text-end" style="width: 150px;">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="ps-4 fw-bold text-muted">#@item.Id</td>
+                        <td>
+                            <span class="fw-bold text-dark">@item.Name</span>
+                        </td>
+                        <td class="text-center">
+                            <span class="badge bg-light text-dark border rounded-pill px-3">@item.DisplayOrder</span>
+                        </td>
+                        <td class="pe-4 text-end">
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-light text-primary me-2 rounded-2" title="Sửa">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-light text-danger rounded-2" title="Xóa">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5 text-muted">
+            <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+            Chưa có danh mục nào.
+        </div>
+    }
+</div>

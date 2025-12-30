@@ -1,0 +1,33 @@
+﻿@model _204Store.Models.Category
+
+@{
+    ViewData["Title"] = "Xóa danh mục";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-body p-5 text-center">
+                <div class="mb-4">
+                    <div class="avatar-lg bg-danger bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center mx-auto" style="width: 80px; height: 80px;">
+                        <i class="bi bi-exclamation-triangle-fill text-danger fs-1"></i>
+                    </div>
+                </div>
+
+                <h4 class="fw-bold mb-2">Xác nhận xóa?</h4>
+                <p class="text-muted mb-4">
+                    Bạn có chắc chắn muốn xóa danh mục <strong class="text-dark">@Model.Name</strong> không?<br />
+                    Hành động này không thể hoàn tác.
+                </p>
+
+                <form asp-action="Delete" method="post">
+                    <input type="hidden" asp-for="Id" />
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-danger fw-bold rounded-3 py-2">Xóa ngay</button>
+                        <a asp-action="Index" class="btn btn-light fw-bold rounded-3 py-2 text-muted">Hủy bỏ</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
