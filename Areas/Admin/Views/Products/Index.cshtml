@@ -1,0 +1,105 @@
+﻿@using System.Globalization
+@model IEnumerable<_204Store.Models.Product>
+
+@{
+    ViewData["Title"] = "Quản lý Sản phẩm";
+    var culture = new CultureInfo("vi-VN");
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold text-dark mb-1">Danh sách sản phẩm</h2>
+        <p class="text-muted mb-0">Quản lý kho hàng và thông tin sản phẩm</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary fw-bold rounded-3 shadow-sm">
+        <i class="bi bi-plus-lg me-2"></i>Thêm sản phẩm
+    </a>
+</div>
+
+@if (TempData["success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show rounded-3 shadow-sm" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i> @TempData["success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+    <div class="table-responsive">
+        <table class="table align-middle mb-0 table-hover">
+            <thead class="bg-light">
+                <tr>
+                    <th class="ps-4 py-3 text-secondary small fw-bold">Sản phẩm</th>
+                    <th class="py-3 text-secondary small fw-bold">Danh mục</th>
+                    <th class="py-3 text-secondary small fw-bold">Khoảng giá</th>
+                    <th class="py-3 text-secondary small fw-bold text-center">Biến thể</th>
+                    <th class="pe-4 py-3 text-secondary small fw-bold text-end">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="ps-4">
+                            <div class="d-flex align-items-center">
+                                <img src="@item.ImageUrl" class="rounded-3 border me-3 object-fit-cover"
+                                     style="width: 50px; height: 50px;"
+                                     onerror="this.src='https://via.placeholder.com/50'" />
+                                <div>
+                                    <div class="fw-bold text-dark">@item.Name</div>
+                                    <small class="text-muted">ID: #@item.Id</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge bg-light text-dark border">@item.Category?.Name</span>
+                        </td>
+                        <td class="fw-bold text-primary">
+                            @if (item.ProductDetails != null && item.ProductDetails.Any())
+                            {
+                                var minPrice = item.ProductDetails.Min(x => x.Price);
+                                var maxPrice = item.ProductDetails.Max(x => x.Price);
+
+                                if (minPrice == maxPrice)
+                                {
+                                    <span>@minPrice.ToString("#,##0", culture) ₫</span>
+                                }
+                                else
+                                {
+                                    <span>@minPrice.ToString("#,##0") - @maxPrice.ToString("#,##0", culture) ₫</span>
+                                }
+                            }
+                            else
+                            {
+                                <span class="text-muted small fst-italic">Chưa có cấu hình</span>
+                            }
+                        </td>
+                        <td class="text-center">
+                            <span class="badge bg-info bg-opacity-10 text-info">
+                                @(item.ProductDetails?.Count ?? 0) loại
+                            </span>
+                        </td>
+                        <td class="pe-4 text-end">
+                            <div class="btn-group">
+                                <a asp-controller="ProductDetails" asp-action="Index" asp-route-productId="@item.Id"
+                                   class="btn btn-sm btn-light text-dark border" title="Quản lý biến thể">
+                                    <i class="bi bi-gear-fill me-1"></i> Cấu hình
+                                </a>
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-light text-primary" title="Sửa">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-light text-danger" title="Xóa">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5 text-muted">Chưa có sản phẩm nào.</div>
+    }
+</div>
