@@ -16,8 +16,8 @@
 - [x] **Trang chủ:** Hiển thị sản phẩm nổi bật, banner khuyến mãi.
 - [x] **Danh mục:** Lọc sản phẩm theo hãng (Apple, Samsung, Xiaomi...).
 - [x] **Chi tiết sản phẩm:** Xem biến thể (Màu sắc, RAM/ROM), giá bán động theo phiên bản.
-- [ ] **Giỏ hàng & Thanh toán:** Thêm vào giỏ, đặt hàng (Checkout) - *In Progress*.
-- [ ] **Tài khoản:** Xem lịch sử đơn hàng, cập nhật thông tin cá nhân.
+- [x] **Giỏ hàng & Thanh toán:** Thêm vào giỏ, đặt hàng (Checkout) - *In Progress*.
+- [x] **Tài khoản:** Xem lịch sử đơn hàng, cập nhật thông tin cá nhân.
 
 ### 🛡️ Phân hệ Quản trị (Admin Dashboard)
 - [x] **Authentication:** Đăng ký/Đăng nhập bảo mật với ASP.NET Core Identity.
