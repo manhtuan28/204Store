@@ -405,6 +405,9 @@ namespace _204Store.Migrations
                     b.Property<int>("Sold")
                         .HasColumnType("int");
 
+                    b.Property<string>("Specifications")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
@@ -449,6 +452,28 @@ namespace _204Store.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("ProductDetails");
+                });
+
+            modelBuilder.Entity("_204Store.Models.ProductImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductImages");
                 });
 
             modelBuilder.Entity("_204Store.Models.Promotion", b =>
@@ -614,6 +639,17 @@ namespace _204Store.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("_204Store.Models.ProductImage", b =>
+                {
+                    b.HasOne("_204Store.Models.Product", "Product")
+                        .WithMany("ProductImages")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("_204Store.Models.Category", b =>
                 {
                     b.Navigation("ChildCategories");
@@ -622,6 +658,8 @@ namespace _204Store.Migrations
             modelBuilder.Entity("_204Store.Models.Product", b =>
                 {
                     b.Navigation("ProductDetails");
+
+                    b.Navigation("ProductImages");
                 });
 #pragma warning restore 612, 618
         }
