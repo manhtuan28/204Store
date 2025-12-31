@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "Quản lý Danh mục";
+    var parentCategories = Model.Where(c => c.ParentId == null || c.ParentId == 0).OrderBy(c => c.DisplayOrder);
+    var allCategories = Model.ToList();
 }
 
 <style>
@@ -23,9 +25,15 @@
             background-color: #4338ca;
             color: white;
         }
-
     .table-hover tbody tr:hover {
         background-color: rgba(79, 70, 229, 0.04);
+    }
+    .tree-line {
+        border-left: 2px dashed #cbd5e1;
+        height: 100%;
+        position: absolute;
+        left: 25px;
+        top: 0;
     }
 </style>
 
@@ -62,7 +70,7 @@
 
     <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
         <div class="card-header bg-white border-bottom py-3 px-4 d-flex justify-content-between align-items-center">
-            <h6 class="fw-bold m-0 text-secondary"><i class="bi bi-list-ul me-2"></i>Danh sách hiện có</h6>
+            <h6 class="fw-bold m-0 text-secondary"><i class="bi bi-diagram-3 me-2"></i>Cấu trúc danh mục</h6>
             <div class="input-group" style="max-width: 250px;">
                 <span class="input-group-text bg-light border-0"><i class="bi bi-search text-muted"></i></span>
                 <input type="text" class="form-control bg-light border-0 small" placeholder="Tìm kiếm...">
@@ -75,40 +83,59 @@
                     <tr>
                         <th class="ps-4 py-3 text-uppercase text-secondary small fw-bold" style="width: 80px;">ID</th>
                         <th class="py-3 text-uppercase text-secondary small fw-bold">Tên Danh Mục</th>
-                        <th class="py-3 text-uppercase text-secondary small fw-bold text-center">Thứ tự hiển thị</th>
+                        <th class="py-3 text-uppercase text-secondary small fw-bold">Cấp độ</th>
+                        <th class="py-3 text-uppercase text-secondary small fw-bold text-center">Thứ tự</th>
                         <th class="pe-4 py-3 text-uppercase text-secondary small fw-bold text-end" style="width: 150px;">Hành động</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model)
+                    @foreach (var parent in parentCategories)
                     {
-                        <tr>
-                            <td class="ps-4 text-muted small">#@item.Id</td>
+                        <tr class="bg-light bg-opacity-25">
+                            <td class="ps-4 text-muted small fw-bold">#@parent.Id</td>
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <div class="bg-light rounded p-2 me-3 text-theme">
+                                    <div class="bg-primary bg-opacity-10 rounded p-2 me-3 text-primary">
                                         <i class="bi bi-folder-fill fs-5"></i>
                                     </div>
                                     <div>
-                                        <span class="fw-bold text-dark d-block">@item.Name</span>
-                                        <span class="small text-muted">Cập nhật lần cuối: Vừa xong</span>
+                                        <span class="fw-bold text-dark d-block text-uppercase">@parent.Name</span>
                                     </div>
                                 </div>
                             </td>
+                            <td><span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-10">Danh mục Gốc</span></td>
                             <td class="text-center">
-                                <span class="badge bg-light text-dark border fw-normal px-3 py-2 rounded-pill">
-                                    Ưu tiên: <strong>@item.DisplayOrder</strong>
-                                </span>
+                                <span class="fw-bold text-dark">@parent.DisplayOrder</span>
                             </td>
                             <td class="pe-4 text-end">
-                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-light text-primary btn-sm rounded-2 me-1" data-bs-toggle="tooltip" title="Chỉnh sửa">
-                                    <i class="bi bi-pencil-square"></i>
-                                </a>
-                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-light text-danger btn-sm rounded-2" data-bs-toggle="tooltip" title="Xóa">
-                                    <i class="bi bi-trash"></i>
-                                </a>
+                                <a asp-action="Edit" asp-route-id="@parent.Id" class="btn btn-light text-primary btn-sm rounded-2 me-1" title="Sửa"><i class="bi bi-pencil-square"></i></a>
+                                <a asp-action="Delete" asp-route-id="@parent.Id" class="btn btn-light text-danger btn-sm rounded-2" title="Xóa"><i class="bi bi-trash"></i></a>
                             </td>
                         </tr>
+
+                        var children = allCategories.Where(c => c.ParentId == parent.Id).OrderBy(c => c.DisplayOrder);
+                        foreach (var child in children)
+                        {
+                            <tr>
+                                <td class="ps-4 text-muted small">#@child.Id</td>
+                                <td>
+                                    <div class="d-flex align-items-center" style="padding-left: 40px; position: relative;">
+                                        <i class="bi bi-arrow-return-right text-muted me-2 fs-5"></i>
+                                        <div>
+                                            <span class="fw-medium text-secondary d-block">@child.Name</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-10">Danh mục Con</span></td>
+                                <td class="text-center">
+                                    <span class="text-muted small">@child.DisplayOrder</span>
+                                </td>
+                                <td class="pe-4 text-end">
+                                    <a asp-action="Edit" asp-route-id="@child.Id" class="btn btn-light text-primary btn-sm rounded-2 me-1" title="Sửa"><i class="bi bi-pencil-square"></i></a>
+                                    <a asp-action="Delete" asp-route-id="@child.Id" class="btn btn-light text-danger btn-sm rounded-2" title="Xóa"><i class="bi bi-trash"></i></a>
+                                </td>
+                            </tr>
+                        }
                     }
                 </tbody>
             </table>
