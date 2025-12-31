@@ -22,8 +22,10 @@
                 </p>
 
                 <div class="bg-light rounded-3 p-3 border d-flex align-items-center mb-4">
-                    <img src="@Model.Product?.ImageUrl" class="rounded-3 border me-3 object-fit-cover bg-white"
-                         width="60" height="60" onerror="this.src='https://via.placeholder.com/60'" />
+                    <img src="@(string.IsNullOrEmpty(Model.ImageUrl) ? Model.Product?.ImageUrl : Model.ImageUrl)"
+                         class="rounded-3 border me-3 object-fit-cover bg-white"
+                         width="60" height="60"
+                         onerror="this.src='https://placehold.co/60?text=NoImg'" />
 
                     <div class="flex-grow-1">
                         <h6 class="fw-bold text-dark mb-1">@Model.Product?.Name</h6>

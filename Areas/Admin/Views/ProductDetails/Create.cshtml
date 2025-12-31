@@ -5,7 +5,7 @@
 }
 
 <div class="row justify-content-center mt-4">
-    <div class="col-md-8 col-lg-7">
+    <div class="col-md-10 col-lg-9">
         <div class="mb-3">
             <a asp-action="Index" asp-route-productId="@product?.Id" class="text-decoration-none text-muted small fw-bold">
                 <i class="bi bi-arrow-left me-1"></i>Quay lại danh sách biến thể
@@ -26,70 +26,88 @@
             </div>
 
             <div class="card-body p-4">
-                <form asp-action="Create" method="post">
+                <form asp-action="Create" method="post" enctype="multipart/form-data">
                     <input type="hidden" asp-for="ProductId" />
 
-                    <h6 class="text-uppercase text-secondary small fw-bold mb-3"><i class="bi bi-cpu me-2"></i>Thông số kỹ thuật</h6>
-                    <div class="row g-3 mb-4">
-                        <div class="col-12">
-                            <label class="form-label fw-semibold small text-secondary">MÀU SẮC</label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-light border-0"><i class="bi bi-palette text-muted"></i></span>
-                                <input asp-for="Color" class="form-control bg-light border-0" placeholder="Ví dụ: Titan Tự Nhiên..." />
+                    <div class="row">
+                        <div class="col-md-4 mb-4 mb-md-0">
+                            <label class="form-label fw-semibold small text-secondary">ẢNH ĐẠI DIỆN</label>
+                            <div class="text-center p-4 border rounded-3 bg-light h-100 d-flex flex-column align-items-center justify-content-center">
+                                <div class="mb-3 position-relative" style="width: 100%; padding-top: 100%; overflow: hidden; background: #fff; border-radius: 12px; border: 1px dashed #cbd5e1;">
+                                    <img id="previewImage" src="https://placehold.co/400x400/f1f5f9/cbd5e1?text=PREVIEW"
+                                         class="position-absolute top-0 start-0 w-100 h-100 object-fit-contain p-2"
+                                         alt="Ảnh xem trước" />
+                                </div>
+                                <div class="w-100">
+                                    <label for="imageUpload" class="btn btn-white border w-100 fw-bold text-primary shadow-sm">
+                                        <i class="bi bi-cloud-upload me-2"></i>Chọn ảnh
+                                    </label>
+                                    <input type="file" id="imageUpload" name="imageFile" class="d-none" onchange="previewFile(this)" accept="image/*" />
+                                    <small class="d-block text-muted mt-2" style="font-size: 0.75rem;">Hỗ trợ: JPG, PNG, WEBP</small>
+                                </div>
                             </div>
-                            <span asp-validation-for="Color" class="text-danger small ms-1"></span>
                         </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold small text-secondary">RAM</label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-light border-0"><i class="bi bi-memory text-muted"></i></span>
-                                <input asp-for="Ram" class="form-control bg-light border-0" placeholder="Ví dụ: 8GB" />
+
+                        <div class="col-md-8">
+                            <h6 class="text-uppercase text-secondary small fw-bold mb-3"><i class="bi bi-cpu me-2"></i>Thông số kỹ thuật</h6>
+                            <div class="row g-3 mb-4">
+                                <div class="col-12">
+                                    <label class="form-label fw-semibold small text-secondary">MÀU SẮC</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-0"><i class="bi bi-palette text-muted"></i></span>
+                                        <input asp-for="Color" class="form-control bg-light border-0" placeholder="Ví dụ: Titan Tự Nhiên..." />
+                                    </div>
+                                    <span asp-validation-for="Color" class="text-danger small ms-1"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold small text-secondary">RAM</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-0"><i class="bi bi-memory text-muted"></i></span>
+                                        <input asp-for="Ram" class="form-control bg-light border-0" placeholder="Ví dụ: 8GB" />
+                                    </div>
+                                    <span asp-validation-for="Ram" class="text-danger small ms-1"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold small text-secondary">ROM (BỘ NHỚ)</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-0"><i class="bi bi-hdd text-muted"></i></span>
+                                        <input asp-for="Rom" class="form-control bg-light border-0" placeholder="Ví dụ: 256GB" />
+                                    </div>
+                                    <span asp-validation-for="Rom" class="text-danger small ms-1"></span>
+                                </div>
                             </div>
-                            <span asp-validation-for="Ram" class="text-danger small ms-1"></span>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold small text-secondary">ROM (BỘ NHỚ)</label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-light border-0"><i class="bi bi-hdd text-muted"></i></span>
-                                <input asp-for="Rom" class="form-control bg-light border-0" placeholder="Ví dụ: 256GB" />
+
+                            <hr class="border-light my-4" />
+
+                            <h6 class="text-uppercase text-secondary small fw-bold mb-3"><i class="bi bi-tag me-2"></i>Thông tin bán hàng</h6>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold small text-secondary">GIÁ BÁN (VNĐ)</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-0"><i class="bi bi-currency-dollar text-muted"></i></span>
+                                        <input type="text" class="form-control bg-light border-0 fw-bold text-primary"
+                                               id="DisplayPrice" placeholder="0" oninput="formatCurrency(this)" />
+                                        <input asp-for="Price" type="hidden" id="RealPrice" />
+                                    </div>
+                                    <span asp-validation-for="Price" class="text-danger small ms-1"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold small text-secondary">SỐ LƯỢNG TỒN KHO</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-0"><i class="bi bi-box-seam text-muted"></i></span>
+                                        <input asp-for="Quantity" type="number" class="form-control bg-light border-0" value="1" />
+                                    </div>
+                                    <span asp-validation-for="Quantity" class="text-danger small ms-1"></span>
+                                </div>
                             </div>
-                            <span asp-validation-for="Rom" class="text-danger small ms-1"></span>
                         </div>
                     </div>
 
-                    <hr class="border-light my-4" />
-
-                    <h6 class="text-uppercase text-secondary small fw-bold mb-3"><i class="bi bi-tag me-2"></i>Thông tin bán hàng</h6>
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold small text-secondary">GIÁ BÁN (VNĐ)</label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-light border-0"><i class="bi bi-currency-dollar text-muted"></i></span>
-
-                                <input type="text" class="form-control bg-light border-0 fw-bold text-primary"
-                                       id="DisplayPrice"
-                                       placeholder="0"
-                                       oninput="formatCurrency(this)" />
-
-                                <input asp-for="Price" type="hidden" id="RealPrice" />
-                            </div>
-                            <span asp-validation-for="Price" class="text-danger small ms-1"></span>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold small text-secondary">SỐ LƯỢNG TỒN KHO</label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-light border-0"><i class="bi bi-box-seam text-muted"></i></span>
-                                <input asp-for="Quantity" type="number" class="form-control bg-light border-0" value="1" />
-                            </div>
-                            <span asp-validation-for="Quantity" class="text-danger small ms-1"></span>
-                        </div>
-                    </div>
-
-                    <div class="d-grid gap-2 mt-5">
-                        <button type="submit" class="btn btn-primary fw-bold py-3 rounded-3 shadow-sm" style="background-color: #4f46e5; border: none;">
+                    <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
+                        <a asp-action="Index" asp-route-productId="@Model.ProductId" class="btn btn-light fw-bold py-2 px-4 rounded-3 text-muted">Hủy bỏ</a>
+                        <button type="submit" class="btn btn-primary fw-bold py-2 px-4 rounded-3 shadow-sm" style="background-color: #4f46e5; border: none;">
                             <i class="bi bi-check-lg me-2"></i>Hoàn tất thêm mới
                         </button>
-                        <a asp-action="Index" asp-route-productId="@Model.ProductId" class="btn btn-light fw-bold py-3 rounded-3 text-muted">Hủy bỏ</a>
                     </div>
                 </form>
             </div>
@@ -102,11 +120,20 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
     <script>
+        function previewFile(input) {
+            var file = input.files[0];
+            if(file){
+                var reader = new FileReader();
+                reader.onload = function(){
+                    document.getElementById("previewImage").src = reader.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
         function formatCurrency(input) {
             let value = input.value.replace(/\D/g, '');
-
             document.getElementById('RealPrice').value = value;
-
             if (value) {
                 input.value = new Intl.NumberFormat('en-US').format(value);
             } else {

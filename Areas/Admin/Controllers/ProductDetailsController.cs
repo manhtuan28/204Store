@@ -11,10 +11,12 @@ namespace _204Store.Areas.Admin.Controllers
     public class ProductDetailsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _environment;
 
-        public ProductDetailsController(ApplicationDbContext context)
+        public ProductDetailsController(ApplicationDbContext context, IWebHostEnvironment environment)
         {
             _context = context;
+            _environment = environment;
         }
 
         public async Task<IActionResult> Index(int productId)
@@ -37,12 +39,27 @@ namespace _204Store.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ProductDetail model)
+        public async Task<IActionResult> Create(ProductDetail model, IFormFile? imageFile)
         {
             ModelState.Remove("Product");
 
             if (ModelState.IsValid)
             {
+                if (imageFile != null)
+                {
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
+                    string uploadFolder = Path.Combine(_environment.WebRootPath, "images", "variants");
+
+                    if (!Directory.Exists(uploadFolder)) Directory.CreateDirectory(uploadFolder);
+
+                    string filePath = Path.Combine(uploadFolder, fileName);
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await imageFile.CopyToAsync(fileStream);
+                    }
+                    model.ImageUrl = "/images/variants/" + fileName;
+                }
+
                 _context.Add(model);
                 await _context.SaveChangesAsync();
                 TempData["success"] = "Thêm biến thể thành công";
@@ -52,7 +69,6 @@ namespace _204Store.Areas.Admin.Controllers
             ViewBag.Product = _context.Products.Find(model.ProductId);
             return View(model);
         }
-
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
@@ -63,7 +79,7 @@ namespace _204Store.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, ProductDetail model)
+        public async Task<IActionResult> Edit(int id, ProductDetail model, IFormFile? imageFile)
         {
             if (id != model.Id) return NotFound();
 
@@ -73,6 +89,29 @@ namespace _204Store.Areas.Admin.Controllers
             {
                 try
                 {
+                    if (imageFile != null)
+                    {
+                        string fileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
+                        string uploadFolder = Path.Combine(_environment.WebRootPath, "images", "variants");
+
+                        if (!Directory.Exists(uploadFolder)) Directory.CreateDirectory(uploadFolder);
+
+                        string filePath = Path.Combine(uploadFolder, fileName);
+                        using (var fileStream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await imageFile.CopyToAsync(fileStream);
+                        }
+                        model.ImageUrl = "/images/variants/" + fileName;
+                    }
+                    else
+                    {
+                        var existingDetail = await _context.ProductDetails.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+                        if (existingDetail != null)
+                        {
+                            model.ImageUrl = existingDetail.ImageUrl;
+                        }
+                    }
+
                     _context.Update(model);
                     await _context.SaveChangesAsync();
                     TempData["success"] = "Cập nhật thành công";
@@ -91,7 +130,6 @@ namespace _204Store.Areas.Admin.Controllers
             }
             return View(model);
         }
-
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();
