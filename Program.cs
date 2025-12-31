@@ -1,5 +1,7 @@
 ﻿using _204Store.Data;
 using _204Store.Models;
+using _204Store.Services;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +20,23 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddAuthentication()
+    .AddGoogle(options =>
+    {
+        IConfigurationSection googleAuthNSection = builder.Configuration.GetSection("Authentication:Google");
+
+        options.ClientId = googleAuthNSection["ClientId"] ?? "TAM_THOI_BO_QUA";
+        options.ClientSecret = googleAuthNSection["ClientSecret"] ?? "TAM_THOI_BO_QUA";
+    })
+    .AddFacebook(options =>
+    {
+        IConfigurationSection fbAuthNSection = builder.Configuration.GetSection("Authentication:Facebook");
+        options.AppId = fbAuthNSection["AppId"] ?? "TAM_THOI_BO_QUA";
+        options.AppSecret = fbAuthNSection["AppSecret"] ?? "TAM_THOI_BO_QUA";
+    });
+
+builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 var app = builder.Build();
 
