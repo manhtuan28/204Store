@@ -83,5 +83,20 @@ namespace _204Store.Controllers
             Response.StatusCode = 404;
             return View();
         }
+
+        public async Task<IActionResult> Details(int productId)
+        {
+            var product = await _context.Products
+                .Include(p => p.Category)
+                .Include(p => p.ProductDetails)
+                .FirstOrDefaultAsync(m => m.Id == productId);
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            return View(product);
+        }
     }
 }

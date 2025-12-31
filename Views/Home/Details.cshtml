@@ -1,0 +1,523 @@
+﻿@using System.Globalization
+@model _204Store.Models.Product
+@{
+    ViewData["Title"] = Model.Name;
+    var culture = new CultureInfo("vi-VN");
+
+    // Chuẩn bị dữ liệu biến thể để dùng trong Javascript
+    var variants = Model.ProductDetails.Select(v => new
+    {
+        id = v.Id,
+        color = v.Color,
+        rom = v.Rom,
+        price = v.Price,
+        stock = 10 // Giả lập số tồn kho, nếu có field thật thì thay vào
+    }).ToList();
+
+    // Tìm phiên bản giá thấp nhất làm mặc định
+    var defaultVariant = Model.ProductDetails.OrderBy(v => v.Price).FirstOrDefault();
+
+    // Lấy danh sách các thuộc tính duy nhất để render nút bấm
+    var uniqueRoms = Model.ProductDetails.Select(v => v.Rom).Distinct().OrderBy(r => r).ToList();
+    var uniqueColors = Model.ProductDetails.Select(v => v.Color).Distinct().ToList();
+}
+
+<style>
+    /* --- HÌNH ẢNH SẢN PHẨM --- */
+    .product-gallery {
+        background: white;
+        border-radius: 20px;
+        border: 1px solid #f1f5f9;
+        padding: 30px;
+        position: relative;
+        overflow: hidden;
+        text-align: center;
+    }
+
+    #main-product-img {
+        max-width: 100%;
+        height: auto;
+        max-height: 450px;
+        object-fit: contain;
+        transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        cursor: zoom-in;
+    }
+
+        #main-product-img:hover {
+            transform: scale(1.1);
+        }
+
+    /* --- GIÁ & TIÊU ĐỀ --- */
+    .product-title {
+        font-weight: 800;
+        color: #1e293b;
+        letter-spacing: -0.5px;
+    }
+
+    .price-box {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 15px 20px;
+        display: flex;
+        align-items: baseline;
+        gap: 15px;
+    }
+
+    .current-price {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #ef4444;
+        line-height: 1;
+    }
+
+    .old-price {
+        font-size: 1.1rem;
+        color: #94a3b8;
+        text-decoration: line-through;
+    }
+
+    .discount-tag {
+        background: #fee2e2;
+        color: #ef4444;
+        font-weight: 700;
+        font-size: 0.8rem;
+        padding: 4px 8px;
+        border-radius: 6px;
+    }
+
+    /* --- NÚT CHỌN PHIÊN BẢN (CHIPS) --- */
+    .option-label {
+        font-weight: 700;
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+        display: block;
+        color: #475569;
+    }
+
+    .btn-option {
+        border: 1px solid #e2e8f0;
+        background: #fff;
+        color: #334155;
+        padding: 10px 18px;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        position: relative;
+        min-width: 80px;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+        .btn-option:hover {
+            border-color: #4f46e5;
+            color: #4f46e5;
+            transform: translateY(-2px);
+        }
+
+        .btn-option.active {
+            border-color: #4f46e5;
+            background-color: #eef2ff;
+            color: #4f46e5;
+            font-weight: 700;
+            box-shadow: 0 0 0 1px #4f46e5 inset;
+        }
+
+            /* Dấu tích khi chọn */
+            .btn-option.active::after {
+                content: '\F26A'; /* Bootstrap Check Icon */
+                font-family: 'bootstrap-icons';
+                position: absolute;
+                top: -8px;
+                right: -8px;
+                background: #4f46e5;
+                color: white;
+                width: 20px;
+                height: 20px;
+                font-size: 12px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: 2px solid white;
+            }
+
+    /* --- SỐ LƯỢNG --- */
+    .qty-control {
+        display: flex;
+        align-items: center;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        overflow: hidden;
+        width: fit-content;
+    }
+
+    .qty-btn {
+        width: 40px;
+        height: 40px;
+        border: none;
+        background: white;
+        cursor: pointer;
+        transition: 0.2s;
+        font-size: 1.2rem;
+    }
+
+        .qty-btn:hover {
+            background: #f1f5f9;
+            color: #4f46e5;
+        }
+
+    .qty-input {
+        width: 50px;
+        text-align: center;
+        border: none;
+        font-weight: 700;
+        font-size: 1.1rem;
+        outline: none;
+    }
+
+    /* --- BOX KHUYẾN MÃI --- */
+    .promo-box {
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .promo-header {
+        background: #f1f5f9;
+        padding: 10px 15px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .promo-content {
+        padding: 15px;
+    }
+
+    .promo-item {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 10px;
+        font-size: 0.9rem;
+        align-items: flex-start;
+    }
+
+    .promo-number {
+        background: #4f46e5;
+        color: white;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        font-size: 0.7rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin-top: 2px;
+    }
+
+    /* --- ANIMATION --- */
+    .flying-img {
+        position: fixed;
+        z-index: 9999;
+        border-radius: 50%;
+        border: 2px solid #4f46e5;
+        opacity: 0.8;
+        pointer-events: none;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+</style>
+
+<div class="container py-5">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-action="Index" class="text-decoration-none text-muted fw-bold small">Trang chủ</a></li>
+            <li class="breadcrumb-item"><a href="#" class="text-decoration-none text-muted fw-bold small">@Model.Category?.Name</a></li>
+            <li class="breadcrumb-item active fw-bold text-dark small" aria-current="page">@Model.Name</li>
+        </ol>
+    </nav>
+
+    <div class="row g-5">
+        <div class="col-lg-5">
+            <div class="sticky-top" style="top: 100px; z-index: 10;">
+                <div class="product-gallery shadow-sm">
+                    <img src="@Model.ImageUrl" alt="@Model.Name" id="main-product-img"
+                         onerror="this.src='https://placehold.co/600x600/f8fafc/cbd5e1?text=NO+IMAGE'" />
+
+                    @if (Model.DiscountRate > 0)
+                    {
+                        <span class="position-absolute top-0 start-0 m-3 badge bg-danger rounded-3 px-3 py-2 fs-6 shadow-sm">
+                            Giảm @Model.DiscountRate%
+                        </span>
+                    }
+                </div>
+
+                <div class="mt-4 row g-2 justify-content-center">
+                    <div class="col-3"><div class="border rounded-3 p-1 cursor-pointer hover-shadow"><img src="@Model.ImageUrl" class="w-100 rounded-2"></div></div>
+                    <div class="col-3"><div class="border rounded-3 p-1 cursor-pointer hover-shadow opacity-50"><img src="@Model.ImageUrl" class="w-100 rounded-2"></div></div>
+                    <div class="col-3"><div class="border rounded-3 p-1 cursor-pointer hover-shadow opacity-50"><img src="@Model.ImageUrl" class="w-100 rounded-2"></div></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-7">
+            <h1 class="product-title mb-2">@Model.Name</h1>
+
+            <div class="d-flex align-items-center gap-3 mb-4 text-warning small">
+                <div class="d-flex">
+                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i>
+                </div>
+                <span class="text-muted border-start ps-3 ms-2">Đã bán: <b>@Model.Sold</b></span>
+                <span class="text-muted border-start ps-3">Tình trạng: <span class="text-success fw-bold">Còn hàng</span></span>
+            </div>
+
+            <div class="price-box mb-4">
+                <span id="displayPrice" class="current-price">
+                    @(defaultVariant != null ? defaultVariant.Price.ToString("#,##0", culture) : "Liên hệ")₫
+                </span>
+                @if (Model.DiscountRate > 0 && defaultVariant != null)
+                {
+                    var oldPrice = defaultVariant.Price / (1 - (decimal)Model.DiscountRate / 100);
+                    <span class="old-price">@oldPrice.ToString("#,##0", culture)₫</span>
+                    <span class="discount-tag">-@Model.DiscountRate%</span>
+                }
+            </div>
+
+            @if (variants.Any())
+            {
+                <div class="mb-4">
+                    <label class="option-label">Dung lượng bộ nhớ</label>
+                    <div class="d-flex flex-wrap gap-2">
+                        @foreach (var rom in uniqueRoms)
+                        {
+                            var isActive = defaultVariant != null && defaultVariant.Rom == rom ? "active" : "";
+                            <button type="button" class="btn-option btn-rom @isActive"
+                                    data-value="@rom" onclick="selectRom(this)">
+                                @rom
+                            </button>
+                        }
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="option-label">Màu sắc</label>
+                    <div class="d-flex flex-wrap gap-2">
+                        @foreach (var color in uniqueColors)
+                        {
+                            var isActive = defaultVariant != null && defaultVariant.Color == color ? "active" : "";
+                            <button type="button" class="btn-option btn-color @isActive"
+                                    data-value="@color" onclick="selectColor(this)">
+                                @color
+                            </button>
+                        }
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-end gap-3 mb-4">
+                    <div>
+                        <label class="option-label">Số lượng</label>
+                        <div class="qty-control">
+                            <button class="qty-btn" onclick="updateQty(-1)">-</button>
+                            <input type="text" id="input-quantity" value="1" class="qty-input" readonly>
+                            <button class="qty-btn" onclick="updateQty(1)">+</button>
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="selectedProductDetailId" value="@(defaultVariant?.Id)" />
+
+                    <button type="button" id="btnAddToCart" class="btn btn-primary btn-lg rounded-3 flex-grow-1 py-2 fw-bold shadow-sm"
+                            style="height: 50px;" onclick="addToCartFromDetails()">
+                        <i class="bi bi-cart-plus me-2"></i> THÊM VÀO GIỎ NGAY
+                    </button>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-warning">Sản phẩm đang tạm hết hàng.</div>
+            }
+
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <div class="promo-box h-100">
+                        <div class="promo-header text-danger bg-danger bg-opacity-10">
+                            <i class="bi bi-gift-fill"></i> Ưu đãi thêm
+                        </div>
+                        <div class="promo-content">
+                            <div class="promo-item"><span class="promo-number">1</span> <span>Giảm thêm 5% tối đa 300k khi thanh toán qua Kredivo.</span></div>
+                            <div class="promo-item"><span class="promo-number">2</span> <span>Tặng gói iCloud 50GB miễn phí 3 tháng.</span></div>
+                            <div class="promo-item"><span class="promo-number">3</span> <span>Thu cũ đổi mới trợ giá ngay 1.000.000đ.</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="promo-box h-100">
+                        <div class="promo-header text-primary bg-primary bg-opacity-10">
+                            <i class="bi bi-shield-check"></i> Yên tâm mua sắm
+                        </div>
+                        <div class="promo-content">
+                            <div class="promo-item"><i class="bi bi-check-circle-fill text-success mt-1"></i> <span>Bảo hành chính hãng 12 tháng.</span></div>
+                            <div class="promo-item"><i class="bi bi-arrow-repeat text-primary mt-1"></i> <span>Lỗi là đổi mới trong 30 ngày.</span></div>
+                            <div class="promo-item"><i class="bi bi-truck text-dark mt-1"></i> <span>Giao hàng tận nơi, kiểm tra mới thanh toán.</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="bg-white p-4 p-md-5 rounded-4 shadow-sm border">
+                <h4 class="fw-bold mb-4 pb-3 border-bottom text-dark text-uppercase">Đặc điểm nổi bật</h4>
+                <div class="text-muted" style="line-height: 1.8; font-size: 1rem;">
+                    @if (!string.IsNullOrEmpty(Model.Description))
+                    {
+                        @Html.Raw(Model.Description.Replace("\n", "<br>"))
+                    }
+                    else
+                    {
+                        <p>Thông tin mô tả đang được cập nhật...</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // 1. LẤY DỮ LIỆU TỪ SERVER VÀO BIẾN JS
+        var allVariants = @Html.Raw(Json.Serialize(variants));
+        var currentRom = "@(defaultVariant?.Rom)";
+        var currentColor = "@(defaultVariant?.Color)";
+
+        // Hàm format tiền tệ VNĐ
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+        }
+
+        // 2. XỬ LÝ CHỌN ROM
+        function selectRom(btn) {
+            // Xóa active cũ, thêm active mới
+            document.querySelectorAll('.btn-rom').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // Cập nhật giá trị đang chọn
+            currentRom = btn.getAttribute('data-value');
+            updateProductInfo();
+        }
+
+        // 3. XỬ LÝ CHỌN MÀU
+        function selectColor(btn) {
+            document.querySelectorAll('.btn-color').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            currentColor = btn.getAttribute('data-value');
+            updateProductInfo();
+        }
+
+        // 4. CẬP NHẬT GIAO DIỆN (Giá, ID, Nút mua)
+        function updateProductInfo() {
+            var foundVariant = allVariants.find(v => v.rom === currentRom && v.color === currentColor);
+
+            var btnAdd = document.getElementById('btnAddToCart');
+            var priceDisplay = document.getElementById('displayPrice');
+            var inputId = document.getElementById('selectedProductDetailId');
+
+            if (foundVariant) {
+                // Tìm thấy phiên bản
+                priceDisplay.innerText = formatCurrency(foundVariant.price);
+                inputId.value = foundVariant.id; // Cập nhật ID để gửi lên server
+
+                btnAdd.disabled = false;
+                btnAdd.innerHTML = '<i class="bi bi-cart-plus me-2"></i> THÊM VÀO GIỎ NGAY';
+                btnAdd.classList.remove('btn-secondary');
+                btnAdd.classList.add('btn-primary');
+            } else {
+                // Không tồn tại (VD: 1TB mà màu Hồng không có)
+                priceDisplay.innerText = "Liên hệ";
+                inputId.value = "";
+
+                btnAdd.disabled = true;
+                btnAdd.innerText = "TẠM HẾT HÀNG";
+                btnAdd.classList.remove('btn-primary');
+                btnAdd.classList.add('btn-secondary');
+            }
+        }
+
+        // 5. TĂNG GIẢM SỐ LƯỢNG
+        function updateQty(change) {
+            var input = document.getElementById('input-quantity');
+            var currentVal = parseInt(input.value) || 1;
+            var newVal = currentVal + change;
+            if (newVal < 1) newVal = 1;
+            if (newVal > 50) newVal = 50;
+            input.value = newVal;
+        }
+
+        // 6. THÊM VÀO GIỎ HÀNG (AJAX + ANIMATION)
+        function addToCartFromDetails() {
+            var detailId = $('#selectedProductDetailId').val();
+            var qty = $('#input-quantity').val();
+
+            if (!detailId) {
+                alert("Vui lòng chọn phiên bản sản phẩm!");
+                return;
+            }
+
+            // Gọi hàm Bay (định nghĩa bên dưới)
+            flyToCartAnimation();
+
+            // Gửi Ajax lên CartController
+            $.ajax({
+                url: '/Cart/AddToCart',
+                type: 'POST',
+                data: { productDetailId: detailId, quantity: qty },
+                success: function (res) {
+                    if (res.success) {
+                        // Cập nhật số trên badge giỏ hàng
+                        var badge = $('#cart-badge');
+                        badge.text(res.cartCount);
+                        badge.removeClass('d-none');
+                    }
+                },
+                error: function () {
+                    // Nếu lỗi (thường là 401 chưa login), chuyển hướng
+                    window.location.href = '/Identity/Account/Login';
+                }
+            });
+        }
+
+        // Hàm tạo hiệu ứng ảnh bay
+        function flyToCartAnimation() {
+            var cartIcon = $('.btn-cart'); // Class nút giỏ hàng trên Header
+            var productImg = $('#main-product-img'); // Ảnh sản phẩm chính
+
+            if (cartIcon.length && productImg.length) {
+                // Tạo bản sao của ảnh
+                var flyImg = productImg.clone()
+                    .offset({ top: productImg.offset().top, left: productImg.offset().left })
+                    .addClass('flying-img') // Class CSS đã define ở trên
+                    .css({
+                        'width': '200px', 'height': '200px', 'object-fit': 'cover'
+                    })
+                    .appendTo($('body'));
+
+                // Bay đến vị trí giỏ hàng
+                flyImg.animate({
+                    'top': cartIcon.offset().top + 10,
+                    'left': cartIcon.offset().left + 10,
+                    'width': '20px', 'height': '20px', 'opacity': '0.5'
+                }, 800, 'swing', function () {
+                    $(this).remove(); // Xóa sau khi bay xong
+                    // Rung nhẹ giỏ hàng
+                    cartIcon.addClass('shake-cart');
+                    setTimeout(() => cartIcon.removeClass('shake-cart'), 500);
+                });
+            }
+        }
+    </script>
+}
