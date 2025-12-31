@@ -10,33 +10,65 @@
         <partial name="_StatusMessage" for="StatusMessage" />
 
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-
             <div class="card-header bg-primary bg-opacity-10 p-4 border-0 d-flex align-items-center">
-                <div class="bg-white rounded-circle d-flex align-items-center justify-content-center shadow-sm text-primary me-3" style="width: 60px; height: 60px;">
-                    <i class="bi bi-person-bounding-box fs-3"></i>
+                <div class="me-3 position-relative">
+                    @if (!string.IsNullOrEmpty(Model.CurrentProfilePicture))
+                    {
+                        <img src="@Model.CurrentProfilePicture" class="rounded-circle shadow-sm object-fit-cover" style="width: 80px; height: 80px;" alt="Avatar">
+                    }
+                    else
+                    {
+                        <div class="bg-white rounded-circle d-flex align-items-center justify-content-center shadow-sm text-primary" style="width: 80px; height: 80px;">
+                            <i class="bi bi-person-bounding-box fs-1"></i>
+                        </div>
+                    }
                 </div>
                 <div>
                     <h4 class="fw-bold text-primary mb-0">@ViewData["Title"]</h4>
-                    <p class="text-muted small mb-0">Cập nhật thông tin cơ bản của bạn.</p>
+                    <p class="text-muted small mb-0">Quản lý thông tin và bảo mật.</p>
                 </div>
             </div>
 
             <div class="card-body p-4 p-md-5">
-                <form id="profile-form" method="post">
+                <form id="profile-form" method="post" enctype="multipart/form-data">
                     <div asp-validation-summary="ModelOnly" class="text-danger small mb-3 fw-bold" role="alert"></div>
 
-                    <div class="form-floating mb-3">
-                        <input asp-for="Username" class="form-control bg-light text-muted" disabled />
-                        <label asp-for="Username" class="form-label">Tên đăng nhập / Email</label>
+                    <div class="mb-4">
+                        <label asp-for="Input.ProfilePicture" class="form-label fw-bold">Thay đổi ảnh đại diện</label>
+                        <input asp-for="Input.ProfilePicture" type="file" class="form-control" accept="image/*" />
+                        <span asp-validation-for="Input.ProfilePicture" class="text-danger small"></span>
                     </div>
 
-                    <div class="form-floating mb-4">
-                        <input asp-for="Input.PhoneNumber" class="form-control" placeholder="Nhập số điện thoại" />
-                        <label asp-for="Input.PhoneNumber" class="form-label">Số điện thoại</label>
-                        <span asp-validation-for="Input.PhoneNumber" class="text-danger small ms-1"></span>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input asp-for="Username" class="form-control bg-light text-muted" disabled />
+                                <label asp-for="Username">Email / Tên đăng nhập</label>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                <input asp-for="Input.FullName" class="form-control" placeholder="Họ và tên" />
+                                <label asp-for="Input.FullName">Họ và tên hiển thị</label>
+                                <span asp-validation-for="Input.FullName" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input asp-for="Input.PhoneNumber" class="form-control" placeholder="Số điện thoại" />
+                                <label asp-for="Input.PhoneNumber">Số điện thoại</label>
+                                <span asp-validation-for="Input.PhoneNumber" class="text-danger small"></span>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                <input asp-for="Input.Address" class="form-control" placeholder="Địa chỉ" />
+                                <label asp-for="Input.Address">Địa chỉ giao hàng</label>
+                                <span asp-validation-for="Input.Address" class="text-danger small"></span>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
                         <button id="update-profile-button" type="submit" class="btn btn-primary btn-lg rounded-pill fw-bold shadow-sm px-5">
                             <i class="bi bi-save2-fill me-2"></i>Lưu thay đổi
                         </button>
