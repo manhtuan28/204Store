@@ -6,138 +6,263 @@
     <title>@ViewData["Title"] - 204Store</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
+        :root {
+            --primary-color: #4f46e5;
+            --primary-hover: #4338ca;
+            --text-dark: #1e293b;
+            --text-gray: #64748b;
+            --bg-body: #f8fafc;
         }
 
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            line-height: 1.6;
+            font-size: 1rem; /* Chữ mặc định to rõ hơn */
+        }
+
+        /* --- NAVBAR & HEADER --- */
         .navbar.sticky-top {
+            /* Hiệu ứng kính mờ (Glassmorphism) giúp dễ nhìn khi cuộn */
             background-color: rgba(255, 255, 255, 0.95) !important;
             backdrop-filter: blur(12px);
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05); /* Bóng đổ mềm mại */
+            transition: all 0.3s ease;
         }
 
         .brand-logo {
-            color: #4f46e5 !important;
             font-weight: 800;
             letter-spacing: -0.5px;
+            color: var(--primary-color) !important;
+            white-space: nowrap;
         }
 
         .nav-link {
-            color: #475569 !important;
             font-weight: 600;
-            font-size: 0.95rem;
-            padding: 0.5rem 1rem;
+            color: #475569 !important;
+            padding: 0.6rem 1rem;
             transition: all 0.2s;
-            border-radius: 0.5rem;
+            white-space: nowrap;
+            font-size: 0.95rem;
         }
 
             .nav-link:hover, .nav-link.active {
-                color: #4f46e5 !important;
-                background-color: rgba(79, 70, 229, 0.05);
+                color: var(--primary-color) !important;
+                background-color: rgba(79, 70, 229, 0.08);
+                border-radius: 8px;
             }
 
-        .search-group .form-control {
-            background-color: #f1f5f9;
-            border: 1px solid transparent;
-            padding-left: 2.5rem;
+        /* Search Bar */
+        .search-group {
+            position: relative;
         }
 
-            .search-group .form-control:focus {
-                background-color: #fff;
-                border-color: #4f46e5;
-                box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+            .search-group .form-control {
+                background-color: #f1f5f9;
+                border: 1px solid transparent;
+                padding-left: 2.8rem;
+                height: 42px;
+                font-size: 0.95rem;
             }
 
-        .search-icon-box {
+                .search-group .form-control:focus {
+                    background-color: #fff;
+                    border-color: var(--primary-color);
+                    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+                }
+
+        .search-icon {
             position: absolute;
-            left: 12px;
+            left: 15px;
             top: 50%;
             transform: translateY(-50%);
             color: #94a3b8;
+            font-size: 1.1rem;
             z-index: 5;
         }
 
+        /* --- CART BUTTON --- */
+        .btn-cart {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 18px;
+            border: 1px solid #e2e8f0;
+            border-radius: 50rem;
+            background-color: #fff;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+            .btn-cart:hover {
+                border-color: var(--primary-color);
+                color: var(--primary-color);
+                background-color: #f8fafc;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            }
+
+        .cart-icon-box {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
         .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -10px;
             background-color: #ef4444;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 700;
+            min-width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             border: 2px solid #fff;
-            font-size: 0.7rem;
-            padding: 0.25em 0.5em;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+
+        /* --- FOOTER (Đã nâng cấp) --- */
+        footer {
+            background-color: #ffffff;
+            border-top: 1px solid #e2e8f0;
+            font-size: 1rem; /* Chữ footer to hơn (16px) */
+            color: #475569;
+        }
+
+        .footer-heading {
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 1.2rem;
+            font-size: 1.1rem; /* Tiêu đề to hơn */
         }
 
         .footer-link {
             color: #64748b;
-            transition: all 0.2s;
+            text-decoration: none;
+            transition: 0.2s;
+            display: block; /* Xuống dòng rõ ràng */
+            margin-bottom: 0.6rem;
+            font-size: 1rem;
         }
 
             .footer-link:hover {
-                color: #4f46e5;
-                padding-left: 5px;
+                color: var(--primary-color);
+                transform: translateX(5px);
             }
+
+        .social-btn {
+            width: 40px;
+            height: 40px; /* Icon to hơn */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: #f1f5f9;
+            color: var(--text-gray);
+            transition: 0.3s;
+            margin-right: 8px;
+            text-decoration: none;
+            font-size: 1.2rem;
+        }
+
+            .social-btn:hover {
+                color: #fff;
+                background-color: var(--primary-color);
+                transform: translateY(-3px);
+            }
+
+        .newsletter-box {
+            background-color: #f8fafc;
+            border-radius: 16px;
+            padding: 2.5rem;
+            border: 1px border #e2e8f0;
+        }
     </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
 
     <header class="sticky-top">
-        <nav class="navbar navbar-expand-lg navbar-light py-3">
+        <nav class="navbar navbar-expand-lg navbar-light py-2">
             <div class="container">
-                <a class="navbar-brand fw-bolder fs-3 text-primary" asp-area="" asp-controller="Home" asp-action="Index">
-                    <i class="bi bi-shop-window me-2"></i>204Store
+
+                <a class="navbar-brand d-flex align-items-center gap-2 me-4" asp-area="" asp-controller="Home" asp-action="Index">
+                    <span class="bg-primary text-white rounded-3 d-flex align-items-center justify-content-center shadow-sm" style="width: 40px; height: 40px;">
+                        <i class="bi bi-box-seam-fill fs-5"></i>
+                    </span>
+                    <span class="brand-logo fs-3">204Store</span>
                 </a>
 
-                <div class="d-flex align-items-center gap-3 order-lg-3 ms-auto ms-lg-0">
-                    <a class="nav-link position-relative py-1 px-2 border rounded-3 me-1 me-lg-3" href="#">
-                        <i class="bi bi-cart3 fs-5"></i>
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill cart-badge">
-                            2
-                        </span>
-                    </a>
-
-                    <button class="navbar-toggler border-0 p-1" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                <div class="d-flex align-items-center gap-2 order-lg-3 ms-auto ms-lg-0">
+                    <button class="navbar-toggler border-0 p-2 bg-light rounded-circle" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                 </div>
 
-                <div class="collapse navbar-collapse order-lg-2" id="navbarContent">
-                    <form class="d-flex my-3 my-lg-0 mx-lg-auto position-relative search-group w-100" style="max-width: 450px;">
-                        <i class="bi bi-search search-icon-box"></i>
-                        <input class="form-control rounded-pill py-2" type="search" placeholder="Tìm kiếm sản phẩm..." aria-label="Search">
-                    </form>
+                <div class="collapse navbar-collapse" id="navbarContent">
 
-                    <ul class="navbar-nav mb-2 mb-lg-0 align-items-lg-center gap-2 ms-lg-3">
+                    <div class="flex-grow-1 mx-lg-4 my-3 my-lg-0">
+                        <form class="search-group w-100" style="max-width: 500px;">
+                            <i class="bi bi-search search-icon"></i>
+                            <input class="form-control rounded-pill" type="search" placeholder="Bạn muốn tìm gì hôm nay?..." aria-label="Search">
+                        </form>
+                    </div>
+
+                    <ul class="navbar-nav align-items-lg-center gap-2">
                         <li class="nav-item">
-                            <a class="nav-link fw-semibold" asp-area="" asp-controller="Home" asp-action="Index">Trang chủ</a>
+                            <a class="nav-link active" asp-area="" asp-controller="Home" asp-action="Index">Trang chủ</a>
                         </li>
+
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Danh mục</a>
-                            <ul class="dropdown-menu shadow-sm border-0 rounded-3 mt-2">
-                                <li><a class="dropdown-item py-2" href="#"><i class="bi bi-phone me-2 text-muted"></i>Điện thoại</a></li>
-                                <li><a class="dropdown-item py-2" href="#"><i class="bi bi-laptop me-2 text-muted"></i>Laptop</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item py-2 fw-bold text-primary" href="#">Tất cả sản phẩm</a></li>
+                            <ul class="dropdown-menu shadow-lg border-0 rounded-4 mt-3 p-3" style="min-width: 240px;">
+                                <li><a class="dropdown-item rounded-3 py-2" href="#"><i class="bi bi-phone me-3 text-primary"></i>Điện thoại</a></li>
+                                <li><a class="dropdown-item rounded-3 py-2" href="#"><i class="bi bi-laptop me-3 text-success"></i>Laptop & Macbook</a></li>
+                                <li><a class="dropdown-item rounded-3 py-2" href="#"><i class="bi bi-smartwatch me-3 text-warning"></i>Đồng hồ thông minh</a></li>
+                                <li><a class="dropdown-item rounded-3 py-2" href="#"><i class="bi bi-headphones me-3 text-danger"></i>Phụ kiện & Tai nghe</a></li>
+                                <li><hr class="dropdown-divider mx-2"></li>
+                                <li><a class="dropdown-item rounded-3 py-2 fw-bold text-center text-primary" href="#">Xem tất cả danh mục</a></li>
                             </ul>
                         </li>
 
                         @if (User.IsInRole("Admin"))
                         {
-                            <li class="nav-item d-lg-none d-xl-block">
+                            <li class="nav-item">
                                 <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index"
-                                   class="btn btn-sm fw-bold text-danger bg-danger bg-opacity-10 rounded-pill px-3 d-flex align-items-center">
-                                    <i class="bi bi-shield-lock me-2"></i>Admin
+                                   class="btn btn-sm fw-bold text-danger bg-danger bg-opacity-10 rounded-pill px-3 ms-lg-2 d-flex align-items-center text-nowrap">
+                                    <i class="bi bi-shield-lock me-2"></i>Quản trị
                                 </a>
                             </li>
                         }
 
-                        <li class="nav-item border-start ps-lg-3 ms-lg-2">
+                        <li class="nav-item border-start ps-lg-3 ms-lg-2 d-none d-lg-block">
                             <partial name="_LoginPartial" />
+                        </li>
+                        <li class="nav-item d-lg-none mt-2 border-top pt-2">
+                            <partial name="_LoginPartial" />
+                        </li>
+
+                        <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
+                            <a class="btn-cart" href="#">
+                                <div class="cart-icon-box">
+                                    <i class="bi bi-bag-dash fs-5"></i>
+                                    <span class="cart-badge">2</span>
+                                </div>
+                                <span class="fw-bold d-none d-xl-inline">Giỏ hàng</span>
+                            </a>
                         </li>
                     </ul>
                 </div>
@@ -145,78 +270,119 @@
         </nav>
     </header>
 
-    <main role="main" class="flex-grow-1 py-4">
-        @RenderBody()
+    <main role="main" class="flex-grow-1 py-5">
+        <div class="container">
+            @RenderBody()
+        </div>
     </main>
 
-    <footer class="bg-white border-top pt-5">
+    <footer class="pt-5 pb-4 mt-auto">
         <div class="container">
-            <div class="row g-4 justify-content-between">
-                <div class="col-lg-4 mb-3">
-                    <a href="#" class="text-decoration-none mb-3 d-block">
-                        <span class="brand-logo fs-4"><i class="bi bi-bag-heart-fill me-2"></i>204Store</span>
-                    </a>
-                    <p class="text-muted small mb-4 pe-lg-5">
-                        Trải nghiệm mua sắm công nghệ đỉnh cao. Cam kết sản phẩm chính hãng, giá tốt nhất và dịch vụ khách hàng tận tâm 24/7.
-                    </p>
-                    <div class="d-flex gap-2">
-                        <a href="#" class="btn btn-light btn-sm rounded-circle border"><i class="bi bi-facebook text-primary"></i></a>
-                        <a href="#" class="btn btn-light btn-sm rounded-circle border"><i class="bi bi-youtube text-danger"></i></a>
-                        <a href="#" class="btn btn-light btn-sm rounded-circle border"><i class="bi bi-tiktok text-dark"></i></a>
-                    </div>
-                </div>
 
-                <div class="col-6 col-lg-2 mb-3">
-                    <h6 class="fw-bold mb-3 text-dark">Mua hàng</h6>
-                    <ul class="list-unstyled d-flex flex-column gap-2">
-                        <li><a href="#" class="text-decoration-none footer-link small">Tất cả sản phẩm</a></li>
-                        <li><a href="#" class="text-decoration-none footer-link small">Khuyến mãi hot</a></li>
-                        <li><a href="#" class="text-decoration-none footer-link small">Chính sách giao hàng</a></li>
-                        <li><a href="#" class="text-decoration-none footer-link small">Hướng dẫn mua trả góp</a></li>
-                    </ul>
-                </div>
-
-                <div class="col-6 col-lg-2 mb-3">
-                    <h6 class="fw-bold mb-3 text-dark">Hỗ trợ</h6>
-                    <ul class="list-unstyled d-flex flex-column gap-2">
-                        <li><a href="#" class="text-decoration-none footer-link small">Tra cứu bảo hành</a></li>
-                        <li><a href="#" class="text-decoration-none footer-link small">Trung tâm bảo hành</a></li>
-                        <li><a href="#" class="text-decoration-none footer-link small">Chính sách đổi trả</a></li>
-                        <li><a href="#" class="text-decoration-none footer-link small">Liên hệ góp ý</a></li>
-                    </ul>
-                </div>
-
-                <div class="col-lg-3 mb-3">
-                    <h6 class="fw-bold mb-3 text-dark">Tổng đài miễn phí</h6>
-                    <div class="bg-light p-3 rounded-3 border mb-4">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <span class="small text-muted"><i class="bi bi-telephone me-2"></i>Tư vấn:</span>
-                            <strong class="text-primary">1800.2044</strong>
+            <div class="row justify-content-center mb-5">
+                <div class="col-lg-10">
+                    <div class="newsletter-box d-md-flex align-items-center justify-content-between gap-4">
+                        <div class="mb-3 mb-md-0">
+                            <h4 class="fw-bold mb-2 text-dark">Đăng ký nhận tin mới</h4>
+                            <p class="text-muted mb-0">Nhận thông tin về sản phẩm mới và khuyến mãi đặc biệt.</p>
                         </div>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="small text-muted"><i class="bi bi-gear me-2"></i>Kỹ thuật:</span>
-                            <strong>1800.2045</strong>
+                        <div class="flex-grow-1" style="max-width: 500px;">
+                            <div class="input-group">
+                                <input type="email" class="form-control form-control-lg border-0 shadow-sm ps-4" placeholder="Nhập email của bạn..." style="font-size: 1rem;">
+                                <button class="btn btn-primary btn-lg fw-bold px-4 shadow-sm" type="button">Đăng ký</button>
+                            </div>
                         </div>
-                    </div>
-                    <h6 class="fw-bold mb-3 text-dark">Thanh toán an toàn</h6>
-                    <div class="d-flex gap-3 opacity-50">
-                        <i class="bi bi-credit-card fs-4"></i>
-                        <i class="bi bi-paypal fs-4"></i>
-                        <i class="bi bi-bank fs-4"></i>
                     </div>
                 </div>
             </div>
 
-            <div class="border-top py-4 mt-4 text-center small text-muted bg-light mx-n3 px-3">
-                &copy; 2025 <strong>204Store</strong>. Designed with <i class="bi bi-heart-fill text-danger"></i> for technology lovers.
+            <div class="row g-5">
+                <div class="col-lg-4 col-md-6">
+                    <a href="#" class="d-inline-block text-decoration-none mb-3">
+                        <span class="brand-logo fs-3"><i class="bi bi-shop me-2"></i>204Store</span>
+                    </a>
+                    <p class="text-muted mb-4 pe-lg-4" style="text-align: justify;">
+                        Hệ thống bán lẻ điện thoại, máy tính, phụ kiện chính hãng uy tín. Chúng tôi cam kết mang đến trải nghiệm mua sắm tốt nhất với sản phẩm chất lượng và dịch vụ tận tâm.
+                    </p>
+                    <div class="mb-4">
+                        <p class="mb-2"><i class="bi bi-geo-alt-fill text-primary me-2"></i> 123 Đường Trần Nguyễn Hãn, Thanh Miếu</p>
+                        <p class="mb-2"><i class="bi bi-envelope-fill text-primary me-2"></i> contact@204store.vn</p>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <a href="#" class="social-btn"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="social-btn"><i class="bi bi-youtube"></i></a>
+                        <a href="#" class="social-btn"><i class="bi bi-tiktok"></i></a>
+                        <a href="#" class="social-btn"><i class="bi bi-instagram"></i></a>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-6 col-6">
+                    <h5 class="footer-heading">Chính sách</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="footer-link">Bảo hành 1 đổi 1</a></li>
+                        <li><a href="#" class="footer-link">Dùng thử 7 ngày</a></li>
+                        <li><a href="#" class="footer-link">Chính sách đổi trả</a></li>
+                        <li><a href="#" class="footer-link">Giao hàng hỏa tốc</a></li>
+                        <li><a href="#" class="footer-link">Bảo mật thông tin</a></li>
+                        <li><a href="#" class="footer-link">Kiểm hàng trước nhận</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-2 col-md-6 col-6">
+                    <h5 class="footer-heading">Hỗ trợ</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="footer-link">Hướng dẫn mua hàng</a></li>
+                        <li><a href="#" class="footer-link">Tra cứu đơn hàng</a></li>
+                        <li><a href="#" class="footer-link">Trung tâm bảo hành</a></li>
+                        <li><a href="#" class="footer-link">Mua hàng trả góp</a></li>
+                        <li><a href="#" class="footer-link">Tuyển dụng nhân tài</a></li>
+                        <li><a href="#" class="footer-link">Câu hỏi thường gặp</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-4 col-md-6">
+                    <h5 class="footer-heading">Tổng đài hỗ trợ (Miễn phí)</h5>
+                    <div class="row g-2 mb-4">
+                        <div class="col-6">
+                            <div class="p-3 bg-light rounded-3 border h-100">
+                                <small class="text-muted d-block mb-1">Mua hàng</small>
+                                <strong class="fs-5 text-dark">1800.2044</strong>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-3 bg-light rounded-3 border h-100">
+                                <small class="text-muted d-block mb-1">Khiếu nại</small>
+                                <strong class="fs-5 text-dark">1800.2045</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h5 class="footer-heading mb-3">Thanh toán an toàn</h5>
+                    <div class="d-flex flex-wrap gap-2">
+                        <i class="bi bi-credit-card-2-front fs-2 text-secondary" title="Visa/Mastercard"></i>
+                        <i class="bi bi-qr-code-scan fs-2 text-secondary" title="QR Code"></i>
+                        <i class="bi bi-paypal fs-2 text-secondary" title="Paypal"></i>
+                        <i class="bi bi-cash-coin fs-2 text-secondary" title="Tiền mặt"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-top pt-4 mt-2">
+                <div class="row align-items-center">
+                    <div class="col-md-6 text-center text-md-start mb-2 mb-md-0">
+                        <p class="mb-0 text-muted">&copy; 2026 <strong>204Store</strong>. All rights reserved.</p>
+                    </div>
+                    <div class="col-md-6 text-center text-md-end text-muted small">
+                        Designed with <i class="bi bi-heart-fill text-danger mx-1"></i> for 204Teams.
+                    </div>
+                </div>
             </div>
         </div>
     </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    @{
-        await RenderSectionAsync("Scripts", required: false);
-    }
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
