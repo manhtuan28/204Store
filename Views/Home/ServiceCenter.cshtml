@@ -1,0 +1,241 @@
+﻿@{
+    ViewData["Title"] = "Trung tâm bảo hành";
+}
+
+<style>
+    .service-hero {
+        background: url('https://images.unsplash.com/photo-1581092921461-eab6245b0262?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80') no-repeat center center;
+        background-size: cover;
+        height: 350px;
+        border-radius: 20px;
+        margin-bottom: 40px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .service-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: rgba(15, 23, 42, 0.7);
+            border-radius: 20px;
+        }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+        color: white;
+    }
+
+    .branch-card {
+        border: none;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s;
+        height: 100%;
+        overflow: hidden;
+    }
+
+        .branch-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+    .map-placeholder {
+        background-color: #e2e8f0;
+        height: 150px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #64748b;
+        font-weight: bold;
+    }
+
+    .service-item {
+        background: #f8fafc;
+        padding: 20px;
+        border-radius: 12px;
+        display: flex;
+        align-items: start;
+        transition: 0.3s;
+        border: 1px solid transparent;
+    }
+
+        .service-item:hover {
+            background: #fff;
+            border-color: #3b82f6;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+        }
+
+    .si-icon {
+        width: 48px;
+        height: 48px;
+        background: #dbeafe;
+        color: #2563eb;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-right: 15px;
+        flex-shrink: 0;
+    }
+</style>
+
+<div class="container py-4">
+    <div class="service-hero shadow">
+        <div class="hero-content">
+            <h1 class="fw-bold display-5 mb-3">Hệ thống Bảo hành & Sửa chữa</h1>
+            <p class="fs-5 opacity-90">Chính hãng - Uy tín - Lấy ngay sau 30 phút</p>
+            <a href="#locations" class="btn btn-primary rounded-pill px-4 py-2 fw-bold mt-2">
+                <i class="bi bi-geo-alt-fill me-2"></i>Tìm trung tâm gần nhất
+            </a>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-12 text-center mb-4">
+            <h3 class="fw-bold">Dịch vụ của chúng tôi</h3>
+            <p class="text-muted">Đội ngũ kỹ thuật viên chứng chỉ Apple/Samsung trực tiếp xử lý</p>
+        </div>
+
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="service-item">
+                <div class="si-icon"><i class="bi bi-phone"></i></div>
+                <div>
+                    <h6 class="fw-bold mb-1">Thay màn hình, Ép kính</h6>
+                    <p class="small text-muted mb-0">Linh kiện chính hãng, bảo hành cảm ứng 6 tháng. Xử lý sọc màn, chảy mực.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="service-item">
+                <div class="si-icon"><i class="bi bi-battery-charging"></i></div>
+                <div>
+                    <h6 class="fw-bold mb-1">Thay pin chính hãng</h6>
+                    <p class="small text-muted mb-0">Pin Pisen/Energizer dung lượng cao. Thay thế 15 phút lấy ngay.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="service-item">
+                <div class="si-icon"><i class="bi bi-motherboard"></i></div>
+                <div>
+                    <h6 class="fw-bold mb-1">Sửa chữa phần cứng</h6>
+                    <p class="small text-muted mb-0">Sửa lỗi mất nguồn, wifi yếu, mất sóng, lỗi FaceID, lỗi Audio...</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="service-item">
+                <div class="si-icon"><i class="bi bi-laptop"></i></div>
+                <div>
+                    <h6 class="fw-bold mb-1">Vệ sinh & Bảo dưỡng</h6>
+                    <p class="small text-muted mb-0">Vệ sinh laptop, tra keo tản nhiệt MX4. Spa làm đẹp điện thoại.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="service-item">
+                <div class="si-icon"><i class="bi bi-code-square"></i></div>
+                <div>
+                    <h6 class="fw-bold mb-1">Cài đặt Phần mềm</h6>
+                    <p class="small text-muted mb-0">Cài Win, Office bản quyền, chạy lại phần mềm, mở khóa tài khoản.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="service-item">
+                <div class="si-icon"><i class="bi bi-recycle"></i></div>
+                <div>
+                    <h6 class="fw-bold mb-1">Thu cũ đổi mới</h6>
+                    <p class="small text-muted mb-0">Định giá máy cũ giá cao, trợ giá lên đời máy mới tiết kiệm chi phí.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="locations" class="mb-5">
+        <h3 class="fw-bold mb-4 border-start border-4 border-primary ps-3">Hệ thống chi nhánh</h3>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card branch-card rounded-4">
+                    <div class="map-placeholder position-relative">
+                        <img src="https://via.placeholder.com/400x150/e2e8f0/64748b?text=Map+Ha+Noi" class="w-100 h-100 object-fit-cover" />
+                        <span class="badge bg-danger position-absolute top-0 end-0 m-3">Trụ sở chính</span>
+                    </div>
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold text-primary mb-3">204Store Hà Nội</h5>
+                        <ul class="list-unstyled text-muted small mb-4">
+                            <li class="mb-2"><i class="bi bi-geo-alt-fill me-2 text-dark"></i>Số 1 Đại Cồ Việt, Hai Bà Trưng</li>
+                            <li class="mb-2"><i class="bi bi-telephone-fill me-2 text-dark"></i>0988.888.888</li>
+                            <li class="mb-2"><i class="bi bi-clock-fill me-2 text-dark"></i>8:30 - 21:00 (Cả CN & Lễ)</li>
+                        </ul>
+                        <a href="#" class="btn btn-outline-primary w-100 rounded-pill fw-bold">Chỉ đường Google Maps</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card branch-card rounded-4">
+                    <div class="map-placeholder">
+                        <img src="https://via.placeholder.com/400x150/e2e8f0/64748b?text=Map+Da+Nang" class="w-100 h-100 object-fit-cover" />
+                    </div>
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold text-primary mb-3">204Store Đà Nẵng</h5>
+                        <ul class="list-unstyled text-muted small mb-4">
+                            <li class="mb-2"><i class="bi bi-geo-alt-fill me-2 text-dark"></i>123 Nguyễn Văn Linh, Hải Châu</li>
+                            <li class="mb-2"><i class="bi bi-telephone-fill me-2 text-dark"></i>0977.777.777</li>
+                            <li class="mb-2"><i class="bi bi-clock-fill me-2 text-dark"></i>8:30 - 20:00 (Nghỉ CN)</li>
+                        </ul>
+                        <a href="#" class="btn btn-outline-primary w-100 rounded-pill fw-bold">Chỉ đường Google Maps</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card branch-card rounded-4">
+                    <div class="map-placeholder">
+                        <img src="https://via.placeholder.com/400x150/e2e8f0/64748b?text=Map+Sai+Gon" class="w-100 h-100 object-fit-cover" />
+                    </div>
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold text-primary mb-3">204Store Sài Gòn</h5>
+                        <ul class="list-unstyled text-muted small mb-4">
+                            <li class="mb-2"><i class="bi bi-geo-alt-fill me-2 text-dark"></i>456 Đường 3/2, Quận 10</li>
+                            <li class="mb-2"><i class="bi bi-telephone-fill me-2 text-dark"></i>0966.666.666</li>
+                            <li class="mb-2"><i class="bi bi-clock-fill me-2 text-dark"></i>8:00 - 21:30 (Cả CN & Lễ)</li>
+                        </ul>
+                        <a href="#" class="btn btn-outline-primary w-100 rounded-pill fw-bold">Chỉ đường Google Maps</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-light rounded-4 p-5 text-center border border-dashed">
+        <h4 class="fw-bold mb-4">Cam kết vàng từ 204Store</h4>
+        <div class="row g-4 justify-content-center">
+            <div class="col-md-3">
+                <div class="fs-1 text-success mb-2"><i class="bi bi-patch-check-fill"></i></div>
+                <div class="fw-bold">Linh kiện chính hãng</div>
+                <div class="small text-muted">Nguồn gốc rõ ràng, zin 100%</div>
+            </div>
+            <div class="col-md-3">
+                <div class="fs-1 text-primary mb-2"><i class="bi bi-camera-video-fill"></i></div>
+                <div class="fw-bold">Xem trực tiếp</div>
+                <div class="small text-muted">Khách xem kỹ thuật viên làm</div>
+            </div>
+            <div class="col-md-3">
+                <div class="fs-1 text-warning mb-2"><i class="bi bi-shield-lock-fill"></i></div>
+                <div class="fw-bold">Bảo hành dài hạn</div>
+                <div class="small text-muted">Bảo hành từ 6 - 12 tháng</div>
+            </div>
+        </div>
+    </div>
+</div>

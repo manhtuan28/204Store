@@ -36,6 +36,9 @@
             --text-dark: #1e293b;
             --text-gray: #64748b;
             --bg-body: #f8fafc;
+            --footer-bg: #0f172a;
+            --footer-text: #94a3b8;
+            --footer-heading: #f8fafc;
         }
 
         body {
@@ -105,46 +108,101 @@
         }
 
         footer {
-            background-color: #ffffff;
-            border-top: 1px solid #e2e8f0;
-            color: #475569;
+            background-color: var(--footer-bg);
+            color: var(--footer-text);
+            font-size: 0.9rem;
+            padding-top: 4rem;
+            margin-top: auto;
         }
 
         .footer-heading {
+            color: var(--footer-heading);
             font-weight: 700;
-            color: #0f172a;
-            margin-bottom: 1.2rem;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         .footer-link {
-            color: #64748b;
+            color: var(--footer-text);
             text-decoration: none;
             display: block;
-            margin-bottom: 0.6rem;
+            margin-bottom: 0.8rem;
+            transition: all 0.2s;
         }
 
             .footer-link:hover {
-                color: var(--primary-color);
+                color: #fff;
                 transform: translateX(5px);
             }
 
-        .social-btn {
-            width: 40px;
-            height: 40px;
+        .footer-social-btn {
+            width: 36px;
+            height: 36px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            border-radius: 12px;
-            background: #f1f5f9;
-            color: var(--text-gray);
-            margin-right: 8px;
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            border-radius: 50%;
+            margin-right: 10px;
+            transition: 0.3s;
             text-decoration: none;
         }
 
-            .social-btn:hover {
-                color: #fff;
-                background-color: var(--primary-color);
+            .footer-social-btn:hover {
+                background: var(--primary);
+                transform: translateY(-3px);
             }
+
+        .newsletter-input {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #fff;
+            height: 48px;
+            border-radius: 8px 0 0 8px;
+        }
+
+            .newsletter-input:focus {
+                background: rgba(255,255,255,0.1);
+                border-color: var(--primary);
+                color: #fff;
+                box-shadow: none;
+            }
+
+        .btn-subscribe {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0 20px;
+            font-weight: 600;
+            border-radius: 0 8px 8px 0;
+        }
+
+            .btn-subscribe:hover {
+                background: var(--primary-hover);
+            }
+
+        .payment-icon {
+            height: 24px;
+            width: auto;
+            opacity: 0.7;
+            transition: 0.2s;
+            filter: grayscale(100%) brightness(200%); /* Làm icon trắng đen */
+        }
+
+            .payment-icon:hover {
+                opacity: 1;
+                filter: none;
+            }
+
+        .footer-bottom {
+            background: rgba(0,0,0,0.2);
+            padding: 20px 0;
+            margin-top: 3rem;
+            font-size: 0.85rem;
+        }
     </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
@@ -199,21 +257,89 @@
         </div>
     </main>
 
-    <footer class="pt-5 pb-4 mt-auto">
+    <footer>
         <div class="container">
             <div class="row g-5">
-                <div class="col-lg-4"><a href="#" class="text-decoration-none"><span class="brand-logo fs-3">204Store</span></a><p class="text-muted mt-3">Hệ thống bán lẻ uy tín.</p></div>
-                <div class="col-lg-2"><h5 class="footer-heading">Chính sách</h5><ul class="list-unstyled"><li><a href="#" class="footer-link">Bảo hành</a></li><li><a href="#" class="footer-link">Đổi trả</a></li></ul></div>
-                <div class="col-lg-2"><h5 class="footer-heading">Hỗ trợ</h5><ul class="list-unstyled"><li><a href="#" class="footer-link">Tra cứu đơn</a></li><li><a href="#" class="footer-link">Tư vấn</a></li></ul></div>
-                <div class="col-lg-4"><h5 class="footer-heading">Tổng đài</h5><strong class="fs-5 text-dark">1800.2044</strong></div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="mb-4">
+                        <span class="brand-logo fs-3">204Store</span>
+                    </div>
+                    <p class="mb-4" style="line-height: 1.8;">
+                        Hệ thống bán lẻ các sản phẩm công nghệ chính hãng hàng đầu Việt Nam. Chúng tôi cam kết mang đến những sản phẩm chất lượng nhất với mức giá tốt nhất.
+                    </p>
+                    <div>
+                        <a href="#" class="footer-social-btn"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="footer-social-btn"><i class="bi bi-youtube"></i></a>
+                        <a href="#" class="footer-social-btn"><i class="bi bi-tiktok"></i></a>
+                        <a href="#" class="footer-social-btn"><i class="bi bi-instagram"></i></a>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-6">
+                    <h5 class="footer-heading">Hỗ trợ</h5>
+                    <ul class="list-unstyled">
+                        <li><a asp-area="" asp-controller="Home" asp-action="Tracking" class="footer-link">Tra cứu đơn hàng</a></li>
+                        <li><a asp-controller="Home" asp-action="Guide" class="footer-link">Hướng dẫn mua hàng</a></li>
+                        <li><a asp-controller="Home" asp-action="Warranty" class="footer-link">Chính sách bảo hành</a></li>
+                        <li><a asp-controller="Home" asp-action="ReturnPolicy" class="footer-link">Chính sách đổi trả</a></li>
+                        <li><a asp-controller="Home" asp-action="ServiceCenter" class="footer-link">Trung tâm bảo hành</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-2 col-md-6">
+                    <h5 class="footer-heading">Về 204Store</h5>
+                    <ul class="list-unstyled">
+                        <li><a asp-controller="Home" asp-action="About" class="footer-link">Giới thiệu công ty</a></li>
+                        <li><a asp-controller="Home" asp-action="Careers" class="footer-link">Tuyển dụng</a></li>
+                        <li><a asp-controller="Home" asp-action="Contact" class="footer-link">Gửi góp ý, khiếu nại</a></li>
+                        <li><a asp-controller="Home" asp-action="ServiceCenter" class="footer-link">Tìm siêu thị (20 shop)</a></li>
+                        <li><a asp-controller="Home" asp-action="ServiceCenter" class="footer-link">Liên hệ hợp tác</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-4 col-md-6">
+                    <h5 class="footer-heading">Tổng đài hỗ trợ</h5>
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="me-3 text-white"><i class="bi bi-headset fs-2"></i></div>
+                        <div>
+                            <div class="fw-bold text-white fs-5">1800 2044</div>
+                            <div class="small">Thứ 2 - CN: 8:00 - 21:30</div>
+                        </div>
+                    </div>
+
+                    <h5 class="footer-heading mt-4 mb-3">Đăng ký nhận tin</h5>
+                    <p class="small mb-3">Nhận thông tin khuyến mãi mới nhất từ chúng tôi.</p>
+                    <form class="input-group">
+                        <input type="email" class="form-control newsletter-input" placeholder="Email của bạn...">
+                        <button class="btn btn-subscribe" type="button"><i class="bi bi-send-fill"></i></button>
+                    </form>
+                </div>
             </div>
-            <div class="border-top pt-4 mt-4 text-center text-muted"><small>&copy; 2026 204Store. All rights reserved.</small></div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                        &copy; 2026 <strong>204Store</strong>. All Rights Reserved.
+                        <div class="mt-1 small">
+                            <a href="#" class="text-white-50 text-decoration-none me-3">Điều khoản</a>
+                            <a href="#" class="text-white-50 text-decoration-none">Bảo mật</a>
+                        </div>
+                    </div>
+                    <div class="col-md-6 text-center text-md-end">
+                        <span class="text-white-50 me-2 small">Chấp nhận thanh toán:</span>
+                        <i class="bi bi-credit-card-2-front fs-4 me-2 text-white-50" title="Visa/Master"></i>
+                        <i class="bi bi-qr-code-scan fs-4 me-2 text-white-50" title="VNPay"></i>
+                        <i class="bi bi-cash-coin fs-4 text-white-50" title="COD"></i>
+                    </div>
+                </div>
+            </div>
         </div>
     </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -12,10 +12,57 @@ namespace _204Store.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _context;
 
+
+
+        public IActionResult About()
+        {
+            return View();
+        }
+        public IActionResult Careers()
+        {
+            return View();
+        }
+        public IActionResult Contact()
+        {
+            return View();
+        }
+        public IActionResult Guide()
+        {
+            return View();
+        }
+        public IActionResult Warranty()
+        {
+            return View();
+        }
+        public IActionResult ReturnPolicy()
+        {
+            return View();
+        }
+        public IActionResult ServiceCenter()
+        {
+            return View();
+        }
         public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
         {
             _logger = logger;
             _context = context;
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult SendFeedback(string fullName, string email, string type, string content)
+        {
+
+            if (type == "Khiếu nại")
+            {
+                TempData["success"] = "Đã tiếp nhận khiếu nại. Quản lý sẽ liên hệ bạn trong vòng 4 giờ làm việc.";
+            }
+            else
+            {
+                TempData["success"] = "Cảm ơn những đóng góp quý báu của bạn dành cho 204Store!";
+            }
+
+            return RedirectToAction(nameof(Contact));
         }
 
         public async Task<IActionResult> Index()
@@ -103,6 +150,40 @@ namespace _204Store.Controllers
             ViewBag.RelatedProducts = relatedProducts;
 
             return View(product);
+        }
+
+        [HttpGet]
+        public IActionResult Tracking(int? orderId, string? phone)
+        {
+            if (orderId.HasValue && !string.IsNullOrEmpty(phone))
+            {
+                return TrackingOrder(orderId.Value, phone).Result;
+            }
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> TrackingOrder(int orderId, string phone)
+        {
+            if (orderId <= 0 || string.IsNullOrEmpty(phone))
+            {
+                ViewBag.Error = "Vui lòng nhập đầy đủ Mã đơn hàng và Số điện thoại.";
+                return View("Tracking");
+            }
+
+            var order = await _context.OrderHeaders
+                .Include(o => o.OrderDetails)
+                .ThenInclude(od => od.ProductDetail)
+                .ThenInclude(p => p.Product)
+                .FirstOrDefaultAsync(o => o.Id == orderId && o.PhoneNumber == phone);
+
+            if (order == null)
+            {
+                ViewBag.Error = "Không tìm thấy đơn hàng hoặc số điện thoại không khớp.";
+                return View("Tracking");
+            }
+
+            return View("Tracking", order);
         }
     }
 }

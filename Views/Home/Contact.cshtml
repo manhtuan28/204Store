@@ -1,0 +1,177 @@
+﻿@{
+    ViewData["Title"] = "Liên hệ & Góp ý";
+}
+
+<style>
+    .contact-hero {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        color: white;
+        padding: 60px 0;
+        border-radius: 20px;
+        margin-bottom: 50px;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .contact-hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: url('https://cdn-icons-png.flaticon.com/512/3225/3225196.png') no-repeat 90% center;
+            background-size: 200px;
+            opacity: 0.15;
+        }
+
+    .contact-box {
+        padding: 30px;
+        background: #f8fafc;
+        border-radius: 16px;
+        height: 100%;
+        border: 1px solid transparent;
+        transition: 0.3s;
+    }
+
+        .contact-box:hover {
+            background: #fff;
+            border-color: #3b82f6;
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.1);
+        }
+
+    .cb-icon {
+        width: 50px;
+        height: 50px;
+        background: #dbeafe;
+        color: #2563eb;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+    }
+
+    .form-floating > .form-control:focus ~ label,
+    .form-floating > .form-control:not(:placeholder-shown) ~ label {
+        color: #2563eb;
+        font-weight: bold;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 0.25rem rgba(37, 99, 235, 0.1);
+    }
+</style>
+
+<div class="container py-4">
+    <div class="contact-hero shadow-sm px-4">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="fw-bold mb-3">Chúng tôi luôn lắng nghe bạn</h1>
+                <p class="fs-5 opacity-90 mb-0">
+                    Mọi góp ý của bạn đều là động lực để 204Store hoàn thiện hơn mỗi ngày.
+                    Đừng ngần ngại chia sẻ với chúng tôi.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-5">
+        <div class="col-lg-5">
+            <div class="mb-4">
+                <h4 class="fw-bold mb-4">Kênh hỗ trợ nhanh</h4>
+
+                <div class="contact-box mb-4">
+                    <div class="cb-icon"><i class="bi bi-headset"></i></div>
+                    <h5 class="fw-bold">Tổng đài hỗ trợ</h5>
+                    <p class="text-muted small">Tư vấn mua hàng & Bảo hành</p>
+                    <a href="tel:1900204204" class="fs-4 fw-bold text-dark text-decoration-none">1900 204 204</a>
+                    <div class="small text-success mt-1"><i class="bi bi-dot"></i>Đang hoạt động (8:00 - 22:00)</div>
+                </div>
+
+                <div class="contact-box mb-4">
+                    <div class="cb-icon"><i class="bi bi-envelope-open-fill"></i></div>
+                    <h5 class="fw-bold">Email khiếu nại</h5>
+                    <p class="text-muted small">Giải quyết khiếu nại dịch vụ trong 24h</p>
+                    <a href="mailto:cskh@204store.com" class="fs-5 fw-bold text-dark text-decoration-none">cskh@204store.com</a>
+                </div>
+
+                <div class="contact-box">
+                    <div class="cb-icon"><i class="bi bi-geo-alt-fill"></i></div>
+                    <h5 class="fw-bold">Văn phòng chính</h5>
+                    <p class="text-muted small mb-0">Số 1 Đại Cồ Việt, Hai Bà Trưng, Hà Nội</p>
+                    <p class="text-muted small mt-2">
+                        <a href="https://goo.gl/maps/xxxx" target="_blank" class="fw-bold text-primary text-decoration-none">
+                            Xem bản đồ <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-7">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden h-100">
+                <div class="card-header bg-white border-bottom-0 pt-4 px-4 pb-0">
+                    <h4 class="fw-bold text-primary"><i class="bi bi-send-fill me-2"></i>Gửi phản hồi tới Ban quản lý</h4>
+                    <p class="text-muted small">Vui lòng điền thông tin chi tiết để chúng tôi hỗ trợ bạn tốt nhất.</p>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="SendFeedback" method="post">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control bg-light border-0" id="fullName" name="fullName" placeholder="Nguyen Van A" required>
+                                    <label for="fullName">Họ và tên của bạn</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="email" class="form-control bg-light border-0" id="email" name="email" placeholder="name@example.com" required>
+                                    <label for="email">Địa chỉ Email</label>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <select class="form-select bg-light border-0" id="type" name="type" required>
+                                        <option value="Góp ý" selected>Góp ý cải thiện dịch vụ</option>
+                                        <option value="Khiếu nại">Khiếu nại về sản phẩm / Thái độ nhân viên</option>
+                                        <option value="Hỗ trợ kỹ thuật">Cần hỗ trợ kỹ thuật</option>
+                                        <option value="Hợp tác">Liên hệ hợp tác kinh doanh</option>
+                                    </select>
+                                    <label for="type">Bạn muốn liên hệ về việc gì?</label>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control bg-light border-0" id="orderId" name="orderId" placeholder="#12345">
+                                    <label for="orderId">Mã đơn hàng (Nếu liên quan đến đơn hàng)</label>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <textarea class="form-control bg-light border-0" placeholder="Nội dung" id="content" name="content" style="height: 150px" required></textarea>
+                                    <label for="content">Nội dung chi tiết...</label>
+                                </div>
+                            </div>
+
+                            <div class="col-12 mt-4">
+                                <button type="submit" class="btn btn-primary w-100 py-3 fw-bold rounded-pill shadow-sm">
+                                    <i class="bi bi-paperplane-fill me-2"></i>Gửi phản hồi ngay
+                                </button>
+                                <p class="text-center text-muted small mt-3 mb-0">
+                                    <i class="bi bi-lock-fill me-1"></i>Thông tin của bạn được bảo mật tuyệt đối.
+                                </p>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
