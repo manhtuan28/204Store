@@ -2,12 +2,10 @@
 @model _204Store.Areas.Admin.Models.DashboardViewModel
 @{
     ViewData["Title"] = "Tổng quan";
-    // Format tiền tệ Việt Nam
     var culture = new CultureInfo("vi-VN");
 }
 
 <style>
-    /* Stats Card Enhancement */
     .card-stats {
         border: 1px solid rgba(0,0,0,0.05);
         border-radius: 20px;
@@ -28,7 +26,6 @@
         border-radius: 14px;
     }
 
-    /* Table & Badge */
     .table-container {
         background: #fff;
         border-radius: 20px;
