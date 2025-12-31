@@ -23,5 +23,6 @@ namespace _204Store.Models
 
         [Required]
         public int Quantity { get; set; }
+        public string? ImageUrl { get; set; }
     }
 }
