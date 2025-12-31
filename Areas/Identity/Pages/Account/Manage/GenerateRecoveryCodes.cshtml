@@ -1,27 +1,60 @@
 ﻿@page
 @model GenerateRecoveryCodesModel
 @{
-    ViewData["Title"] = "Generate two-factor authentication (2FA) recovery codes";
+    ViewData["Title"] = "Tạo mã khôi phục 2 lớp";
     ViewData["ActivePage"] = ManageNavPages.TwoFactorAuthentication;
 }
 
-<partial name="_StatusMessage" for="StatusMessage" />
-<h3>@ViewData["Title"]</h3>
-<div class="alert alert-warning" role="alert">
-    <p>
-        <span class="glyphicon glyphicon-warning-sign"></span>
-        <strong>Put these codes in a safe place.</strong>
-    </p>
-    <p>
-        If you lose your device and don't have the recovery codes you will lose access to your account.
-    </p>
-    <p>
-        Generating new recovery codes does not change the keys used in authenticator apps. If you wish to change the key
-        used in an authenticator app you should <a asp-page="./ResetAuthenticator">reset your authenticator keys.</a>
-    </p>
-</div>
-<div>
-    <form method="post">
-        <button class="btn btn-danger" type="submit">Generate Recovery Codes</button>
-    </form>
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <partial name="_StatusMessage" for="StatusMessage" />
+
+        <div class="card border-warning shadow-sm rounded-4 overflow-hidden">
+
+            <div class="card-header bg-warning bg-opacity-25 p-4 text-center border-0">
+                <div class="mb-3">
+                    <div class="bg-warning text-white rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm" style="width: 70px; height: 70px;">
+                        <i class="bi bi-arrow-repeat fs-1"></i>
+                    </div>
+                </div>
+                <h4 class="fw-bold text-dark mb-1">Tạo bộ mã khôi phục mới</h4>
+                <p class="mb-0 text-dark text-opacity-75 small">Hành động này sẽ vô hiệu hóa các mã khôi phục cũ.</p>
+            </div>
+
+            <div class="card-body p-4 p-md-5">
+
+                <div class="alert alert-danger border-danger border-opacity-25 bg-danger bg-opacity-10 rounded-3 mb-4">
+                    <div class="d-flex">
+                        <i class="bi bi-exclamation-triangle-fill text-danger me-3 fs-4"></i>
+                        <div>
+                            <strong class="text-danger">Cảnh báo quan trọng:</strong>
+                            <p class="mb-2 mt-1 small">
+                                Hãy lưu trữ các mã này ở nơi an toàn (ví dụ: in ra giấy hoặc lưu vào trình quản lý mật khẩu).
+                            </p>
+                            <p class="mb-0 small">
+                                Nếu bạn bị mất thiết bị và không có mã khôi phục, bạn sẽ <strong>mất quyền truy cập vĩnh viễn</strong> vào tài khoản của mình.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert alert-light border bg-light rounded-3 mb-4 small text-muted">
+                    <i class="bi bi-info-circle-fill me-2 text-primary"></i>
+                    Việc tạo mã khôi phục mới không làm thay đổi khóa dùng trong ứng dụng xác thực (Google/Microsoft Authenticator).
+                    Nếu bạn muốn đổi khóa ứng dụng, hãy <a asp-page="./ResetAuthenticator" class="fw-bold text-decoration-none">đặt lại ứng dụng xác thực</a>.
+                </div>
+
+                <form method="post">
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-danger btn-lg rounded-pill fw-bold shadow-sm" type="submit">
+                            <i class="bi bi-file-earmark-lock2 me-2"></i>Xác nhận tạo mã mới
+                        </button>
+                        <a asp-page="./TwoFactorAuthentication" class="btn btn-light rounded-pill fw-bold text-muted mt-2">
+                            <i class="bi bi-x-lg me-2"></i>Hủy bỏ
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>

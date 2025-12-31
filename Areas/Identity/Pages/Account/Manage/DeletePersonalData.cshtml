@@ -5,57 +5,48 @@
     ViewData["ActivePage"] = ManageNavPages.PersonalData;
 }
 
-<h4 class="fw-bold text-danger mb-4 border-bottom pb-2">
-    <i class="bi bi-trash3-fill me-2"></i>@ViewData["Title"]
-</h4>
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card border-danger shadow-sm rounded-4 overflow-hidden">
 
-<div class="row">
-    <div class="col-md-7">
-        <div class="alert alert-danger bg-danger bg-opacity-10 border-danger border-opacity-25 rounded-4 p-4 mb-4">
-            <div class="d-flex">
-                <div class="flex-shrink-0">
-                    <i class="bi bi-exclamation-triangle-fill text-danger fs-3"></i>
+            <div class="card-header bg-danger text-white p-4 text-center border-0">
+                <div class="mb-3">
+                    <div class="bg-white bg-opacity-25 rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                        <i class="bi bi-exclamation-triangle-fill fs-1"></i>
+                    </div>
                 </div>
-                <div class="ms-3">
-                    <h5 class="alert-heading fw-bold text-danger">Cảnh báo nghiêm trọng!</h5>
-                    <p class="mb-0 text-danger opacity-75">
-                        Hành động này sẽ <strong>xóa vĩnh viễn</strong> tài khoản của bạn khỏi hệ thống. Dữ liệu này không thể khôi phục lại được.
-                    </p>
+                <h4 class="fw-bold mb-1">CẢNH BÁO: Hành động này không thể hoàn tác!</h4>
+                <p class="mb-0 opacity-75 small">Toàn bộ dữ liệu cá nhân của bạn sẽ bị xóa vĩnh viễn khỏi hệ thống.</p>
+            </div>
+
+            <div class="card-body p-4 p-md-5">
+                <div class="alert alert-warning border-warning border-opacity-25 bg-warning bg-opacity-10 rounded-3 mb-4">
+                    <i class="bi bi-info-circle-fill me-2"></i>
+                    Nếu bạn xóa tài khoản, tất cả lịch sử mua hàng, điểm thưởng và thông tin cá nhân sẽ bị mất và <strong>không thể khôi phục lại</strong>.
                 </div>
+
+                <form id="delete-user" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger small mb-3 text-center fw-bold" role="alert"></div>
+
+                    @if (Model.RequirePassword)
+                    {
+                        <div class="form-floating mb-4">
+                            <input asp-for="Input.Password" class="form-control bg-light" autocomplete="current-password" aria-required="true" placeholder="Nhập mật khẩu của bạn" />
+                            <label asp-for="Input.Password" class="text-muted">Nhập mật khẩu xác nhận</label>
+                            <span asp-validation-for="Input.Password" class="text-danger small ms-1"></span>
+                        </div>
+                    }
+
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-danger btn-lg rounded-pill fw-bold shadow-sm" type="submit">
+                            <i class="bi bi-trash3-fill me-2"></i>Xác nhận xóa tài khoản
+                        </button>
+                        <a asp-page="Index" class="btn btn-light rounded-pill fw-bold text-muted mt-2">
+                            <i class="bi bi-x-lg me-2"></i>Hủy bỏ
+                        </a>
+                    </div>
+                </form>
             </div>
-        </div>
-
-        <form id="delete-user" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger small mb-3" role="alert"></div>
-
-            @if (Model.RequirePassword)
-            {
-                <div class="form-floating mb-4">
-                    <input asp-for="Input.Password" class="form-control bg-light border-0" autocomplete="current-password" aria-required="true" placeholder="Nhập mật khẩu xác nhận" />
-                    <label asp-for="Input.Password" class="text-muted">Nhập mật khẩu của bạn để xác nhận</label>
-                    <span asp-validation-for="Input.Password" class="text-danger small ms-1"></span>
-                </div>
-            }
-
-            <div class="d-grid gap-2">
-                <button class="btn btn-danger btn-lg rounded-pill fw-bold shadow-sm" type="submit">
-                    <i class="bi bi-x-circle me-2"></i>Xác nhận xóa vĩnh viễn
-                </button>
-                <a asp-page="PersonalData" class="btn btn-light btn-lg rounded-pill fw-bold text-muted mt-2">
-                    <i class="bi bi-arrow-left me-2"></i>Hủy bỏ, quay lại
-                </a>
-            </div>
-        </form>
-    </div>
-
-    <div class="col-md-5 d-none d-md-block border-start ps-4">
-        <div class="text-center mt-5">
-            <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm" style="width: 140px; height: 140px;">
-                <i class="bi bi-person-x-fill text-danger opacity-50" style="font-size: 5rem;"></i>
-            </div>
-            <p class="text-muted small mt-4 px-3">
-                Chúng tôi rất tiếc khi bạn rời đi. Nếu bạn gặp vấn đề gì, hãy liên hệ với đội ngũ hỗ trợ trước khi quyết định xóa tài khoản.
-            </p>
         </div>
     </div>
 </div>

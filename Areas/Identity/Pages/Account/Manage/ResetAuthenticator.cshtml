@@ -1,56 +1,54 @@
 ﻿@page
 @model ResetAuthenticatorModel
 @{
-    ViewData["Title"] = "Đặt lại ứng dụng xác thực";
+    ViewData["Title"] = "Đặt lại khóa xác thực";
     ViewData["ActivePage"] = ManageNavPages.TwoFactorAuthentication;
 }
 
-<h4 class="fw-bold text-primary mb-4 border-bottom pb-2">
-    <i class="bi bi-arrow-counterclockwise me-2"></i>@ViewData["Title"]
-</h4>
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <partial name="_StatusMessage" for="StatusMessage" />
 
-<partial name="_StatusMessage" for="StatusMessage" />
+        <div class="card border-warning shadow-sm rounded-4 overflow-hidden">
 
-<div class="row">
-    <div class="col-md-7">
-        <div class="alert alert-warning bg-warning bg-opacity-10 border-warning border-opacity-25 rounded-4 p-4 mb-4">
-            <div class="d-flex">
-                <div class="flex-shrink-0">
-                    <i class="bi bi-exclamation-triangle-fill text-warning fs-3"></i>
+            <div class="card-header bg-warning bg-opacity-25 p-4 text-center border-0">
+                <div class="mb-3">
+                    <div class="bg-warning text-white rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm" style="width: 70px; height: 70px;">
+                        <i class="bi bi-arrow-counterclockwise fs-1"></i>
+                    </div>
                 </div>
-                <div class="ms-3">
-                    <h5 class="alert-heading fw-bold text-dark">Cảnh báo quan trọng!</h5>
-                    <p class="mb-2 text-dark opacity-75">
-                        Nếu bạn đặt lại khóa này, ứng dụng xác thực hiện tại (Google/Microsoft Authenticator) sẽ <strong>ngừng hoạt động</strong> ngay lập tức.
-                    </p>
-                    <hr class="border-warning opacity-25">
-                    <p class="mb-0 small text-dark opacity-75">
-                        Bạn sẽ cần phải quét lại mã QR mới để kích hoạt lại tính năng bảo mật 2 lớp. Trong thời gian chưa cấu hình lại, tài khoản của bạn sẽ tạm thời không được bảo vệ bởi 2FA.
-                    </p>
+                <h4 class="fw-bold text-dark mb-1">Đặt lại khóa ứng dụng xác thực</h4>
+                <p class="mb-0 text-dark text-opacity-75 small">Hành động này sẽ ngắt kết nối với ứng dụng xác thực hiện tại.</p>
+            </div>
+
+            <div class="card-body p-4 p-md-5">
+
+                <div class="alert alert-danger border-danger border-opacity-25 bg-danger bg-opacity-10 rounded-3 mb-4">
+                    <div class="d-flex">
+                        <i class="bi bi-exclamation-triangle-fill text-danger me-3 fs-4"></i>
+                        <div>
+                            <strong class="text-danger">Cảnh báo:</strong>
+                            <p class="mb-2 mt-1 small">
+                                Nếu bạn đặt lại khóa xác thực, ứng dụng Authenticator hiện tại trên điện thoại của bạn sẽ <strong>không còn hoạt động</strong>.
+                            </p>
+                            <p class="mb-0 small">
+                                Bạn bắt buộc phải cấu hình lại ứng dụng xác thực (quét lại mã QR) ngay sau khi thực hiện hành động này.
+                            </p>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
 
-        <form id="reset-authenticator-form" method="post">
-            <div class="d-grid gap-2 d-md-block">
-                <button id="reset-authenticator-button" class="btn btn-danger rounded-pill fw-bold px-4 py-2 shadow-sm" type="submit">
-                    <i class="bi bi-arrow-repeat me-2"></i>Xác nhận đặt lại
-                </button>
-                <a asp-page="./TwoFactorAuthentication" class="btn btn-light rounded-pill fw-bold px-4 py-2 text-muted ms-md-2">
-                    Hủy bỏ
-                </a>
+                <form id="reset-authenticator" method="post">
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-warning btn-lg rounded-pill fw-bold shadow-sm text-dark" type="submit">
+                            <i class="bi bi-arrow-repeat me-2"></i>Xác nhận đặt lại
+                        </button>
+                        <a asp-page="./TwoFactorAuthentication" class="btn btn-light rounded-pill fw-bold text-muted mt-2">
+                            <i class="bi bi-x-lg me-2"></i>Hủy bỏ
+                        </a>
+                    </div>
+                </form>
             </div>
-        </form>
-    </div>
-
-    <div class="col-md-5 d-none d-md-block border-start ps-4">
-        <div class="text-center mt-4">
-            <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm" style="width: 120px; height: 120px;">
-                <i class="bi bi-key text-warning opacity-75" style="font-size: 4rem;"></i>
-            </div>
-            <p class="text-muted small mt-4 px-3">
-                Chỉ thực hiện thao tác này khi bạn bị mất thiết bị, đổi điện thoại mới hoặc nghi ngờ khóa bảo mật bị lộ.
-            </p>
         </div>
     </div>
 </div>
