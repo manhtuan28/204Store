@@ -32,5 +32,7 @@ namespace _204Store.Models
         [Required]
         public string Name { get; set; }
         public ICollection<OrderDetail> OrderDetails { get; set; }
+        public string? ReturnReason { get; set; }
+        public int ReturnAttempts { get; set; } = 0;
     }
 }
