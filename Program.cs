@@ -43,19 +43,19 @@ builder.Logging.AddDebug();
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    try
-    {
-        await _204Store.Data.DbInitializer.Initialize(services);
-    }
-    catch (Exception ex)
-    {
-        var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "Đã xảy ra lỗi khi khởi tạo dữ liệu mẫu.");
-    }
-}
+//using (var scope = app.Services.CreateScope())
+//{
+//    var services = scope.ServiceProvider;
+//    try
+//    {
+//        await _204Store.Data.DbInitializer.Initialize(services);
+//    }
+//    catch (Exception ex)
+//    {
+//        var logger = services.GetRequiredService<ILogger<Program>>();
+//        logger.LogError(ex, "Đã xảy ra lỗi khi khởi tạo dữ liệu mẫu.");
+//    }
+//}
 
 if (app.Environment.IsDevelopment())
 {

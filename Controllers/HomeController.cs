@@ -89,12 +89,18 @@ namespace _204Store.Controllers
             var product = await _context.Products
                 .Include(p => p.Category)
                 .Include(p => p.ProductDetails)
-                .FirstOrDefaultAsync(m => m.Id == productId);
+                .Include(p => p.ProductImages)
+                .FirstOrDefaultAsync(p => p.Id == productId);
 
-            if (product == null)
-            {
-                return NotFound();
-            }
+            if (product == null) return NotFound();
+
+            var relatedProducts = await _context.Products
+                .Where(p => p.CategoryId == product.CategoryId && p.Id != productId)
+                .Include(p => p.ProductDetails)
+                .Take(4)
+                .ToListAsync();
+
+            ViewBag.RelatedProducts = relatedProducts;
 
             return View(product);
         }
