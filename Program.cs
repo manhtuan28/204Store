@@ -19,6 +19,21 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
 
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddAuthentication()
+    .AddGoogle(options =>
+    {
+        IConfigurationSection googleAuthNSection = builder.Configuration.GetSection("Authentication:Google");
+
+        options.ClientId = googleAuthNSection["ClientId"] ?? "TAM_THOI_BO_QUA";
+        options.ClientSecret = googleAuthNSection["ClientSecret"] ?? "TAM_THOI_BO_QUA";
+    })
+    .AddFacebook(options =>
+    {
+        IConfigurationSection fbAuthNSection = builder.Configuration.GetSection("Authentication:Facebook");
+        options.AppId = fbAuthNSection["AppId"] ?? "TAM_THOI_BO_QUA";
+        options.AppSecret = fbAuthNSection["AppSecret"] ?? "TAM_THOI_BO_QUA";
+    });
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

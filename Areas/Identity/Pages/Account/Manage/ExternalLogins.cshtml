@@ -1,53 +1,148 @@
 ﻿@page
 @model ExternalLoginsModel
 @{
-    ViewData["Title"] = "Manage your external logins";
+    ViewData["Title"] = "Quản lý liên kết ngoài";
     ViewData["ActivePage"] = ManageNavPages.ExternalLogins;
 }
 
+<style>
+    .btn-google {
+        background-color: #ffffff;
+        color: #3c4043;
+        border: 1px solid #dadce0;
+        transition: all 0.2s;
+        font-weight: 500;
+    }
+
+        .btn-google:hover {
+            background-color: #f8f9fa;
+            border-color: #d2e3fc;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+    .btn-facebook {
+        background-color: #1877F2;
+        color: #ffffff;
+        border: none;
+        transition: all 0.2s;
+        font-weight: 500;
+    }
+
+        .btn-facebook:hover {
+            background-color: #166fe5;
+            color: #ffffff;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(24, 119, 242, 0.3);
+        }
+
+    .provider-card {
+        transition: all 0.2s;
+    }
+
+        .provider-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 .5rem 1rem rgba(0,0,0,.05) !important;
+        }
+</style>
+
+<h4 class="fw-bold text-primary mb-4 border-bottom pb-2">
+    <i class="bi bi-diagram-2 me-2"></i>@ViewData["Title"]
+</h4>
+
 <partial name="_StatusMessage" for="StatusMessage" />
-@if (Model.CurrentLogins?.Count > 0)
-{
-    <h3>Registered Logins</h3>
-    <table class="table">
-        <tbody>
-            @foreach (var login in Model.CurrentLogins)
-            {
-                <tr>
-                    <td id="@($"login-provider-{login.LoginProvider}")">@login.ProviderDisplayName</td>
-                    <td>
-                        @if (Model.ShowRemoveButton)
+
+<div class="row">
+    <div class="col-md-12">
+
+        @if (Model.CurrentLogins?.Count > 0)
+        {
+            <div class="card border-0 shadow-sm rounded-4 mb-5">
+                <div class="card-header bg-success bg-opacity-10 border-0 py-3">
+                    <h6 class="fw-bold text-success mb-0"><i class="bi bi-check-circle-fill me-2"></i>Tài khoản đã liên kết</h6>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row g-3">
+                        @foreach (var login in Model.CurrentLogins)
                         {
-                            <form id="@($"remove-login-{login.LoginProvider}")" asp-page-handler="RemoveLogin" method="post">
-                                <div>
-                                    <input asp-for="@login.LoginProvider" name="LoginProvider" type="hidden" />
-                                    <input asp-for="@login.ProviderKey" name="ProviderKey" type="hidden" />
-                                    <button type="submit" class="btn btn-primary" title="Remove this @login.ProviderDisplayName login from your account">Remove</button>
+                            var iconClass = "bi-shield-lock";
+                            var textClass = "text-dark";
+
+                            if (login.LoginProvider == "Google") { iconClass = "bi-google text-danger"; }
+                            else if (login.LoginProvider == "Facebook") { iconClass = "bi-facebook text-primary"; }
+
+                            <div class="col-md-6">
+                                <div class="p-3 border rounded-3 d-flex align-items-center justify-content-between provider-card bg-white shadow-sm h-100">
+                                    <div class="d-flex align-items-center">
+                                        <div class="fs-3 me-3 @textClass">
+                                            <i class="bi @iconClass"></i>
+                                        </div>
+                                        <div>
+                                            <span class="d-block fw-bold">@login.ProviderDisplayName</span>
+                                            <small class="text-muted" style="font-size: 0.75rem;">Đang hoạt động</small>
+                                        </div>
+                                    </div>
+
+                                    @if (Model.ShowRemoveButton)
+                                    {
+                                        <form id="@($"remove-login-{login.LoginProvider}")" asp-page-handler="RemoveLogin" method="post">
+                                            <input asp-for="@login.LoginProvider" name="LoginProvider" type="hidden" />
+                                            <input asp-for="@login.ProviderKey" name="ProviderKey" type="hidden" />
+                                            <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill px-3 fw-bold" title="Gỡ bỏ liên kết @login.ProviderDisplayName">
+                                                <i class="bi bi-trash"></i> Gỡ
+                                            </button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-light text-muted border px-3 py-2 rounded-pill">Mặc định</span>
+                                    }
                                 </div>
-                            </form>
+                            </div>
                         }
-                        else
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (Model.OtherLogins?.Count > 0)
+        {
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-header bg-primary bg-opacity-10 border-0 py-3">
+                    <h6 class="fw-bold text-primary mb-0"><i class="bi bi-plus-circle-fill me-2"></i>Thêm liên kết mới</h6>
+                </div>
+                <div class="card-body p-4">
+                    <p class="text-muted small mb-3">Chọn dịch vụ bên dưới để liên kết với tài khoản hiện tại của bạn:</p>
+
+                    <form id="link-login-form" asp-page-handler="LinkLogin" method="post" class="d-flex flex-wrap gap-2">
+                        @foreach (var provider in Model.OtherLogins)
                         {
-                            @: &nbsp;
+                            var btnClass = "btn-outline-secondary";
+                            var iconHtml = "<i class='bi bi-shield-lock me-2'></i>";
+
+                            if (provider.DisplayName == "Google")
+                            {
+                                btnClass = "btn-google";
+                                iconHtml = "<i class='bi bi-google me-2 text-danger'></i>";
+                            }
+                            else if (provider.DisplayName == "Facebook")
+                            {
+                                btnClass = "btn-facebook";
+                                iconHtml = "<i class='bi bi-facebook me-2'></i>";
+                            }
+
+                            <button id="@($"link-login-button-{provider.Name}")"
+                                    type="submit"
+                                    class="btn @btnClass rounded-pill fw-bold px-4 py-2 shadow-sm d-flex align-items-center"
+                                    name="provider"
+                                    value="@provider.Name"
+                                    title="Đăng nhập bằng @provider.DisplayName">
+                                @Html.Raw(iconHtml) Liên kết với @provider.DisplayName
+                            </button>
                         }
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
-@if (Model.OtherLogins?.Count > 0)
-{
-    <h4>Add another service to log in.</h4>
-    <hr />
-    <form id="link-login-form" asp-page-handler="LinkLogin" method="post" class="form-horizontal">
-        <div id="socialLoginList">
-            <p>
-                @foreach (var provider in Model.OtherLogins)
-                {
-                    <button id="@($"link-login-button-{provider.Name}")" type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
-                }
-            </p>
-        </div>
-    </form>
-}
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+</div>
