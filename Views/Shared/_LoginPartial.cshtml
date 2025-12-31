@@ -7,9 +7,7 @@
 <ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User))
     {
-        // Lấy thông tin user đang đăng nhập
         var user = await UserManager.GetUserAsync(User);
-        // Ưu tiên hiển thị FullName, nếu không có thì hiện Email (UserName)
         var displayName = !string.IsNullOrEmpty(user?.FullName) ? user.FullName : user?.UserName;
         var avatarUrl = !string.IsNullOrEmpty(user?.ProfilePictureUrl) ? user.ProfilePictureUrl : "https://placehold.co/30x30";
 
@@ -41,7 +39,7 @@
             <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Đăng ký</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link btn btn-primary text-white ms-2 px-3 rounded-pill" asp-area="Identity" asp-page="/Account/Login">Đăng nhập</a>
+            <a class="btn btn-primary text-white ms-2 px-3 rounded-pill" asp-area="Identity" asp-page="/Account/Login">Đăng nhập</a>
         </li>
     }
 </ul>
