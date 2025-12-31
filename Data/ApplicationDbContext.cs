@@ -14,6 +14,7 @@ namespace _204Store.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductDetail> ProductDetails { get; set; }
+        public DbSet<CartItem> CartItems { get; set; }
         public DbSet<OrderHeader> OrderHeaders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<Promotion> Promotions { get; set; }

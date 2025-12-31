@@ -1,16 +1,34 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@using _204Store.Models
+@using _204Store.Data
+@using Microsoft.EntityFrameworkCore
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@inject ApplicationDbContext Context
+
+@{
+    int cartCount = 0;
+    if (SignInManager.IsSignedIn(User))
+    {
+        var user = await UserManager.GetUserAsync(User);
+        if (user != null)
+        {
+            cartCount = Context.CartItems.Where(c => c.UserId == user.Id).Sum(c => c.Quantity);
+        }
+    }
+}
+
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - 204Store</title>
-
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-
     <style>
         :root {
             --primary-color: #4f46e5;
@@ -25,33 +43,23 @@
             background-color: var(--bg-body);
             color: var(--text-dark);
             line-height: 1.6;
-            font-size: 1rem; /* Chữ mặc định to rõ hơn */
         }
 
-        /* --- NAVBAR & HEADER --- */
         .navbar.sticky-top {
-            /* Hiệu ứng kính mờ (Glassmorphism) giúp dễ nhìn khi cuộn */
             background-color: rgba(255, 255, 255, 0.95) !important;
             backdrop-filter: blur(12px);
             border-bottom: 1px solid rgba(0,0,0,0.05);
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05); /* Bóng đổ mềm mại */
-            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
         }
 
         .brand-logo {
             font-weight: 800;
-            letter-spacing: -0.5px;
             color: var(--primary-color) !important;
-            white-space: nowrap;
         }
 
         .nav-link {
             font-weight: 600;
             color: #475569 !important;
-            padding: 0.6rem 1rem;
-            transition: all 0.2s;
-            white-space: nowrap;
-            font-size: 0.95rem;
         }
 
             .nav-link:hover, .nav-link.active {
@@ -60,36 +68,6 @@
                 border-radius: 8px;
             }
 
-        /* Search Bar */
-        .search-group {
-            position: relative;
-        }
-
-            .search-group .form-control {
-                background-color: #f1f5f9;
-                border: 1px solid transparent;
-                padding-left: 2.8rem;
-                height: 42px;
-                font-size: 0.95rem;
-            }
-
-                .search-group .form-control:focus {
-                    background-color: #fff;
-                    border-color: var(--primary-color);
-                    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
-                }
-
-        .search-icon {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #94a3b8;
-            font-size: 1.1rem;
-            z-index: 5;
-        }
-
-        /* --- CART BUTTON --- */
         .btn-cart {
             display: flex;
             align-items: center;
@@ -107,14 +85,7 @@
                 border-color: var(--primary-color);
                 color: var(--primary-color);
                 background-color: #f8fafc;
-                box-shadow: 0 4px 10px rgba(0,0,0,0.05);
             }
-
-        .cart-icon-box {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
 
         .cart-badge {
             position: absolute;
@@ -131,15 +102,11 @@
             align-items: center;
             justify-content: center;
             border: 2px solid #fff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            z-index: 10;
         }
 
-        /* --- FOOTER (Đã nâng cấp) --- */
         footer {
             background-color: #ffffff;
             border-top: 1px solid #e2e8f0;
-            font-size: 1rem; /* Chữ footer to hơn (16px) */
             color: #475569;
         }
 
@@ -147,16 +114,13 @@
             font-weight: 700;
             color: #0f172a;
             margin-bottom: 1.2rem;
-            font-size: 1.1rem; /* Tiêu đề to hơn */
         }
 
         .footer-link {
             color: #64748b;
             text-decoration: none;
-            transition: 0.2s;
-            display: block; /* Xuống dòng rõ ràng */
+            display: block;
             margin-bottom: 0.6rem;
-            font-size: 1rem;
         }
 
             .footer-link:hover {
@@ -166,100 +130,59 @@
 
         .social-btn {
             width: 40px;
-            height: 40px; /* Icon to hơn */
+            height: 40px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             border-radius: 12px;
             background: #f1f5f9;
             color: var(--text-gray);
-            transition: 0.3s;
             margin-right: 8px;
             text-decoration: none;
-            font-size: 1.2rem;
         }
 
             .social-btn:hover {
                 color: #fff;
                 background-color: var(--primary-color);
-                transform: translateY(-3px);
             }
-
-        .newsletter-box {
-            background-color: #f8fafc;
-            border-radius: 16px;
-            padding: 2.5rem;
-            border: 1px border #e2e8f0;
-        }
     </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
-
     <header class="sticky-top">
         <nav class="navbar navbar-expand-lg navbar-light py-2">
             <div class="container">
-
                 <a class="navbar-brand d-flex align-items-center gap-2 me-4" asp-area="" asp-controller="Home" asp-action="Index">
-                    <span class="bg-primary text-white rounded-3 d-flex align-items-center justify-content-center shadow-sm" style="width: 40px; height: 40px;">
-                        <i class="bi bi-box-seam-fill fs-5"></i>
-                    </span>
+                    <span class="bg-primary text-white rounded-3 d-flex align-items-center justify-content-center shadow-sm" style="width: 40px; height: 40px;"><i class="bi bi-box-seam-fill fs-5"></i></span>
                     <span class="brand-logo fs-3">204Store</span>
                 </a>
-
-                <div class="d-flex align-items-center gap-2 order-lg-3 ms-auto ms-lg-0">
-                    <button class="navbar-toggler border-0 p-2 bg-light rounded-circle" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                </div>
-
+                <button class="navbar-toggler border-0 p-2 bg-light rounded-circle" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navbarContent">
-
                     <div class="flex-grow-1 mx-lg-4 my-3 my-lg-0">
-                        <form class="search-group w-100" style="max-width: 500px;">
-                            <i class="bi bi-search search-icon"></i>
-                            <input class="form-control rounded-pill" type="search" placeholder="Bạn muốn tìm gì hôm nay?..." aria-label="Search">
+                        <form class="w-100" style="max-width: 500px;" asp-controller="Home" asp-action="Search" method="get">
+                            <input class="form-control rounded-pill ps-4" name="query" type="search" placeholder="Bạn muốn tìm gì hôm nay?..." aria-label="Search" style="background-color: #f1f5f9; border:none; height: 42px;">
                         </form>
                     </div>
-
                     <ul class="navbar-nav align-items-lg-center gap-2">
-                        <li class="nav-item">
-                            <a class="nav-link active" asp-area="" asp-controller="Home" asp-action="Index">Trang chủ</a>
-                        </li>
-
+                        <li class="nav-item"><a class="nav-link active" asp-area="" asp-controller="Home" asp-action="Index">Trang chủ</a></li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Danh mục</a>
-                            <ul class="dropdown-menu shadow-lg border-0 rounded-4 mt-3 p-3" style="min-width: 240px;">
-                                <li><a class="dropdown-item rounded-3 py-2" href="#"><i class="bi bi-phone me-3 text-primary"></i>Điện thoại</a></li>
-                                <li><a class="dropdown-item rounded-3 py-2" href="#"><i class="bi bi-laptop me-3 text-success"></i>Laptop & Macbook</a></li>
-                                <li><a class="dropdown-item rounded-3 py-2" href="#"><i class="bi bi-smartwatch me-3 text-warning"></i>Đồng hồ thông minh</a></li>
-                                <li><a class="dropdown-item rounded-3 py-2" href="#"><i class="bi bi-headphones me-3 text-danger"></i>Phụ kiện & Tai nghe</a></li>
-                                <li><hr class="dropdown-divider mx-2"></li>
-                                <li><a class="dropdown-item rounded-3 py-2 fw-bold text-center text-primary" href="#">Xem tất cả danh mục</a></li>
+                            <ul class="dropdown-menu shadow-lg border-0 rounded-4 mt-3 p-3">
+                                <li><a class="dropdown-item rounded-3 py-2" href="#"><i class="bi bi-phone me-2"></i>Điện thoại</a></li>
+                                <li><a class="dropdown-item rounded-3 py-2" href="#"><i class="bi bi-laptop me-2"></i>Laptop</a></li>
                             </ul>
                         </li>
-
                         @if (User.IsInRole("Admin"))
                         {
-                            <li class="nav-item">
-                                <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index"
-                                   class="btn btn-sm fw-bold text-danger bg-danger bg-opacity-10 rounded-pill px-3 ms-lg-2 d-flex align-items-center text-nowrap">
-                                    <i class="bi bi-shield-lock me-2"></i>Quản trị
-                                </a>
-                            </li>
+                            <li class="nav-item"><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="btn btn-sm text-danger bg-danger bg-opacity-10 rounded-pill px-3 fw-bold"><i class="bi bi-shield-lock me-2"></i>Quản trị</a></li>
                         }
-
-                        <li class="nav-item border-start ps-lg-3 ms-lg-2 d-none d-lg-block">
-                            <partial name="_LoginPartial" />
-                        </li>
-                        <li class="nav-item d-lg-none mt-2 border-top pt-2">
-                            <partial name="_LoginPartial" />
-                        </li>
-
+                        <li class="nav-item border-start ps-lg-3 ms-lg-2"><partial name="_LoginPartial" /></li>
                         <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
-                            <a class="btn-cart" href="#">
-                                <div class="cart-icon-box">
+                            <a class="btn-cart" asp-area="" asp-controller="Cart" asp-action="Index">
+                                <div class="position-relative d-flex align-items-center">
                                     <i class="bi bi-bag-dash fs-5"></i>
-                                    <span class="cart-badge">2</span>
+                                    <span id="cart-badge" class="cart-badge @(cartCount > 0 ? "" : "d-none")">
+                                        @cartCount
+                                    </span>
                                 </div>
                                 <span class="fw-bold d-none d-xl-inline">Giỏ hàng</span>
                             </a>
@@ -278,105 +201,13 @@
 
     <footer class="pt-5 pb-4 mt-auto">
         <div class="container">
-
-            <div class="row justify-content-center mb-5">
-                <div class="col-lg-10">
-                    <div class="newsletter-box d-md-flex align-items-center justify-content-between gap-4">
-                        <div class="mb-3 mb-md-0">
-                            <h4 class="fw-bold mb-2 text-dark">Đăng ký nhận tin mới</h4>
-                            <p class="text-muted mb-0">Nhận thông tin về sản phẩm mới và khuyến mãi đặc biệt.</p>
-                        </div>
-                        <div class="flex-grow-1" style="max-width: 500px;">
-                            <div class="input-group">
-                                <input type="email" class="form-control form-control-lg border-0 shadow-sm ps-4" placeholder="Nhập email của bạn..." style="font-size: 1rem;">
-                                <button class="btn btn-primary btn-lg fw-bold px-4 shadow-sm" type="button">Đăng ký</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <div class="row g-5">
-                <div class="col-lg-4 col-md-6">
-                    <a href="#" class="d-inline-block text-decoration-none mb-3">
-                        <span class="brand-logo fs-3"><i class="bi bi-shop me-2"></i>204Store</span>
-                    </a>
-                    <p class="text-muted mb-4 pe-lg-4" style="text-align: justify;">
-                        Hệ thống bán lẻ điện thoại, máy tính, phụ kiện chính hãng uy tín. Chúng tôi cam kết mang đến trải nghiệm mua sắm tốt nhất với sản phẩm chất lượng và dịch vụ tận tâm.
-                    </p>
-                    <div class="mb-4">
-                        <p class="mb-2"><i class="bi bi-geo-alt-fill text-primary me-2"></i> 123 Đường Trần Nguyễn Hãn, Thanh Miếu</p>
-                        <p class="mb-2"><i class="bi bi-envelope-fill text-primary me-2"></i> contact@204store.vn</p>
-                    </div>
-                    <div class="d-flex gap-2">
-                        <a href="#" class="social-btn"><i class="bi bi-facebook"></i></a>
-                        <a href="#" class="social-btn"><i class="bi bi-youtube"></i></a>
-                        <a href="#" class="social-btn"><i class="bi bi-tiktok"></i></a>
-                        <a href="#" class="social-btn"><i class="bi bi-instagram"></i></a>
-                    </div>
-                </div>
-
-                <div class="col-lg-2 col-md-6 col-6">
-                    <h5 class="footer-heading">Chính sách</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#" class="footer-link">Bảo hành 1 đổi 1</a></li>
-                        <li><a href="#" class="footer-link">Dùng thử 7 ngày</a></li>
-                        <li><a href="#" class="footer-link">Chính sách đổi trả</a></li>
-                        <li><a href="#" class="footer-link">Giao hàng hỏa tốc</a></li>
-                        <li><a href="#" class="footer-link">Bảo mật thông tin</a></li>
-                        <li><a href="#" class="footer-link">Kiểm hàng trước nhận</a></li>
-                    </ul>
-                </div>
-
-                <div class="col-lg-2 col-md-6 col-6">
-                    <h5 class="footer-heading">Hỗ trợ</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#" class="footer-link">Hướng dẫn mua hàng</a></li>
-                        <li><a href="#" class="footer-link">Tra cứu đơn hàng</a></li>
-                        <li><a href="#" class="footer-link">Trung tâm bảo hành</a></li>
-                        <li><a href="#" class="footer-link">Mua hàng trả góp</a></li>
-                        <li><a href="#" class="footer-link">Tuyển dụng nhân tài</a></li>
-                        <li><a href="#" class="footer-link">Câu hỏi thường gặp</a></li>
-                    </ul>
-                </div>
-
-                <div class="col-lg-4 col-md-6">
-                    <h5 class="footer-heading">Tổng đài hỗ trợ (Miễn phí)</h5>
-                    <div class="row g-2 mb-4">
-                        <div class="col-6">
-                            <div class="p-3 bg-light rounded-3 border h-100">
-                                <small class="text-muted d-block mb-1">Mua hàng</small>
-                                <strong class="fs-5 text-dark">1800.2044</strong>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="p-3 bg-light rounded-3 border h-100">
-                                <small class="text-muted d-block mb-1">Khiếu nại</small>
-                                <strong class="fs-5 text-dark">1800.2045</strong>
-                            </div>
-                        </div>
-                    </div>
-
-                    <h5 class="footer-heading mb-3">Thanh toán an toàn</h5>
-                    <div class="d-flex flex-wrap gap-2">
-                        <i class="bi bi-credit-card-2-front fs-2 text-secondary" title="Visa/Mastercard"></i>
-                        <i class="bi bi-qr-code-scan fs-2 text-secondary" title="QR Code"></i>
-                        <i class="bi bi-paypal fs-2 text-secondary" title="Paypal"></i>
-                        <i class="bi bi-cash-coin fs-2 text-secondary" title="Tiền mặt"></i>
-                    </div>
-                </div>
+                <div class="col-lg-4"><a href="#" class="text-decoration-none"><span class="brand-logo fs-3">204Store</span></a><p class="text-muted mt-3">Hệ thống bán lẻ uy tín.</p></div>
+                <div class="col-lg-2"><h5 class="footer-heading">Chính sách</h5><ul class="list-unstyled"><li><a href="#" class="footer-link">Bảo hành</a></li><li><a href="#" class="footer-link">Đổi trả</a></li></ul></div>
+                <div class="col-lg-2"><h5 class="footer-heading">Hỗ trợ</h5><ul class="list-unstyled"><li><a href="#" class="footer-link">Tra cứu đơn</a></li><li><a href="#" class="footer-link">Tư vấn</a></li></ul></div>
+                <div class="col-lg-4"><h5 class="footer-heading">Tổng đài</h5><strong class="fs-5 text-dark">1800.2044</strong></div>
             </div>
-
-            <div class="border-top pt-4 mt-2">
-                <div class="row align-items-center">
-                    <div class="col-md-6 text-center text-md-start mb-2 mb-md-0">
-                        <p class="mb-0 text-muted">&copy; 2026 <strong>204Store</strong>. All rights reserved.</p>
-                    </div>
-                    <div class="col-md-6 text-center text-md-end text-muted small">
-                        Designed with <i class="bi bi-heart-fill text-danger mx-1"></i> for 204Teams.
-                    </div>
-                </div>
-            </div>
+            <div class="border-top pt-4 mt-4 text-center text-muted"><small>&copy; 2026 204Store. All rights reserved.</small></div>
         </div>
     </footer>
 
