@@ -1,0 +1,176 @@
+﻿@model IEnumerable<_204Store.Models.OrderHeader>
+
+@{
+    ViewData["Title"] = "Lịch sử đơn hàng";
+}
+
+<style>
+    body {
+        background-color: #f8fafc;
+    }
+
+    .card-history {
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        background: white;
+        overflow: hidden;
+    }
+
+    .table-custom thead th {
+        background-color: #f1f5f9;
+        color: #64748b;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        padding: 16px;
+        border-bottom: 2px solid #e2e8f0;
+    }
+
+    .table-custom tbody td {
+        padding: 16px;
+        vertical-align: middle;
+        color: #334155;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 0.95rem;
+    }
+
+    .status-badge {
+        padding: 6px 12px;
+        border-radius: 30px;
+        font-weight: 600;
+        font-size: 0.75rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .status-pending {
+        background: #fff7ed;
+        color: #ea580c;
+        border: 1px solid #fdba74;
+    }
+
+    .status-approved {
+        background: #eff6ff;
+        color: #2563eb;
+        border: 1px solid #93c5fd;
+    }
+
+    .status-shipped {
+        background: #f0fdf4;
+        color: #16a34a;
+        border: 1px solid #86efac;
+    }
+
+    .status-cancelled {
+        background: #fef2f2;
+        color: #dc2626;
+        border: 1px solid #fca5a5;
+    }
+
+    .btn-action {
+        background: white;
+        border: 1px solid #e2e8f0;
+        color: #4f46e5;
+        font-weight: 600;
+        padding: 6px 16px;
+        border-radius: 8px;
+        transition: 0.2s;
+        text-decoration: none;
+        font-size: 0.9rem;
+    }
+
+        .btn-action:hover {
+            background: #4f46e5;
+            color: white;
+            border-color: #4f46e5;
+        }
+</style>
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-dark m-0">Lịch sử đơn hàng</h2>
+            <p class="text-muted small m-0">Quản lý và theo dõi các đơn hàng của bạn</p>
+        </div>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-primary rounded-pill px-4 fw-bold">
+            <i class="bi bi-cart-plus me-2"></i>Mua sắm ngay
+        </a>
+    </div>
+
+    <div class="card-history">
+        <div class="table-responsive">
+            <table class="table table-custom mb-0 w-100">
+                <thead>
+                    <tr>
+                        <th class="ps-4">Mã đơn</th>
+                        <th>Ngày đặt</th>
+                        <th>Người nhận</th>
+                        <th>Tổng tiền</th>
+                        <th>Trạng thái</th>
+                        <th class="text-end pe-4">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="ps-4 fw-bold text-primary">#@item.Id</td>
+                                <td>@item.OrderDate.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td>
+                                    <div class="fw-bold">@item.Name</div>
+                                    <div class="small text-muted">@item.PhoneNumber</div>
+                                </td>
+                                <td class="fw-bold text-dark">@item.OrderTotal.ToString("#,##0")₫</td>
+                                <td>
+                                    @switch (item.OrderStatus)
+                                    {
+                                        case "Pending":
+                                            <span class="status-badge status-pending">Chờ xác nhận</span>
+                                            ; break;
+                                        case "Approved":
+
+                                            <span class="status-badge status-approved">Đã xác nhận</span>
+                                            ; break;
+                                        case "Shipped":
+
+                                            <span class="status-badge status-shipped">Đang giao</span>
+                                            ; break;
+                                        case "Cancelled":
+
+                                            <span class="status-badge status-cancelled">Đã hủy</span>
+                                            ; break;
+                                        default:
+
+                                            <span class="status-badge bg-light text-dark border">@item.OrderStatus</span>
+                                            ; break;
+                                    }
+                                </td>
+                                <td class="text-end pe-4">
+                                    <a asp-action="Details" asp-route-orderId="@item.Id" class="btn-action">
+                                        Chi tiết <i class="bi bi-arrow-right ms-1"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center py-5">
+                                <div class="text-muted opacity-50 mb-3">
+                                    <i class="bi bi-inbox fs-1"></i>
+                                </div>
+                                <h6 class="fw-bold text-secondary">Bạn chưa có đơn hàng nào</h6>
+                                <p class="small text-muted">Hãy dạo một vòng cửa hàng và chọn món đồ ưng ý nhé!</p>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

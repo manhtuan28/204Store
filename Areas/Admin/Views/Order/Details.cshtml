@@ -1,0 +1,188 @@
+﻿@model _204Store.Models.OrderHeader
+@{
+    ViewData["Title"] = "Chi tiết đơn hàng #" + Model.Id;
+}
+
+<div class="container-fluid px-4 py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold">Chi tiết đơn hàng #@Model.Id</h3>
+        <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Quay lại</a>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-box-seam me-2"></i>Danh sách sản phẩm</h5>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table mb-0 align-middle">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="ps-4">Sản phẩm</th>
+                                <th class="text-center">Số lượng</th>
+                                <th class="text-center">Đơn giá</th>
+                                <th class="text-end pe-4">Thành tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.OrderDetails)
+                            {
+                                <tr>
+                                    <td class="ps-4">
+                                        <div class="d-flex align-items-center">
+                                            <img src="@item.ProductDetail.Product.ImageUrl" width="50" class="rounded border me-3" />
+                                            <div>
+                                                <div class="fw-bold">@item.ProductDetail.Product.Name</div>
+                                                <small class="text-muted">@item.ProductDetail.Color - @item.ProductDetail.Rom</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-center fw-bold">@item.Count</td>
+                                    <td class="text-center">@item.Price.ToString("#,##0")đ</td>
+                                    <td class="text-end pe-4 fw-bold">@((item.Price * item.Count).ToString("#,##0"))đ</td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot class="bg-light">
+                            <tr>
+                                <td colspan="3" class="text-end fw-bold py-3 fs-5">Tổng cộng:</td>
+                                <td class="text-end pe-4 fw-bold text-danger fs-4">@Model.OrderTotal.ToString("#,##0")đ</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card shadow-sm">
+                <div class="card-header bg-white fw-bold">
+                    <i class="bi bi-truck me-2"></i>Thông tin vận chuyển
+                </div>
+                <div class="card-body row">
+                    <div class="col-md-6 mb-3">
+                        <label class="small text-muted fw-bold">Người nhận</label>
+                        <div class="fs-5">@Model.Name</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="small text-muted fw-bold">Số điện thoại</label>
+                        <div class="fs-5">@Model.PhoneNumber</div>
+                    </div>
+                    <div class="col-12">
+                        <label class="small text-muted fw-bold">Địa chỉ giao hàng</label>
+                        <div class="fs-5">@Model.StreetAddress, @Model.City</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card shadow-sm border-0 bg-light">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3">Xử lý đơn hàng</h5>
+
+                    <div class="mb-3">
+                        <label class="small text-muted fw-bold">Trạng thái hiện tại</label>
+                        <div class="mt-1">
+                            @switch (Model.OrderStatus)
+                            {
+                                case "Pending":
+                                    <span class="badge bg-warning text-dark fs-5 w-100 py-2">Chờ xác nhận</span>
+                                    ; break;
+                                case "Processing":
+
+                                    <span class="badge bg-primary fs-5 w-100 py-2">Đang xử lý</span>
+                                    ; break;
+                                case "Shipped":
+
+                                    <span class="badge bg-info text-dark fs-5 w-100 py-2">Đang giao hàng</span>
+                                    ; break;
+                                case "Completed":
+
+                                    <span class="badge bg-success fs-5 w-100 py-2">Hoàn thành</span>
+                                    ; break;
+                                case "Cancelled":
+
+                                    <span class="badge bg-danger fs-5 w-100 py-2">Đã hủy</span>
+                                    ; break;
+                            }
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="small text-muted fw-bold">Thanh toán</label>
+                        <div class="d-flex align-items-center mt-1">
+                            @if (Model.PaymentStatus == "Approved")
+                            {
+                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                <span>Đã thanh toán</span>
+ }
+                            else
+                            {
+                                <i class="bi bi-exclamation-circle-fill text-warning me-2"></i>
+                                <span>Chưa thanh toán (COD)</span>
+ }
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <div class="d-grid gap-2">
+                        @if (Model.OrderStatus == "Pending")
+                        {
+                            <form asp-action="UpdateStatus" method="post">
+                                <input type="hidden" name="id" value="@Model.Id" />
+                                <input type="hidden" name="status" value="Processing" />
+                                <button type="submit" class="btn btn-primary w-100 fw-bold py-2">
+                                    <i class="bi bi-gear-wide-connected me-2"></i>Xác nhận & Xử lý
+                                </button>
+                            </form>
+                        }
+
+                        @if (Model.OrderStatus == "Processing")
+                        {
+                            <form asp-action="UpdateStatus" method="post">
+                                <input type="hidden" name="id" value="@Model.Id" />
+                                <input type="hidden" name="status" value="Shipped" />
+                                <button type="submit" class="btn btn-info w-100 fw-bold py-2 text-white">
+                                    <i class="bi bi-truck me-2"></i>Bắt đầu giao hàng
+                                </button>
+                            </form>
+                        }
+
+                        @if (Model.OrderStatus == "Shipped")
+                        {
+                            <form asp-action="UpdateStatus" method="post">
+                                <input type="hidden" name="id" value="@Model.Id" />
+                                <input type="hidden" name="status" value="Completed" />
+                                <button type="submit" class="btn btn-success w-100 fw-bold py-2">
+                                    <i class="bi bi-check-lg me-2"></i>Xác nhận Hoàn thành
+                                </button>
+                            </form>
+                        }
+
+                        @if (Model.OrderStatus != "Completed" && Model.OrderStatus != "Cancelled")
+                        {
+                            <form asp-action="UpdateStatus" method="post" class="mt-2">
+                                <input type="hidden" name="id" value="@Model.Id" />
+                                <input type="hidden" name="status" value="Cancelled" />
+                                <button type="submit" class="btn btn-outline-danger w-100 fw-bold" onclick="return confirm('Bạn chắc chắn muốn hủy đơn này?');">
+                                    <i class="bi bi-x-lg me-2"></i>Hủy đơn hàng
+                                </button>
+                            </form>
+                        }
+
+                        @if (Model.OrderStatus == "Cancelled")
+                        {
+                            <form asp-action="Delete" method="post" class="mt-2">
+                                <input type="hidden" name="id" value="@Model.Id" />
+                                <button type="submit" class="btn btn-dark w-100 fw-bold" onclick="return confirm('Xóa vĩnh viễn đơn hàng này?');">
+                                    <i class="bi bi-trash me-2"></i>Xóa đơn hàng
+                                </button>
+                            </form>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
