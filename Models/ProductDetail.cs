@@ -18,7 +18,8 @@ namespace _204Store.Models
         public string Rom { get; set; }
 
         [Required]
-        public double Price { get; set; }
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal Price { get; set; }
 
         [Required]
         public int Quantity { get; set; }
