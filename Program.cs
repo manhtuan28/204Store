@@ -1,5 +1,7 @@
 ﻿using _204Store.Data;
 using _204Store.Models;
+using _204Store.Services;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -33,6 +35,8 @@ builder.Services.AddAuthentication()
         options.AppId = fbAuthNSection["AppId"] ?? "TAM_THOI_BO_QUA";
         options.AppSecret = fbAuthNSection["AppSecret"] ?? "TAM_THOI_BO_QUA";
     });
+
+builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 var app = builder.Build();
 
