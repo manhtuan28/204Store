@@ -78,5 +78,29 @@ namespace _204Store.Areas.Admin.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ProcessReturn(int id, string action)
+        {
+            var order = await _context.OrderHeaders.FindAsync(id);
+            if (order == null) return NotFound();
+
+            if (action == "approve")
+            {
+                order.OrderStatus = "Refunded";
+                order.PaymentStatus = "Refunded";
+
+                TempData["success"] = "Đã chấp thuận trả hàng & Hoàn tiền.";
+            }
+            else
+            {
+                order.OrderStatus = "Completed";
+                TempData["success"] = "Đã từ chối yêu cầu trả hàng.";
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Details), new { id = id });
+        }
     }
 }

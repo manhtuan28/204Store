@@ -66,5 +66,38 @@ namespace _204Store.Controllers
 
             return RedirectToAction(nameof(Details), new { orderId = id });
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RequestReturn(int id, string reason)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var order = await _context.OrderHeaders.FirstOrDefaultAsync(o => o.Id == id && o.ApplicationUserId == userId);
+
+            if (order == null) return NotFound();
+
+            if (order.ReturnAttempts >= 2)
+            {
+                TempData["error"] = "Bạn đã hết lượt yêu cầu trả hàng cho đơn này (Tối đa 2 lần).";
+                return RedirectToAction(nameof(Details), new { id = id });
+            }
+
+            if (order.OrderStatus == "Completed")
+            {
+                order.OrderStatus = "ReturnRequested";
+                order.ReturnReason = reason;
+
+                order.ReturnAttempts += 1;
+
+                await _context.SaveChangesAsync();
+                TempData["success"] = "Đã gửi yêu cầu trả hàng. (Lần thứ " + order.ReturnAttempts + "/2)";
+            }
+            else
+            {
+                TempData["error"] = "Đơn hàng không đủ điều kiện.";
+            }
+
+            return RedirectToAction("Index", "Order", new { id = id });
+        }
     }
 }
