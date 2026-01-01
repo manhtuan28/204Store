@@ -1,0 +1,223 @@
+﻿@{
+    ViewData["Title"] = "Hướng dẫn mua hàng";
+}
+
+<style>
+    .guide-hero {
+        background: linear-gradient(135deg, #4f46e5 0%, #818cf8 100%);
+        color: white;
+        padding: 60px 0;
+        border-radius: 20px;
+        margin-bottom: 40px;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .guide-hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: url('https://cdn-icons-png.flaticon.com/512/3081/3081559.png') no-repeat right center;
+            background-size: contain;
+            opacity: 0.1;
+            margin-right: -50px;
+        }
+
+    .step-card {
+        text-align: center;
+        padding: 20px;
+        transition: transform 0.3s;
+        height: 100%;
+    }
+
+        .step-card:hover {
+            transform: translateY(-5px);
+        }
+
+    .step-icon-wrap {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 20px;
+        background: #eef2ff;
+        color: #4f46e5;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        border: 2px solid #c7d2fe;
+        position: relative;
+        z-index: 1;
+    }
+
+    @@media (min-width: 992px) {
+        .step-col:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 50px;
+            right: -50%;
+            width: 100%;
+            height: 2px;
+            background: #e2e8f0;
+            z-index: 0;
+        }
+    }
+
+    .accordion-button:not(.collapsed) {
+        background-color: #eef2ff;
+        color: #4f46e5;
+        font-weight: 700;
+    }
+
+    .accordion-button:focus {
+        box-shadow: none;
+        border-color: rgba(79, 70, 229, 0.1);
+    }
+</style>
+
+<div class="container py-4">
+    <div class="guide-hero text-center shadow-sm">
+        <h1 class="fw-bold mb-3">Hướng dẫn mua sắm tại 204Store</h1>
+        <p class="fs-5 opacity-75 mb-0">Quy trình đơn giản - Thanh toán an toàn - Giao hàng nhanh chóng</p>
+    </div>
+
+    <div class="row g-4 mb-5 position-relative">
+        <div class="col-lg-3 col-md-6 step-col">
+            <div class="step-card">
+                <div class="step-icon-wrap"><i class="bi bi-search"></i></div>
+                <h5 class="fw-bold">1. Tìm kiếm sản phẩm</h5>
+                <p class="text-muted small">Nhập tên sản phẩm vào ô tìm kiếm hoặc duyệt qua danh mục điện thoại, laptop.</p>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 step-col">
+            <div class="step-card">
+                <div class="step-icon-wrap"><i class="bi bi-cart-plus"></i></div>
+                <h5 class="fw-bold">2. Thêm vào giỏ</h5>
+                <p class="text-muted small">Chọn màu sắc, dung lượng bộ nhớ phù hợp và bấm "Thêm vào giỏ hàng".</p>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 step-col">
+            <div class="step-card">
+                <div class="step-icon-wrap"><i class="bi bi-credit-card"></i></div>
+                <h5 class="fw-bold">3. Thanh toán</h5>
+                <p class="text-muted small">Điền thông tin giao hàng và chọn phương thức thanh toán (COD hoặc VNPay/Momo).</p>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 step-col">
+            <div class="step-card">
+                <div class="step-icon-wrap"><i class="bi bi-box-seam"></i></div>
+                <h5 class="fw-bold">4. Nhận hàng</h5>
+                <p class="text-muted small">Kiểm tra hàng kỹ lưỡng khi nhận. Hỗ trợ đổi trả trong vòng 30 ngày.</p>
+            </div>
+        </div>
+    </div>
+
+    <hr class="my-5 text-muted opacity-25">
+
+    <div class="row g-5">
+        <div class="col-lg-8">
+            <h3 class="fw-bold mb-4 text-primary"><i class="bi bi-question-circle-fill me-2"></i>Câu hỏi thường gặp</h3>
+
+            <div class="accordion shadow-sm rounded-3 overflow-hidden" id="accordionExample">
+                <div class="accordion-item border-0 border-bottom">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#c1">
+                            Tôi có cần tài khoản để mua hàng không?
+                        </button>
+                    </h2>
+                    <div id="c1" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                        <div class="accordion-body text-muted">
+                            Có. Để đảm bảo quyền lợi bảo hành và tra cứu lịch sử đơn hàng, bạn cần đăng ký tài khoản thành viên. Việc đăng ký rất nhanh chóng chỉ với Email.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item border-0 border-bottom">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c2">
+                            Các phương thức thanh toán được hỗ trợ?
+                        </button>
+                    </h2>
+                    <div id="c2" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                        <div class="accordion-body text-muted">
+                            Chúng tôi hỗ trợ đa dạng các phương thức:
+                            <ul class="mb-0 mt-2">
+                                <li><strong>COD (Cash On Delivery):</strong> Thanh toán tiền mặt khi nhận hàng.</li>
+                                <li><strong>VNPay (QR/ATM/Visa):</strong> Thanh toán qua cổng VNPay an toàn.</li>
+                                <li><strong>Ví MoMo:</strong> Chuyển khoản nhanh qua ví điện tử.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item border-0 border-bottom">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c3">
+                            Phí vận chuyển được tính như thế nào?
+                        </button>
+                    </h2>
+                    <div id="c3" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                        <div class="accordion-body text-muted">
+                            Hiện tại, 204Store đang áp dụng chính sách <strong>Miễn phí vận chuyển (Free Shipping)</strong> cho tất cả các đơn hàng trên toàn quốc, không giới hạn giá trị đơn hàng.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item border-0">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c4">
+                            Chính sách đổi trả và hoàn tiền?
+                        </button>
+                    </h2>
+                    <div id="c4" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                        <div class="accordion-body text-muted">
+                            <p>Bạn có thể yêu cầu Trả hàng/Hoàn tiền trong trường hợp sản phẩm bị lỗi do nhà sản xuất hoặc hư hỏng do vận chuyển.</p>
+                            <div class="alert alert-warning small border-0">
+                                <i class="bi bi-exclamation-triangle me-1"></i>
+                                <strong>Lưu ý:</strong> Mỗi đơn hàng chỉ được phép gửi yêu cầu trả hàng tối đa <strong>2 lần</strong>. Vui lòng kiểm tra kỹ lý do và sản phẩm trước khi gửi yêu cầu.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 bg-light p-4 sticky-top" style="top: 100px;">
+                <h5 class="fw-bold mb-3">Cần hỗ trợ trực tiếp?</h5>
+                <p class="text-muted small">Đội ngũ chăm sóc khách hàng của chúng tôi luôn sẵn sàng hỗ trợ bạn từ 8:00 - 22:00 hàng ngày.</p>
+
+                <ul class="list-unstyled">
+                    <li class="mb-3 d-flex align-items-center">
+                        <div class="bg-white p-2 rounded-circle shadow-sm me-3 text-primary"><i class="bi bi-telephone-fill"></i></div>
+                        <div>
+                            <div class="small fw-bold text-muted">Hotline</div>
+                            <div class="fw-bold fs-5">1900 204 204</div>
+                        </div>
+                    </li>
+                    <li class="mb-3 d-flex align-items-center">
+                        <div class="bg-white p-2 rounded-circle shadow-sm me-3 text-success"><i class="bi bi-whatsapp"></i></div>
+                        <div>
+                            <div class="small fw-bold text-muted">Zalo Chat</div>
+                            <div class="fw-bold">0988.888.888</div>
+                        </div>
+                    </li>
+                    <li class="mb-4 d-flex align-items-center">
+                        <div class="bg-white p-2 rounded-circle shadow-sm me-3 text-danger"><i class="bi bi-envelope-fill"></i></div>
+                        <div>
+                            <div class="small fw-bold text-muted">Email</div>
+                            <div class="fw-bold">hotro@204store.com</div>
+                        </div>
+                    </li>
+                </ul>
+
+                <a asp-action="Index" class="btn btn-primary w-100 py-2 fw-bold rounded-pill">
+                    Bắt đầu mua sắm ngay
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

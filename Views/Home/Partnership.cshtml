@@ -1,0 +1,208 @@
+﻿@{
+    ViewData["Title"] = "Liên hệ hợp tác";
+}
+
+<style>
+    .partner-hero {
+        background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.8)), url('https://images.unsplash.com/photo-1556761175-b413da4baf72?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
+        background-size: cover;
+        background-position: center;
+        color: white;
+        padding: 80px 0;
+        border-radius: 20px;
+        margin-bottom: 50px;
+        text-align: center;
+    }
+
+    .partner-card {
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 30px;
+        height: 100%;
+        transition: 0.3s;
+        background: #fff;
+    }
+
+        .partner-card:hover {
+            border-color: #0f172a;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+    .pc-icon {
+        font-size: 2.5rem;
+        color: #0f172a;
+        margin-bottom: 20px;
+    }
+
+    .logo-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 20px;
+        align-items: center;
+        justify-items: center;
+        opacity: 0.6;
+    }
+
+        .logo-grid img {
+            max-width: 100px;
+            filter: grayscale(100%);
+            transition: 0.3s;
+        }
+
+            .logo-grid img:hover {
+                filter: grayscale(0%);
+                opacity: 1;
+                transform: scale(1.1);
+            }
+
+    .b2b-form {
+        background: #f8fafc;
+        padding: 40px;
+        border-radius: 20px;
+        border: 1px solid #e2e8f0;
+    }
+</style>
+
+<div class="container py-4">
+    <div class="partner-hero shadow">
+        <div class="col-lg-8 mx-auto">
+            <h1 class="fw-bold display-5 mb-3">Hợp tác cùng phát triển</h1>
+            <p class="fs-5 opacity-75 mb-4">
+                Với hệ thống 20 cửa hàng trên toàn quốc và 15.000+ khách hàng thân thiết,
+                204Store sẵn sàng đồng hành cùng đối tác vươn tới thành công.
+            </p>
+            <a href="#contact-b2b" class="btn btn-light text-dark fw-bold rounded-pill px-5 py-3 shadow-sm">
+                Đăng ký đối tác ngay
+            </a>
+        </div>
+    </div>
+
+    <div class="text-center mb-5">
+        <h6 class="text-primary fw-bold text-uppercase ls-1">Cơ hội kinh doanh</h6>
+        <h3 class="fw-bold">Bạn muốn hợp tác ở lĩnh vực nào?</h3>
+    </div>
+
+    <div class="row g-4 mb-5 pb-4">
+        <div class="col-md-4">
+            <div class="partner-card text-center">
+                <div class="pc-icon"><i class="bi bi-box-seam"></i></div>
+                <h4 class="fw-bold mb-3">Nhà cung cấp & Phân phối</h4>
+                <p class="text-muted small mb-4">
+                    Dành cho các thương hiệu, nhà phân phối sản phẩm công nghệ muốn đưa hàng hóa vào hệ thống bán lẻ của 204Store.
+                </p>
+                <ul class="text-start list-unstyled small text-muted bg-light p-3 rounded-3">
+                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Thanh toán đúng hạn, minh bạch.</li>
+                    <li><i class="bi bi-check-circle-fill text-success me-2"></i>Marketing sản phẩm chuyên nghiệp.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="partner-card text-center">
+                <div class="pc-icon"><i class="bi bi-building"></i></div>
+                <h4 class="fw-bold mb-3">Khách hàng Doanh nghiệp</h4>
+                <p class="text-muted small mb-4">
+                    Cung cấp thiết bị (Laptop, PC, Tablet) cho văn phòng, trường học, dự án với mức chiết khấu tốt nhất thị trường.
+                </p>
+                <ul class="text-start list-unstyled small text-muted bg-light p-3 rounded-3">
+                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Xuất hóa đơn VAT đầy đủ.</li>
+                    <li><i class="bi bi-check-circle-fill text-success me-2"></i>Hỗ trợ kỹ thuật On-site tận nơi.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="partner-card text-center">
+                <div class="pc-icon"><i class="bi bi-megaphone"></i></div>
+                <h4 class="fw-bold mb-3">Truyền thông & Tiếp thị</h4>
+                <p class="text-muted small mb-4">
+                    Hợp tác với các Reviewer, KOLs, Agency quảng cáo để cùng lan tỏa những sản phẩm công nghệ chất lượng.
+                </p>
+                <ul class="text-start list-unstyled small text-muted bg-light p-3 rounded-3">
+                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Tài trợ sản phẩm quay review.</li>
+                    <li><i class="bi bi-check-circle-fill text-success me-2"></i>Chia sẻ doanh thu Affiliate hấp dẫn.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="mb-5 py-5 border-top border-bottom">
+        <h5 class="fw-bold text-center mb-4 text-muted text-uppercase small ls-2">Đối tác chiến lược</h5>
+        <div class="logo-grid">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/1667px-Apple_logo_black.svg.png" alt="Apple">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/2/24/Samsung_Logo.svg" alt="Samsung">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a6/Logo_NIKE.svg" alt="Nike (Demo)">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Lenovo_logo_2015.svg/2560px-Lenovo_logo_2015.svg.png" alt="Lenovo">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Dell_Logo.svg/1024px-Dell_Logo.svg.png" alt="Dell">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/0/00/Acer_2011.svg" alt="Acer">
+        </div>
+    </div>
+
+    <div id="contact-b2b" class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="b2b-form shadow-lg">
+                <div class="row align-items-center">
+                    <div class="col-lg-5 mb-4 mb-lg-0">
+                        <h3 class="fw-bold mb-3">Kết nối với phòng kinh doanh</h3>
+                        <p class="text-muted mb-4">Để lại thông tin, chuyên viên B2B sẽ liên hệ và gửi hồ sơ năng lực trong vòng 2 giờ.</p>
+
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="bg-white p-2 rounded shadow-sm me-3 text-primary fs-4"><i class="bi bi-telephone-inbound"></i></div>
+                            <div>
+                                <div class="small fw-bold text-muted">Hotline B2B (24/7)</div>
+                                <div class="fw-bold fs-5">0912.345.678 (Mr. Tuấn)</div>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <div class="bg-white p-2 rounded shadow-sm me-3 text-danger fs-4"><i class="bi bi-envelope-paper"></i></div>
+                            <div>
+                                <div class="small fw-bold text-muted">Email hợp tác</div>
+                                <div class="fw-bold">partners@204store.com</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-7">
+                        <form class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold">Tên doanh nghiệp / Đối tác</label>
+                                <input type="text" class="form-control" placeholder="Công ty TNHH..." required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold">Người liên hệ</label>
+                                <input type="text" class="form-control" placeholder="Họ và tên" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold">Số điện thoại</label>
+                                <input type="tel" class="form-control" placeholder="09..." required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold">Email công việc</label>
+                                <input type="email" class="form-control" placeholder="name@company.com" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label small fw-bold">Lĩnh vực hợp tác</label>
+                                <select class="form-select">
+                                    <option>Mua hàng Doanh nghiệp (Số lượng lớn)</option>
+                                    <option>Chào hàng (Nhà cung cấp)</option>
+                                    <option>Marketing / Tài trợ</option>
+                                    <option>Khác</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label small fw-bold">Ghi chú thêm</label>
+                                <textarea class="form-control" rows="3" placeholder="Nội dung sơ bộ..."></textarea>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-dark w-100 py-2 fw-bold rounded-pill" onclick="alert('Cảm ơn! Chúng tôi đã nhận được thông tin và sẽ liên hệ sớm.'); return false;">
+                                    Gửi yêu cầu hợp tác
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
