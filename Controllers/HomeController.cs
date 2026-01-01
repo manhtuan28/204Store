@@ -12,8 +12,14 @@ namespace _204Store.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _context;
-
-
+        public IActionResult Terms()
+        {
+            return View();
+        }
+        public IActionResult Privacy()
+        {
+            return View();
+        }
         public IActionResult About()
         {
             return View();
@@ -117,12 +123,6 @@ namespace _204Store.Controllers
 
             return View(viewModel);
         }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

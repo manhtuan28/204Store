@@ -12,10 +12,12 @@ namespace _204Store.Areas.Admin.Controllers
     public class CategoriesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public CategoriesController(ApplicationDbContext context)
+        public CategoriesController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
         public async Task<IActionResult> Index()
         {
@@ -30,17 +32,34 @@ namespace _204Store.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Category category)
+        public async Task<IActionResult> Create(Category category, IFormFile? file)
         {
             if (ModelState.IsValid)
             {
+                if (file != null)
+                {
+                    string wwwRootPath = _webHostEnvironment.WebRootPath;
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    string productPath = Path.Combine(wwwRootPath, @"images\categories");
+
+                    if (!Directory.Exists(productPath)) Directory.CreateDirectory(productPath);
+
+                    using (var fileStream = new FileStream(Path.Combine(productPath, fileName), FileMode.Create))
+                    {
+                        await file.CopyToAsync(fileStream);
+                    }
+                    category.ImageUrl = @"\images\categories\" + fileName;
+                }
+
                 _context.Add(category);
                 await _context.SaveChangesAsync();
                 TempData["success"] = "Tạo danh mục thành công";
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["ParentId"] = new SelectList(_context.Categories.Where(c => c.ParentId == null), "Id", "Name", category.ParentId);
             return View(category);
         }
+
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
@@ -55,7 +74,7 @@ namespace _204Store.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Category category)
+        public async Task<IActionResult> Edit(int id, Category category, IFormFile? file)
         {
             if (id != category.Id) return NotFound();
 
@@ -63,6 +82,30 @@ namespace _204Store.Areas.Admin.Controllers
             {
                 try
                 {
+                    if (file != null)
+                    {
+                        string wwwRootPath = _webHostEnvironment.WebRootPath;
+                        string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                        string productPath = Path.Combine(wwwRootPath, @"images\categories");
+
+                        if (!Directory.Exists(productPath)) Directory.CreateDirectory(productPath);
+
+                        if (!string.IsNullOrEmpty(category.ImageUrl))
+                        {
+                            var oldImagePath = Path.Combine(wwwRootPath, category.ImageUrl.TrimStart('\\'));
+                            if (System.IO.File.Exists(oldImagePath))
+                            {
+                                System.IO.File.Delete(oldImagePath);
+                            }
+                        }
+
+                        using (var fileStream = new FileStream(Path.Combine(productPath, fileName), FileMode.Create))
+                        {
+                            await file.CopyToAsync(fileStream);
+                        }
+                        category.ImageUrl = @"\images\categories\" + fileName;
+                    }
+
                     _context.Update(category);
                     await _context.SaveChangesAsync();
                     TempData["success"] = "Cập nhật danh mục thành công";
@@ -74,6 +117,7 @@ namespace _204Store.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["ParentId"] = new SelectList(_context.Categories.Where(c => c.ParentId == null && c.Id != id), "Id", "Name", category.ParentId);
             return View(category);
         }
 

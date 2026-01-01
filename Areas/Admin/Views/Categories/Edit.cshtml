@@ -5,7 +5,7 @@
 }
 
 <div class="row justify-content-center mt-4">
-    <div class="col-md-5">
+    <div class="col-md-6">
         <div class="mb-3">
             <a asp-action="Index" class="text-decoration-none text-muted small fw-bold">
                 <i class="bi bi-arrow-left me-1"></i>Quay lại danh sách
@@ -26,10 +26,9 @@
             </div>
 
             <div class="card-body p-4">
-                <form asp-action="Edit" method="post">
+                <form asp-action="Edit" method="post" enctype="multipart/form-data">
                     <input type="hidden" asp-for="Id" />
-
-                    <div class="mb-4">
+                    <input type="hidden" asp-for="ImageUrl" /> <div class="mb-4">
                         <label asp-for="Name" class="form-label fw-semibold text-secondary small">TÊN DANH MỤC</label>
                         <div class="input-group">
                             <span class="input-group-text bg-light border-0 text-muted ps-3 rounded-start-3"><i class="bi bi-tag-fill"></i></span>
@@ -39,19 +38,45 @@
                     </div>
 
                     <div class="mb-4">
-                        <label asp-for="DisplayOrder" class="form-label fw-semibold text-secondary small">THỨ TỰ HIỂN THỊ</label>
+                        <label asp-for="Icon" class="form-label fw-semibold text-secondary small">BIỂU TƯỢNG (ICON)</label>
                         <div class="input-group">
-                            <span class="input-group-text bg-light border-0 text-muted ps-3 rounded-start-3"><i class="bi bi-sort-numeric-down"></i></span>
-                            <input asp-for="DisplayOrder" class="form-control form-control-lg bg-light border-0 rounded-end-3" type="number" />
+                            <span class="input-group-text bg-light border-0 ps-3 rounded-start-3">
+                                <i id="iconPreview" class="@(string.IsNullOrEmpty(Model?.Icon) ? "bi bi-stars" : Model.Icon) fs-5 text-primary"></i>
+                            </span>
+                            <input asp-for="Icon" id="iconInput" class="form-control form-control-lg bg-light border-0" placeholder="Chọn icon..." readonly style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#iconSelectorModal" />
+                            <button type="button" class="btn btn-primary rounded-end-3 px-3" data-bs-toggle="modal" data-bs-target="#iconSelectorModal">
+                                <i class="bi bi-grid-3x3-gap-fill me-1"></i> Thay đổi
+                            </button>
                         </div>
-                        <span asp-validation-for="DisplayOrder" class="text-danger small mt-1 d-block ms-1"></span>
                     </div>
-                    <div class="mb-3">
-                        <label asp-for="ParentId" class="form-label fw-semibold text-secondary">Danh mục cha (Tùy chọn)</label>
-                        <select asp-for="ParentId" class="form-select" asp-items="ViewBag.ParentId">
-                            <option value="">-- Là danh mục gốc --</option>
-                        </select>
+
+                    <div class="mb-4">
+                        <label asp-for="ImageUrl" class="form-label fw-semibold text-secondary small">ẢNH ĐẠI DIỆN</label>
+                        <div class="d-flex align-items-center">
+                            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                            {
+                                <img src="@Model.ImageUrl" width="60" height="60" class="rounded-3 border me-3 object-fit-cover" />
+                            }
+                            <input type="file" name="file" class="form-control bg-light border-0" accept="image/*" />
+                        </div>
                     </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label asp-for="DisplayOrder" class="form-label fw-semibold text-secondary small">THỨ TỰ</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-0 text-muted ps-3 rounded-start-3"><i class="bi bi-sort-numeric-down"></i></span>
+                                <input asp-for="DisplayOrder" class="form-control form-control-lg bg-light border-0 rounded-end-3" type="number" />
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label asp-for="ParentId" class="form-label fw-semibold text-secondary small">DANH MỤC CHA</label>
+                            <select asp-for="ParentId" class="form-select form-select-lg bg-light border-0 rounded-3" asp-items="ViewBag.ParentId">
+                                <option value="">-- Là danh mục gốc --</option>
+                            </select>
+                        </div>
+                    </div>
+
                     <div class="pt-2">
                         <button type="submit" class="btn btn-primary w-100 fw-bold rounded-3 py-3 mb-2 shadow-sm" style="background-color: #4f46e5; border-color: #4f46e5;">
                             <i class="bi bi-save me-2"></i>Lưu thay đổi
@@ -64,8 +89,103 @@
     </div>
 </div>
 
+<div class="modal fade" id="iconSelectorModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content rounded-4 border-0 shadow" style="height: 80vh;">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold">Thư viện Icon (2000+)</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="iconSearch" class="form-control mb-3 sticky-top rounded-pill shadow-sm" placeholder="Tìm kiếm icon..." autocomplete="off">
+                <div id="loadingIcons" class="text-center py-5 text-muted">
+                    <div class="spinner-border text-primary mb-2" role="status"></div>
+                    <p>Đang tải thư viện icon...</p>
+                </div>
+                <div class="row row-cols-4 row-cols-md-6 g-2" id="iconGrid"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const iconGrid = document.getElementById("iconGrid");
+            const loading = document.getElementById("loadingIcons");
+            const searchInput = document.getElementById("iconSearch");
+
+            const customBrandIcons = [
+                "bi-brand-apple", "bi-brand-samsung", "bi-brand-xiaomi",
+                "bi-brand-oppo", "bi-brand-vivo", "bi-brand-dell",
+                "bi-brand-asus", "bi-brand-hp", "bi-brand-lenovo", "bi-brand-sony"
+            ];
+
+            let allIcons = [];
+
+            fetch('https://raw.githubusercontent.com/twbs/icons/main/font/bootstrap-icons.json')
+                .then(response => response.json())
+                .then(data => {
+                    const bootstrapIcons = Object.keys(data).map(k => 'bi-' + k);
+                    allIcons = [...customBrandIcons, ...bootstrapIcons];
+
+                    renderIcons(allIcons);
+                    loading.style.display = 'none';
+                })
+                .catch(err => {
+                    console.error("Lỗi tải icon:", err);
+                    renderIcons(customBrandIcons);
+                    loading.style.display = 'none';
+                });
+
+            function renderIcons(icons) {
+                iconGrid.innerHTML = "";
+                const limit = searchInput.value ? icons.length : 300;
+
+                icons.slice(0, limit).forEach(iconClass => {
+
+                    let fullClass = iconClass.startsWith('bi-brand') ? iconClass : `bi ${iconClass}`;
+                    let displayName = iconClass.replace('bi-brand-', '').replace('bi-', '');
+
+                    const col = document.createElement("div");
+                    col.className = "col";
+                    col.innerHTML = `
+                        <div class="p-2 border rounded-3 text-center icon-option cursor-pointer hover-shadow"
+                             onclick="selectIcon('${fullClass}')" style="cursor: pointer; transition: 0.2s;" title="${displayName}">
+                            <i class="${fullClass} fs-3 text-secondary"></i>
+                            <div class="small text-muted mt-1 text-truncate" style="font-size: 10px;">${displayName}</div>
+                        </div>
+                    `;
+                    iconGrid.appendChild(col);
+                });
+            }
+
+            searchInput.addEventListener("input", (e) => {
+                const term = e.target.value.toLowerCase();
+                const filtered = allIcons.filter(i => i.includes(term));
+                renderIcons(filtered);
+            });
+
+            window.selectIcon = function(iconClass) {
+                document.getElementById("iconInput").value = iconClass;
+                document.getElementById("iconPreview").className = `${iconClass} fs-5 text-primary`;
+                const modal = bootstrap.Modal.getInstance(document.getElementById('iconSelectorModal'));
+                modal.hide();
+            };
+        });
+    </script>
+    <style>
+        .hover-shadow:hover {
+            background-color: #f8fafc;
+            border-color: #4f46e5 !important;
+            transform: translateY(-2px);
+        }
+
+            .hover-shadow:hover i {
+                color: #4f46e5 !important;
+            }
+    </style>
 }
