@@ -1,5 +1,4 @@
-﻿// Đơn hàng
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace _204Store.Models
@@ -13,22 +12,27 @@ namespace _204Store.Models
         [ForeignKey("ApplicationUserId")]
         public ApplicationUser ApplicationUser { get; set; }
 
+        [Required]
         public DateTime OrderDate { get; set; }
-        public DateTime ShippingDate { get; set; }
-        public double OrderTotal { get; set; }
-        public string OrderStatus { get; set; }
-        public string PaymentStatus { get; set; }
 
         [Required]
-        public string Name { get; set; }
+        public double OrderTotal { get; set; }
+
+        public string? OrderStatus { get; set; }
+        public string? PaymentStatus { get; set; }
+        public string? TrackingNumber { get; set; }
+        public string? Carrier { get; set; }
+
         [Required]
         public string PhoneNumber { get; set; }
         [Required]
-        public string Address { get; set; }
+        public string StreetAddress { get; set; }
         [Required]
         public string City { get; set; }
-
-        public string? PromotionCode { get; set; }
-        public double DiscountAmount { get; set; }
+        [Required]
+        public string Name { get; set; }
+        public ICollection<OrderDetail> OrderDetails { get; set; }
+        public string? ReturnReason { get; set; }
+        public int ReturnAttempts { get; set; } = 0;
     }
 }

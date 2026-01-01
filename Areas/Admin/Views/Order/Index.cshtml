@@ -1,0 +1,98 @@
+﻿@model IEnumerable<_204Store.Models.OrderHeader>
+@{
+    ViewData["Title"] = "Quản lý đơn hàng";
+}
+
+<div class="container-fluid px-4">
+    <h3 class="mt-4 fw-bold">Quản lý đơn hàng</h3>
+
+    <div class="card mb-4 shadow-sm rounded-3">
+        <div class="card-header bg-white py-3">
+            <i class="bi bi-table me-1"></i>
+            Danh sách đơn hàng
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered table-hover align-middle" id="datatablesSimple">
+                <thead class="bg-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Khách hàng</th>
+                        <th>Ngày đặt</th>
+                        <th>Tổng tiền</th>
+                        <th>Trạng thái</th>
+                        <th>Thanh toán</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>#@item.Id</td>
+                            <td>
+                                <div class="fw-bold">@item.Name</div>
+                                <div class="small text-muted">@item.PhoneNumber</div>
+                            </td>
+                            <td>@item.OrderDate.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td class="fw-bold text-danger">@item.OrderTotal.ToString("#,##0")đ</td>
+
+                            <td>
+                                @switch (item.OrderStatus)
+                                {
+                                    case "Pending":
+                                        <span class="badge bg-warning text-dark">Chờ xác nhận</span>
+                                        ; break;
+                                    case "Processing":
+
+                                        <span class="badge bg-primary">Đang xử lý</span>
+                                        ; break;
+                                    case "Shipped":
+
+                                        <span class="badge bg-info text-dark">Đang giao</span>
+                                        ; break;
+                                    case "Completed":
+
+                                        <span class="badge bg-success">Hoàn thành</span>
+                                        ; break;
+                                    case "Cancelled":
+
+                                        <span class="badge bg-danger">Đã hủy</span>
+                                        ; break;
+                                    case "ReturnRequested":
+                                        <span class="badge bg-warning text-dark">Yêu cầu trả hàng</span>
+                                        ;
+                                        break;
+                                    case "Refunded":
+                                        <span class="badge bg-danger">Đã hoàn tiền</span>
+                                        ;
+                                        break;
+                                    default:
+
+                                        <span>@item.OrderStatus</span>
+                                        ; break;
+                                }
+                            </td>
+
+                            <td>
+                                @if (item.PaymentStatus == "Approved")
+                                {
+                                    <span class="text-success fw-bold"><i class="bi bi-check-circle-fill"></i> Đã TT</span>
+                                }
+                                else
+                                {
+                                    <span class="text-secondary">Chưa TT (COD)</span>
+                                }
+                            </td>
+
+                            <td>
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-primary">
+                                    <i class="bi bi-eye"></i> Xử lý
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

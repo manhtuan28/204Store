@@ -325,20 +325,16 @@ namespace _204Store.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("ApplicationUserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("Carrier")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("City")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("DiscountAmount")
-                        .HasColumnType("float");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -348,25 +344,30 @@ namespace _204Store.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("OrderStatus")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("OrderTotal")
                         .HasColumnType("float");
 
                     b.Property<string>("PaymentStatus")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PromotionCode")
+                    b.Property<int>("ReturnAttempts")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ReturnReason")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ShippingDate")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("StreetAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TrackingNumber")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -404,6 +405,9 @@ namespace _204Store.Migrations
 
                     b.Property<int>("Sold")
                         .HasColumnType("int");
+
+                    b.Property<string>("Specifications")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -449,6 +453,28 @@ namespace _204Store.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("ProductDetails");
+                });
+
+            modelBuilder.Entity("_204Store.Models.ProductImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductImages");
                 });
 
             modelBuilder.Entity("_204Store.Models.Promotion", b =>
@@ -565,7 +591,7 @@ namespace _204Store.Migrations
             modelBuilder.Entity("_204Store.Models.OrderDetail", b =>
                 {
                     b.HasOne("_204Store.Models.OrderHeader", "OrderHeader")
-                        .WithMany()
+                        .WithMany("OrderDetails")
                         .HasForeignKey("OrderHeaderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -614,14 +640,32 @@ namespace _204Store.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("_204Store.Models.ProductImage", b =>
+                {
+                    b.HasOne("_204Store.Models.Product", "Product")
+                        .WithMany("ProductImages")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("_204Store.Models.Category", b =>
                 {
                     b.Navigation("ChildCategories");
                 });
 
+            modelBuilder.Entity("_204Store.Models.OrderHeader", b =>
+                {
+                    b.Navigation("OrderDetails");
+                });
+
             modelBuilder.Entity("_204Store.Models.Product", b =>
                 {
                     b.Navigation("ProductDetails");
+
+                    b.Navigation("ProductImages");
                 });
 #pragma warning restore 612, 618
         }

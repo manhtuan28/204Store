@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace _204Store.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = "Admin")] // Đảm bảo đã đăng nhập quyền Admin
+    [Authorize(Roles = "Admin")]
     public class DashboardController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -22,7 +22,10 @@ namespace _204Store.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var tongDoanhThu = await _context.OrderHeaders.SumAsync(u => u.OrderTotal);
+            var tongDoanhThu = await _context.OrderHeaders
+                    .Where(u => u.PaymentStatus == "Approved" && u.OrderStatus != "Cancelled" && u.OrderStatus != "Refunded")
+                    .SumAsync(u => u.OrderTotal);
+
             var tongDonHang = await _context.OrderHeaders.CountAsync();
             var tongSanPham = await _context.Products.CountAsync();
             var tongKhachHang = await _context.Users.CountAsync();

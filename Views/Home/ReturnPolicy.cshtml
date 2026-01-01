@@ -1,0 +1,200 @@
+﻿@{
+    ViewData["Title"] = "Chính sách đổi trả";
+}
+
+<style>
+    .return-hero {
+        background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+        color: white;
+        padding: 60px 0;
+        border-radius: 20px;
+        margin-bottom: 40px;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .return-hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: url('https://cdn-icons-png.flaticon.com/512/1585/1585147.png') no-repeat 95% center;
+            background-size: 150px;
+            opacity: 0.2;
+        }
+
+    .info-box {
+        background: #fff;
+        border: 1px dashed #cbd5e1;
+        border-radius: 16px;
+        padding: 25px;
+        height: 100%;
+        transition: 0.3s;
+    }
+
+        .info-box:hover {
+            border-color: #f59e0b;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(245, 158, 11, 0.1);
+        }
+
+    .ib-icon {
+        width: 50px;
+        height: 50px;
+        background: #fffbeb;
+        color: #d97706;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+    }
+
+    .refund-timeline {
+        position: relative;
+        padding-left: 30px;
+        border-left: 2px solid #e2e8f0;
+        margin-left: 10px;
+    }
+
+    .rt-item {
+        position: relative;
+        margin-bottom: 30px;
+    }
+
+        .rt-item::before {
+            content: '';
+            position: absolute;
+            left: -36px;
+            top: 0;
+            width: 14px;
+            height: 14px;
+            background: #fff;
+            border: 3px solid #cbd5e1;
+            border-radius: 50%;
+        }
+
+        .rt-item.active::before {
+            border-color: #f59e0b;
+            background: #f59e0b;
+        }
+</style>
+
+<div class="container py-4">
+    <div class="return-hero text-center shadow-sm">
+        <h1 class="fw-bold mb-2">Chính sách đổi trả & Hoàn tiền</h1>
+        <p class="fs-5 opacity-90 mb-0">An tâm mua sắm - Hỗ trợ đổi trả trong 30 ngày</p>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="info-box">
+                <div class="ib-icon"><i class="bi bi-calendar-check"></i></div>
+                <h5 class="fw-bold">Thời gian áp dụng</h5>
+                <p class="text-muted small mb-0">
+                    Khách hàng được quyền gửi yêu cầu đổi trả trong vòng <strong>30 ngày</strong> kể từ ngày nhận hàng thành công (theo dấu bưu điện).
+                </p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="info-box">
+                <div class="ib-icon"><i class="bi bi-box-seam"></i></div>
+                <h5 class="fw-bold">Tình trạng sản phẩm</h5>
+                <p class="text-muted small mb-0">
+                    Sản phẩm phải còn nguyên tem, hộp, phụ kiện và quà tặng kèm theo. Không bị trầy xước, móp méo do người sử dụng.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="info-box">
+                <div class="ib-icon"><i class="bi bi-wallet2"></i></div>
+                <h5 class="fw-bold">Phương thức hoàn tiền</h5>
+                <p class="text-muted small mb-0">
+                    Hoàn tiền 100% qua chuyển khoản ngân hàng hoặc Ví điện tử (Momo/VNPay) trong vòng 3-5 ngày làm việc.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-5">
+        <div class="col-lg-7">
+            <h4 class="fw-bold mb-4 text-dark"><i class="bi bi-list-check me-2"></i>Quy định chi tiết</h4>
+
+            <div class="card border-0 shadow-sm rounded-4 mb-4">
+                <div class="card-header bg-white py-3">
+                    <h6 class="fw-bold mb-0 text-success"><i class="bi bi-check-circle-fill me-2"></i>Các trường hợp ĐƯỢC đổi trả</h6>
+                </div>
+                <div class="card-body">
+                    <ul class="mb-0 text-secondary">
+                        <li class="mb-2">Sản phẩm bị lỗi kỹ thuật do nhà sản xuất (Màn hình, Pin, Camera...).</li>
+                        <li class="mb-2">Sản phẩm bị hư hỏng, bể vỡ trong quá trình vận chuyển.</li>
+                        <li class="mb-2">Giao sai mẫu mã, màu sắc, sai dung lượng bộ nhớ so với đơn đặt hàng.</li>
+                        <li>Sản phẩm đã hết hạn sử dụng (nếu có).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-4 mb-4">
+                <div class="card-header bg-white py-3">
+                    <h6 class="fw-bold mb-0 text-danger"><i class="bi bi-x-circle-fill me-2"></i>Các trường hợp KHÔNG hỗ trợ</h6>
+                </div>
+                <div class="card-body">
+                    <ul class="mb-0 text-secondary">
+                        <li class="mb-2">Sản phẩm trầy xước, móp méo, vào nước do lỗi người sử dụng.</li>
+                        <li class="mb-2">Máy đã bị can thiệp phần mềm (Root, Jailbreak) hoặc tháo mở sửa chữa bên ngoài.</li>
+                        <li class="mb-2">Không thích, đổi ý (Chỉ hỗ trợ thu mua lại với mức chiết khấu 15-20%).</li>
+                        <li>Mất hộp, mất phụ kiện đi kèm (Sạc, cáp...).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="alert alert-warning border-0 d-flex align-items-center rounded-3">
+                <i class="bi bi-exclamation-triangle-fill fs-3 me-3"></i>
+                <div>
+                    <strong>Lưu ý quan trọng:</strong>
+                    <div class="small">Mỗi đơn hàng chỉ được phép gửi yêu cầu trả hàng tối đa <strong>2 lần</strong> trên hệ thống. Vui lòng kiểm tra kỹ trước khi gửi.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <div class="bg-light p-4 rounded-4 h-100">
+                <h4 class="fw-bold mb-4">Quy trình hoàn tiền</h4>
+
+                <div class="refund-timeline">
+                    <div class="rt-item active">
+                        <h6 class="fw-bold">B1. Gửi yêu cầu</h6>
+                        <p class="small text-muted">Vào <strong>Lịch sử đơn hàng</strong> > Chọn đơn đã mua > Bấm nút "Yêu cầu trả hàng" và nhập lý do/hình ảnh lỗi.</p>
+                    </div>
+
+                    <div class="rt-item active">
+                        <h6 class="fw-bold">B2. Gửi hàng về Shop</h6>
+                        <p class="small text-muted">Sau khi Admin xác nhận, bạn đóng gói sản phẩm và gửi về địa chỉ: <em>Số 1 Đại Cồ Việt, Hà Nội</em> (Shop chịu phí ship nếu lỗi do Shop).</p>
+                    </div>
+
+                    <div class="rt-item">
+                        <h6 class="fw-bold">B3. Kiểm tra thẩm định</h6>
+                        <p class="small text-muted">Kỹ thuật viên sẽ kiểm tra tình trạng máy trong vòng 24h kể từ khi nhận được hàng.</p>
+                    </div>
+
+                    <div class="rt-item">
+                        <h6 class="fw-bold">B4. Nhận tiền hoàn</h6>
+                        <p class="small text-muted">Hệ thống cập nhật trạng thái <strong>"Đã hoàn tiền"</strong>. Tiền sẽ về tài khoản của bạn sau 1-3 ngày.</p>
+                    </div>
+                </div>
+
+                <hr class="border-secondary opacity-25">
+
+                <div class="text-center">
+                    <p class="fw-bold mb-2">Cần hỗ trợ gấp?</p>
+                    <a href="tel:1900204204" class="btn btn-warning text-white fw-bold w-100 rounded-pill shadow-sm">
+                        <i class="bi bi-telephone-fill me-2"></i>Gọi khiếu nại: 1900 204 204
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

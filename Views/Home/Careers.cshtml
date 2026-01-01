@@ -1,0 +1,276 @@
+﻿@{
+    ViewData["Title"] = "Tuyển dụng";
+}
+
+<style>
+    .career-hero {
+        background: url('https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80') no-repeat center center;
+        background-size: cover;
+        height: 350px;
+        position: relative;
+        border-radius: 20px;
+        margin-bottom: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .career-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: rgba(30, 41, 59, 0.85);
+            border-radius: 20px;
+        }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+        color: white;
+        max-width: 700px;
+    }
+
+    .benefit-item {
+        text-align: center;
+        padding: 30px 20px;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        transition: 0.3s;
+        height: 100%;
+        background: #fff;
+    }
+
+        .benefit-item:hover {
+            border-color: #ec4899;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(236, 72, 153, 0.15);
+        }
+
+    .bi-icon {
+        font-size: 2.5rem;
+        color: #ec4899;
+        margin-bottom: 20px;
+        background: #fdf2f8;
+        width: 80px;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        margin: 0 auto 20px;
+    }
+
+    .job-card {
+        border: none;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        border-radius: 12px;
+        margin-bottom: 20px;
+        overflow: hidden;
+    }
+
+    .job-header {
+        background: #fff;
+        padding: 20px;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: 0.2s;
+    }
+
+        .job-header:hover {
+            background: #f8fafc;
+        }
+
+    .job-tag {
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 4px 12px;
+        border-radius: 20px;
+        text-transform: uppercase;
+    }
+
+    .tag-hot {
+        background: #fee2e2;
+        color: #ef4444;
+    }
+
+    .tag-new {
+        background: #dcfce7;
+        color: #166534;
+    }
+</style>
+
+<div class="container py-4">
+    <div class="career-hero shadow-sm">
+        <div class="hero-content">
+            <h1 class="fw-bold display-5 mb-3">Gia nhập đội ngũ 204Store</h1>
+            <p class="fs-5 opacity-90 mb-4">Cùng chúng tôi kiến tạo trải nghiệm mua sắm công nghệ hàng đầu Việt Nam.</p>
+            <a href="#openings" class="btn btn-light text-dark fw-bold rounded-pill px-5 py-2 shadow">Xem vị trí đang tuyển</a>
+        </div>
+    </div>
+
+    <div class="text-center mb-5">
+        <h6 class="text-primary fw-bold text-uppercase ls-1">Môi trường làm việc</h6>
+        <h3 class="fw-bold">Tại sao chọn 204Store?</h3>
+    </div>
+
+    <div class="row g-4 mb-5 pb-4">
+        <div class="col-md-3">
+            <div class="benefit-item">
+                <div class="bi-icon"><i class="bi bi-cash-coin"></i></div>
+                <h5 class="fw-bold">Thu nhập hấp dẫn</h5>
+                <p class="text-muted small mb-0">Lương cứng cạnh tranh + Thưởng doanh số không giới hạn hàng tháng.</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="benefit-item">
+                <div class="bi-icon"><i class="bi bi-people-fill"></i></div>
+                <h5 class="fw-bold">Môi trường trẻ</h5>
+                <p class="text-muted small mb-0">Đồng nghiệp 9x, GenZ năng động, hòa đồng. Sếp tâm lý, hỗ trợ hết mình.</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="benefit-item">
+                <div class="bi-icon"><i class="bi bi-graph-up-arrow"></i></div>
+                <h5 class="fw-bold">Cơ hội thăng tiến</h5>
+                <p class="text-muted small mb-0">Lộ trình thăng tiến rõ ràng lên Cửa hàng trưởng, Quản lý khu vực sau 6 tháng.</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="benefit-item">
+                <div class="bi-icon"><i class="bi bi-gift-fill"></i></div>
+                <h5 class="fw-bold">Đãi ngộ đặc biệt</h5>
+                <p class="text-muted small mb-0">Mua hàng giá gốc. Teambuilding hàng năm. Thưởng Tết, Lễ, Sinh nhật.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="openings" class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="d-flex justify-content-between align-items-end mb-4">
+                <h3 class="fw-bold m-0">Vị trí đang tuyển dụng</h3>
+                <span class="text-muted">3 vị trí</span>
+            </div>
+
+            <div class="job-card">
+                <div class="job-header" data-bs-toggle="collapse" data-bs-target="#job1">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-primary text-white rounded p-3 me-3 text-center" style="width: 60px;">
+                            <h5 class="m-0 fw-bold">01</h5>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-1">Nhân viên Tư vấn bán hàng</h5>
+                            <div class="small text-muted">
+                                <i class="bi bi-geo-alt me-1"></i>Hà Nội & TP.HCM &bull;
+                                <span class="ms-2 fw-bold text-success">8 - 15 Triệu</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="job-tag tag-hot me-2">GẤP</span>
+                        <i class="bi bi-chevron-down text-muted"></i>
+                    </div>
+                </div>
+                <div id="job1" class="collapse bg-light border-top">
+                    <div class="p-4">
+                        <h6 class="fw-bold">Mô tả công việc:</h6>
+                        <ul class="small text-muted mb-3">
+                            <li>Tư vấn, giới thiệu các sản phẩm điện thoại, laptop cho khách hàng tại Showroom.</li>
+                            <li>Hỗ trợ giải đáp thắc mắc, chốt đơn hàng.</li>
+                            <li>Vệ sinh, trưng bày sản phẩm đẹp mắt.</li>
+                        </ul>
+                        <h6 class="fw-bold">Yêu cầu:</h6>
+                        <ul class="small text-muted mb-3">
+                            <li>Nam/Nữ từ 18-25 tuổi, ngoại hình ưa nhìn.</li>
+                            <li>Giao tiếp tốt, yêu thích công nghệ là một lợi thế.</li>
+                            <li>Không yêu cầu kinh nghiệm (được đào tạo bài bản).</li>
+                        </ul>
+                        <a href="mailto:tuyendung@204store.com?subject=UngTuyen_TuVan_TenBan" class="btn btn-primary btn-sm rounded-pill px-4 fw-bold">Ứng tuyển ngay</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="job-card">
+                <div class="job-header" data-bs-toggle="collapse" data-bs-target="#job2">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-dark text-white rounded p-3 me-3 text-center" style="width: 60px;">
+                            <h5 class="m-0 fw-bold">02</h5>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-1">Kỹ thuật viên Phần cứng</h5>
+                            <div class="small text-muted">
+                                <i class="bi bi-geo-alt me-1"></i>Đà Nẵng &bull;
+                                <span class="ms-2 fw-bold text-success">10 - 20 Triệu</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="job-tag tag-new me-2">MỚI</span>
+                        <i class="bi bi-chevron-down text-muted"></i>
+                    </div>
+                </div>
+                <div id="job2" class="collapse bg-light border-top">
+                    <div class="p-4">
+                        <h6 class="fw-bold">Mô tả công việc:</h6>
+                        <ul class="small text-muted mb-3">
+                            <li>Tiếp nhận, kiểm tra lỗi và sửa chữa điện thoại (Thay pin, màn hình, ép kính...).</li>
+                            <li>Tư vấn giải pháp sửa chữa cho khách hàng.</li>
+                        </ul>
+                        <h6 class="fw-bold">Yêu cầu:</h6>
+                        <ul class="small text-muted mb-3">
+                            <li>Có kinh nghiệm sửa chữa phần cứng tối thiểu 1 năm.</li>
+                            <li>Cẩn thận, trung thực, có trách nhiệm.</li>
+                        </ul>
+                        <a href="mailto:tuyendung@204store.com?subject=UngTuyen_KyThuat_TenBan" class="btn btn-primary btn-sm rounded-pill px-4 fw-bold">Ứng tuyển ngay</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="job-card">
+                <div class="job-header" data-bs-toggle="collapse" data-bs-target="#job3">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-info text-white rounded p-3 me-3 text-center" style="width: 60px;">
+                            <h5 class="m-0 fw-bold">03</h5>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-1">Content Marketing (Thực tập/Fulltime)</h5>
+                            <div class="small text-muted">
+                                <i class="bi bi-geo-alt me-1"></i>Hà Nội &bull;
+                                <span class="ms-2 fw-bold text-success">Thỏa thuận</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <i class="bi bi-chevron-down text-muted"></i>
+                    </div>
+                </div>
+                <div id="job3" class="collapse bg-light border-top">
+                    <div class="p-4">
+                        <h6 class="fw-bold">Mô tả công việc:</h6>
+                        <ul class="small text-muted mb-3">
+                            <li>Sáng tạo nội dung cho Fanpage, Website, Tiktok của shop.</li>
+                            <li>Lên kịch bản quay video review sản phẩm.</li>
+                        </ul>
+                        <a href="mailto:tuyendung@204store.com?subject=UngTuyen_MKT_TenBan" class="btn btn-primary btn-sm rounded-pill px-4 fw-bold">Ứng tuyển ngay</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-primary border-0 rounded-4 mt-5 p-4 text-center">
+                <h4 class="fw-bold text-primary mb-3">Cách thức ứng tuyển</h4>
+                <p class="mb-3">Bạn đã sẵn sàng gia nhập 204Store? Hãy gửi CV của bạn về email:</p>
+                <div class="d-inline-block bg-white px-4 py-2 rounded-3 border border-primary border-opacity-25 shadow-sm">
+                    <i class="bi bi-envelope-fill text-primary me-2"></i>
+                    <span class="fw-bold fs-5 text-dark">tuyendung@204store.com</span>
+                </div>
+                <p class="small text-muted mt-3 mb-0">Tiêu đề email: <strong>[Vị trí ứng tuyển] - [Họ tên của bạn]</strong></p>
+            </div>
+
+        </div>
+    </div>
+</div>

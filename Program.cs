@@ -20,7 +20,7 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddControllersWithViews();
-
+builder.Services.AddSingleton<VnPayService>();
 builder.Services.AddAuthentication()
     .AddGoogle(options =>
     {
@@ -37,8 +37,25 @@ builder.Services.AddAuthentication()
     });
 
 builder.Services.AddTransient<IEmailSender, EmailSender>();
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
 
 var app = builder.Build();
+
+//using (var scope = app.Services.CreateScope())
+//{
+//    var services = scope.ServiceProvider;
+//    try
+//    {
+//        await _204Store.Data.DbInitializer.Initialize(services);
+//    }
+//    catch (Exception ex)
+//    {
+//        var logger = services.GetRequiredService<ILogger<Program>>();
+//        logger.LogError(ex, "Đã xảy ra lỗi khi khởi tạo dữ liệu mẫu.");
+//    }
+//}
 
 if (app.Environment.IsDevelopment())
 {

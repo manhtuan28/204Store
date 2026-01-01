@@ -24,7 +24,6 @@
             overflow-x: hidden;
         }
 
-        /* Sidebar Styling */
         #sidebar-wrapper {
             position: fixed;
             top: 0;
@@ -90,14 +89,12 @@
                 box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
             }
 
-        /* Content Wrapper */
         #page-content-wrapper {
             width: 100%;
             padding-left: 280px;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Toggled State */
         body.sb-sidenav-toggled #sidebar-wrapper {
             margin-left: -280px;
         }
@@ -152,7 +149,7 @@
                 </a>
 
                 <div class="sidebar-label">Hệ thống</div>
-                <a href="#" class="list-group-item"><i class="bi bi-receipt-cutoff"></i> Đơn hàng</a>
+                <a asp-area="Admin" asp-controller="Order" asp-action="Index" class="list-group-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Order" ? "active-menu" : "")"><i class="bi bi-receipt-cutoff"></i> Đơn hàng</a>
                 <a href="#" class="list-group-item"><i class="bi bi-people-fill"></i> Khách hàng</a>
             </div>
 

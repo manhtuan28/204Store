@@ -1,0 +1,204 @@
+﻿@using System.Globalization
+@model _204Store.Models.OrderHeader
+@{
+    ViewData["Title"] = "Thanh toán";
+    var cartItems = ViewBag.CartItems as List<_204Store.Models.CartItem>;
+}
+
+<div class="container py-5">
+    <form asp-action="PlaceOrder" method="post" id="checkoutForm">
+        <div class="row g-5">
+            <div class="col-lg-7">
+                <div class="card border-0 shadow-sm rounded-4 mb-4">
+                    <div class="card-header bg-white border-bottom py-3">
+                        <h5 class="fw-bold mb-0 text-dark"><i class="bi bi-person-lines-fill me-2 text-primary"></i>Thông tin giao hàng</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small text-muted">Họ và tên</label>
+                                <input asp-for="Name" class="form-control" required />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small text-muted">Số điện thoại</label>
+                                <input asp-for="PhoneNumber" class="form-control" required />
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label fw-bold small text-muted">Địa chỉ hành chính</label>
+                                <div class="row g-2">
+                                    <div class="col-md-4">
+                                        <select class="form-select" id="province" required>
+                                            <option value="">Tỉnh / Thành</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select class="form-select" id="district" required disabled>
+                                            <option value="">Quận / Huyện</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select class="form-select" id="ward" required disabled>
+                                            <option value="">Phường / Xã</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <input type="hidden" asp-for="City" id="fullAddress" />
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label fw-bold small text-muted">Số nhà, Tên đường</label>
+                                <input asp-for="StreetAddress" class="form-control" placeholder="Ví dụ: Số 20 ngõ 90 đường Láng" required />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card border-0 shadow-sm rounded-4">
+                    <div class="card-header bg-white border-bottom py-3">
+                        <h5 class="fw-bold mb-0 text-dark"><i class="bi bi-credit-card-2-front me-2 text-primary"></i>Phương thức thanh toán</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="payment-options">
+                            <div class="form-check p-3 border rounded-3 mb-2 bg-light">
+                                <input class="form-check-input" type="radio" name="paymentMethod" id="payCOD" value="COD" checked>
+                                <label class="form-check-label d-flex align-items-center cursor-pointer w-100" for="payCOD">
+                                    <i class="bi bi-cash-stack fs-4 text-success me-3"></i>
+                                    <div>
+                                        <div class="fw-bold">Thanh toán khi nhận hàng (COD)</div>
+                                        <small class="text-muted">Kiểm tra hàng trước khi thanh toán</small>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <div class="form-check p-3 border rounded-3 mb-2">
+                                <input class="form-check-input" type="radio" name="paymentMethod" id="payVNPay" value="VNPAY">
+                                <label class="form-check-label d-flex align-items-center cursor-pointer w-100" for="payVNPay">
+                                    <img src="https://vnpay.vn/assets/images/logo-icon/logo-primary.svg" height="24" class="me-3" alt="VNPay">
+                                    <div>
+                                        <div class="fw-bold">VNPAY (ATM / QR / Quốc tế)</div>
+                                        <small class="text-muted">Quét mã QR hoặc thẻ ATM nội địa/Visa</small>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="card border-0 shadow-sm rounded-4 sticky-top" style="top: 20px;">
+                    <div class="card-header bg-white border-bottom py-3">
+                        <h5 class="fw-bold mb-0 text-primary">Đơn hàng của bạn</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive" style="max-height: 400px;">
+                            <table class="table mb-0">
+                                <tbody>
+                                    @foreach (var item in cartItems)
+                                    {
+                                        <tr>
+                                            <td class="ps-4 py-3" width="60">
+                                                <img src="@item.ProductDetail.Product.ImageUrl" width="50" class="rounded border" />
+                                            </td>
+                                            <td class="py-3">
+                                                <div class="fw-bold small text-truncate" style="max-width: 150px;">@item.ProductDetail.Product.Name</div>
+                                                <div class="small text-muted">@item.ProductDetail.Color - @item.ProductDetail.Rom</div>
+                                            </td>
+                                            <td class="text-end pe-4 py-3">
+                                                <div class="fw-bold text-dark">@item.ProductDetail.Price.ToString("#,##0")đ</div>
+                                                <div class="small text-muted">x @item.Quantity</div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-light p-4">
+                        <div class="d-flex justify-content-between border-top pt-3 mb-4">
+                            <span class="h5 fw-bold text-dark">Tổng cộng:</span>
+                            <span class="h4 fw-bold text-danger">@Model.OrderTotal.ToString("#,##0")đ</span>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 py-3 rounded-3 fw-bold fs-5 shadow-sm">
+                            ĐẶT HÀNG NGAY
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            const apiProv = 'https://esgoo.net/api-tinhthanh/1/0.htm';
+
+            $.getJSON(apiProv, function(data) {
+                if (data.error == 0) {
+                    $.each(data.data, function(key, val) {
+                        $("#province").append('<option value="' + val.id + '" data-name="' + val.full_name + '">' + val.full_name + '</option>');
+                    });
+                }
+            });
+
+            $("#province").change(function() {
+                var idProv = $(this).val();
+                $("#district").html('<option value="">Quận / Huyện</option>').prop("disabled", true);
+                $("#ward").html('<option value="">Phường / Xã</option>').prop("disabled", true);
+
+                if (idProv != "") {
+                    $.getJSON(`https://esgoo.net/api-tinhthanh/2/${idProv}.htm`, function(data) {
+                        if (data.error == 0) {
+                            $("#district").html('<option value="">Quận / Huyện</option>');
+                            $.each(data.data, function(key, val) {
+                                $("#district").append('<option value="' + val.id + '" data-name="' + val.full_name + '">' + val.full_name + '</option>');
+                            });
+                            $("#district").prop("disabled", false);
+                        }
+                    });
+                }
+                updateFullAddress();
+            });
+
+            $("#district").change(function() {
+                var idDist = $(this).val();
+                $("#ward").html('<option value="">Phường / Xã</option>').prop("disabled", true);
+
+                if (idDist != "") {
+                    $.getJSON(`https://esgoo.net/api-tinhthanh/3/${idDist}.htm`, function(data) {
+                        if (data.error == 0) {
+                            $("#ward").html('<option value="">Phường / Xã</option>');
+                            $.each(data.data, function(key, val) {
+                                $("#ward").append('<option value="' + val.id + '" data-name="' + val.full_name + '">' + val.full_name + '</option>');
+                            });
+                            $("#ward").prop("disabled", false);
+                        }
+                    });
+                }
+                updateFullAddress();
+            });
+
+            $("#ward").change(function() { updateFullAddress(); });
+
+            function updateFullAddress() {
+                var p = $("#province option:selected").data("name") || "";
+                var d = $("#district option:selected").data("name") || "";
+                var w = $("#ward option:selected").data("name") || "";
+
+                if(p && d && w) {
+                    $("#fullAddress").val(`${w}, ${d}, ${p}`);
+                } else {
+                    $("#fullAddress").val("");
+                }
+            }
+
+            $('input[name="paymentMethod"]').change(function() {
+                $('.form-check').removeClass('bg-light border-primary');
+                $(this).closest('.form-check').addClass('bg-light border-primary');
+            });
+        });
+    </script>
+}
