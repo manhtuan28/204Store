@@ -13,7 +13,14 @@ namespace _204Store.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _context;
 
-
+        public IActionResult Terms()
+        {
+            return View();
+        }
+        public IActionResult Privacy()
+        {
+            return View();
+        }
         public IActionResult About()
         {
             return View();
@@ -69,58 +76,73 @@ namespace _204Store.Controllers
             return RedirectToAction(nameof(Contact));
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? category, string? query)
         {
-            var allProducts = _context.Products
+            var productsQuery = _context.Products
                 .Include(p => p.Category)
                 .Include(p => p.ProductDetails)
                 .AsQueryable();
 
-            var viewModel = new HomeViewModel
+            bool isFiltering = false;
+            string pageTitle = "Trang chủ";
+
+            if (category.HasValue)
             {
-                // Danh mục
-                Categories = await _context.Categories.OrderBy(c => c.DisplayOrder).ToListAsync(),
+                isFiltering = true;
+                var selectedCat = await _context.Categories.FindAsync(category.Value);
 
-                // Sản phẩm Nổi bật
-                FeaturedProducts = await allProducts
-                    .Where(p => p.IsFeatured)
-                    .Take(8)
-                    .ToListAsync(),
+                if (selectedCat != null)
+                {
+                    pageTitle = selectedCat.Name;
 
-                // Sản phẩm Bán chạy
-                BestSellerProducts = await allProducts
-                    .OrderByDescending(p => p.Sold)
-                    .Take(8)
-                    .ToListAsync(),
+                    var categoryIds = new List<int> { category.Value };
+                    var childIds = await _context.Categories
+                        .Where(c => c.ParentId == category.Value)
+                        .Select(c => c.Id)
+                        .ToListAsync();
 
-                // Sản phẩm Giảm giá
-                SaleProducts = await allProducts
-                    .Where(p => p.DiscountRate > 0)
-                    .OrderByDescending(p => p.DiscountRate)
-                    .Take(8)
-                    .ToListAsync(),
+                    categoryIds.AddRange(childIds);
 
-                // Apple
-                AppleProducts = await allProducts
-                    .Where(p => p.Category.Name.Contains("Apple") || p.Category.Name.Contains("iPhone"))
-                    .OrderByDescending(p => p.Id)
-                    .Take(2)
-                    .ToListAsync(),
+                    productsQuery = productsQuery.Where(p => categoryIds.Contains(p.CategoryId));
+                }
+            }
 
-                // Samsung
-                SamsungProducts = await allProducts
-                    .Where(p => p.Category.Name.Contains("Samsung") || p.Category.Name.Contains("Galaxy"))
-                    .OrderByDescending(p => p.Id)
-                    .Take(2)
-                    .ToListAsync()
-            };
+            if (!string.IsNullOrEmpty(query))
+            {
+                isFiltering = true;
+                pageTitle = $"Kết quả tìm kiếm: '{query}'";
+                productsQuery = productsQuery.Where(p => p.Name.Contains(query));
+            }
+
+            var viewModel = new HomeViewModel();
+
+            viewModel.Categories = await _context.Categories.OrderBy(c => c.DisplayOrder).ToListAsync();
+
+            if (isFiltering)
+            {
+                viewModel.FeaturedProducts = await productsQuery.OrderByDescending(p => p.Id).ToListAsync();
+
+                viewModel.BestSellerProducts = new List<Product>();
+                viewModel.SaleProducts = new List<Product>();
+                viewModel.AppleProducts = new List<Product>();
+                viewModel.SamsungProducts = new List<Product>();
+            }
+            else
+            {
+                var allProducts = await productsQuery.ToListAsync();
+
+                viewModel.FeaturedProducts = allProducts.Where(p => p.IsFeatured).Take(8).ToList();
+                viewModel.BestSellerProducts = allProducts.OrderByDescending(p => p.Sold).Take(8).ToList();
+                viewModel.SaleProducts = allProducts.Where(p => p.DiscountRate > 0).OrderByDescending(p => p.DiscountRate).Take(8).ToList();
+                viewModel.AppleProducts = allProducts.Where(p => p.Category.Name.Contains("Apple") || p.Category.Name.Contains("iPhone")).OrderByDescending(p => p.Id).Take(4).ToList(); // Tăng lên 4 cho đẹp
+                viewModel.SamsungProducts = allProducts.Where(p => p.Category.Name.Contains("Samsung") || p.Category.Name.Contains("Galaxy")).OrderByDescending(p => p.Id).Take(4).ToList();
+            }
+
+            ViewData["IsFiltering"] = isFiltering;
+            ViewData["PageTitle"] = pageTitle;
+            ViewBag.SearchQuery = query;
 
             return View(viewModel);
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

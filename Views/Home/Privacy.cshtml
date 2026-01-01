@@ -1,6 +1,173 @@
 ﻿@{
-    ViewData["Title"] = "Privacy Policy";
+    ViewData["Title"] = "Chính sách bảo mật";
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<style>
+    .privacy-hero {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        padding: 60px 0;
+        margin-bottom: 40px;
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .privacy-hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: url('https://cdn-icons-png.flaticon.com/512/2092/2092663.png') no-repeat 90% center;
+            background-size: 180px;
+            opacity: 0.1;
+        }
+
+    .privacy-nav {
+        position: sticky;
+        top: 100px;
+    }
+
+    .list-group-item {
+        border: none;
+        border-left: 3px solid transparent;
+        color: #64748b;
+        font-weight: 500;
+        transition: 0.2s;
+        padding: 12px 20px;
+    }
+
+        .list-group-item:hover, .list-group-item.active {
+            background-color: #f1f5f9;
+            color: #0f172a;
+            border-left-color: #10b981;
+            font-weight: 700;
+        }
+
+    .privacy-content h4 {
+        color: #0f172a;
+        font-weight: 700;
+        margin-top: 40px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+    }
+
+        .privacy-content h4 i {
+            color: #10b981;
+            margin-right: 10px;
+            font-size: 1.5rem;
+        }
+
+    .privacy-content p, .privacy-content li {
+        color: #475569;
+        line-height: 1.8;
+        margin-bottom: 15px;
+        text-align: justify;
+    }
+
+    .highlight-box {
+        background: #ecfdf5;
+        border: 1px dashed #10b981;
+        padding: 20px;
+        border-radius: 12px;
+        margin: 20px 0;
+    }
+</style>
+
+<div class="privacy-hero text-center">
+    <div class="container position-relative" style="z-index: 2;">
+        <h1 class="fw-bold mb-3"><i class="bi bi-shield-lock-fill me-2"></i>Chính sách bảo mật thông tin</h1>
+        <p class="opacity-75 fs-5 mb-0">Cam kết bảo vệ dữ liệu cá nhân của khách hàng tại 204Store</p>
+    </div>
+</div>
+
+<div class="container pb-5">
+    <div class="row">
+        <div class="col-lg-3 d-none d-lg-block">
+            <div class="privacy-nav">
+                <h6 class="fw-bold text-uppercase text-muted mb-3 small ls-1">Nội dung chính</h6>
+                <div class="list-group" id="privacy-list">
+                    <a class="list-group-item list-group-item-action" href="#p1">1. Mục đích thu thập</a>
+                    <a class="list-group-item list-group-item-action" href="#p2">2. Phạm vi sử dụng</a>
+                    <a class="list-group-item list-group-item-action" href="#p3">3. Thời gian lưu trữ</a>
+                    <a class="list-group-item list-group-item-action" href="#p4">4. Chia sẻ thông tin</a>
+                    <a class="list-group-item list-group-item-action" href="#p5">5. Cam kết bảo mật</a>
+                    <a class="list-group-item list-group-item-action" href="#p6">6. Quyền lợi khách hàng</a>
+                </div>
+
+                <div class="mt-4 text-center">
+                    <img src="https://images.dmca.com/Badges/dmca_protected_sml_120n.png?ID=4d265e31-64d8-4eb7-916c-134812674712" alt="DMCA" class="opacity-75">
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-9 privacy-content" data-bs-spy="scroll" data-bs-target="#privacy-list" data-bs-smooth-scroll="true" tabindex="0">
+
+            <div class="alert alert-warning border-0 d-flex align-items-center mb-4">
+                <i class="bi bi-exclamation-triangle-fill fs-4 me-3"></i>
+                <div>
+                    <strong>Lưu ý quan trọng:</strong> Bằng việc đăng ký tài khoản hoặc mua hàng tại website, quý khách mặc nhiên chấp nhận các quy định trong chính sách này.
+                </div>
+            </div>
+
+            <div id="p1">
+                <h4><i class="bi bi-person-lines-fill"></i>1. Mục đích và Phạm vi thu thập</h4>
+                <p>Việc thu thập dữ liệu chủ yếu trên website 204Store bao gồm: email, điện thoại, tên đăng nhập, mật khẩu đăng nhập, địa chỉ khách hàng (thành viên). Đây là các thông tin mà 204Store cần thành viên cung cấp bắt buộc khi đăng ký sử dụng dịch vụ và để 204Store liên hệ xác nhận khi khách hàng đăng ký sử dụng dịch vụ trên website nhằm đảm bảo quyền lợi cho cho người tiêu dùng.</p>
+                <p>Các thành viên sẽ tự chịu trách nhiệm về bảo mật và lưu giữ mọi hoạt động sử dụng dịch vụ dưới tên đăng ký, mật khẩu và hộp thư điện tử của mình.</p>
+            </div>
+
+            <div id="p2">
+                <h4><i class="bi bi-briefcase-fill"></i>2. Phạm vi sử dụng thông tin</h4>
+                <p>204Store sử dụng thông tin thành viên cung cấp để:</p>
+                <ul>
+                    <li>Cung cấp các dịch vụ đến thành viên (Giao hàng, bảo hành).</li>
+                    <li>Gửi các thông báo về các hoạt động trao đổi thông tin giữa thành viên và 204Store.</li>
+                    <li>Ngăn ngừa các hoạt động phá hủy tài khoản người dùng của thành viên hoặc các hoạt động giả mạo thành viên.</li>
+                    <li>Liên lạc và giải quyết với thành viên trong những trường hợp đặc biệt.</li>
+                    <li>Trong trường hợp có yêu cầu của pháp luật: 204Store có trách nhiệm hợp tác cung cấp thông tin cá nhân thành viên khi có yêu cầu từ cơ quan tư pháp bao gồm: Viện kiểm sát, tòa án, cơ quan công an điều tra.</li>
+                </ul>
+            </div>
+
+            <div id="p3">
+                <h4><i class="bi bi-clock-history"></i>3. Thời gian lưu trữ thông tin</h4>
+                <p>Dữ liệu cá nhân của Thành viên sẽ được lưu trữ cho đến khi có yêu cầu hủy bỏ hoặc tự thành viên đăng nhập và thực hiện hủy bỏ. Còn lại trong mọi trường hợp thông tin cá nhân thành viên sẽ được bảo mật trên máy chủ của 204Store.</p>
+            </div>
+
+            <div id="p4">
+                <h4><i class="bi bi-share-fill"></i>4. Chia sẻ thông tin với bên thứ 3</h4>
+                <p>Chúng tôi cam kết <strong>KHÔNG</strong> bán, trao đổi hoặc chia sẻ thông tin cá nhân của quý khách cho bất kỳ bên thứ ba nào, ngoại trừ các trường hợp sau:</p>
+                <div class="highlight-box">
+                    <ul class="mb-0">
+                        <li><strong>Đơn vị vận chuyển:</strong> Tên, SĐT và Địa chỉ của quý khách sẽ được cung cấp cho đối tác vận chuyển (Giao Hàng Tiết Kiệm, Viettel Post...) để thực hiện giao đơn hàng.</li>
+                        <li><strong>Cổng thanh toán:</strong> Khi thanh toán online, thông tin giao dịch sẽ được xử lý bởi các cổng thanh toán uy tín (VNPay, Momo) được Ngân hàng Nhà nước cấp phép.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="p5">
+                <h4><i class="bi bi-shield-check"></i>5. Cam kết bảo mật</h4>
+                <p>Thông tin cá nhân của thành viên trên 204Store được cam kết bảo mật tuyệt đối theo chính sách bảo vệ thông tin cá nhân của 204Store. Việc thu thập và sử dụng thông tin của mỗi thành viên chỉ được thực hiện khi có sự đồng ý của khách hàng đó trừ những trường hợp pháp luật có quy định khác.</p>
+                <p>Chúng tôi sử dụng công nghệ mã hóa SSL (Secure Sockets Layer) để bảo vệ thông tin giao dịch tài chính của quý khách.</p>
+            </div>
+
+            <div id="p6">
+                <h4><i class="bi bi-pencil-square"></i>6. Quyền lợi của khách hàng</h4>
+                <p>Quý khách có quyền yêu cầu truy cập, sửa đổi hoặc xóa thông tin cá nhân của mình bất cứ lúc nào bằng cách:</p>
+                <ul>
+                    <li>Đăng nhập vào trang <strong>Quản lý tài khoản</strong> và tự chỉnh sửa thông tin.</li>
+                    <li>Gọi điện đến Hotline <strong>1900 2044</strong> để yêu cầu nhân viên hỗ trợ.</li>
+                    <li>Gửi email yêu cầu về địa chỉ: <strong>security@204store.com</strong>.</li>
+                </ul>
+            </div>
+
+            <hr class="my-5">
+            <div class="text-center">
+                <p class="text-muted fst-italic">Mọi thắc mắc về chính sách bảo mật, vui lòng liên hệ:</p>
+                <h5 class="fw-bold">Ban Quản Trị 204Store</h5>
+            </div>
+
+        </div>
+    </div>
+</div>

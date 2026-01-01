@@ -1,5 +1,4 @@
-﻿// Danh mục
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace _204Store.Models
@@ -16,6 +15,12 @@ namespace _204Store.Models
         [Display(Name = "Thứ tự hiển thị")]
         [Range(1, 100, ErrorMessage = "Thứ tự phải từ 1 đến 100")]
         public int DisplayOrder { get; set; }
+
+        [Display(Name = "Biểu tượng (Icon Class)")]
+        public string? Icon { get; set; }
+
+        [Display(Name = "Ảnh đại diện")]
+        public string? ImageUrl { get; set; }
 
         [Display(Name = "Danh mục cha")]
         public int? ParentId { get; set; }

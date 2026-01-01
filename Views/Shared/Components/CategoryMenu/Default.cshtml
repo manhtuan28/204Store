@@ -1,0 +1,142 @@
+﻿@model IEnumerable<_204Store.Models.Category>
+
+@if (Model != null && Model.Any())
+{
+    foreach (var parent in Model)
+    {
+        bool hasChild = parent.ChildCategories != null && parent.ChildCategories.Any();
+
+        <li class="position-relative parent-item">
+            <a class="dropdown-item d-flex justify-content-between align-items-center py-2"
+               asp-controller="Home" asp-action="Index" asp-route-category="@parent.Id">
+
+                <div class="d-flex align-items-center gap-2">
+                    @if (!string.IsNullOrEmpty(parent.ImageUrl))
+                    {
+                        <img src="@parent.ImageUrl" alt="@parent.Name" class="rounded-circle border object-fit-cover" width="24" height="24" />
+                    }
+                    else if (!string.IsNullOrEmpty(parent.Icon))
+                    {
+                        <i class="@parent.Icon text-primary fs-6" style="width: 24px; text-align: center;"></i>
+                    }
+                    else
+                    {
+                        <i class="bi bi-grid text-muted fs-6" style="width: 24px; text-align: center;"></i>
+                    }
+
+                    <span class="fw-bold">@parent.Name</span>
+                </div>
+
+                @if (hasChild)
+                {
+                    <i class="bi bi-chevron-right text-muted ms-3" style="font-size: 0.75rem;"></i>
+                }
+            </a>
+
+            @if (hasChild)
+            {
+                <ul class="submenu dropdown-menu shadow-sm rounded-3 border-0 p-0">
+                    @foreach (var child in parent.ChildCategories)
+                    {
+                        <li>
+                            <a class="dropdown-item py-2 ps-3 child-link d-flex align-items-center"
+                               asp-controller="Home" asp-action="Index" asp-route-category="@child.Id">
+
+                                @if (!string.IsNullOrEmpty(child.ImageUrl))
+                                {
+                                    <img src="@child.ImageUrl" class="rounded-circle border me-2 object-fit-cover" width="20" height="20" />
+                                }
+                                else if (!string.IsNullOrEmpty(child.Icon))
+                                {
+                                    <i class="@child.Icon text-secondary me-2" style="font-size: 1rem;"></i>
+                                }
+                                else
+                                {
+                                    <i class="bi bi-dot me-1 text-muted fs-4" style="line-height: 0;"></i>
+                                }
+
+                                <span>@child.Name</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            }
+        </li>
+        <li><hr class="dropdown-divider m-0 opacity-25"></li>
+    }
+
+    <li>
+        <a class="dropdown-item text-center text-primary fw-bold py-2" asp-controller="Home" asp-action="Index">
+            Xem tất cả <i class="bi bi-arrow-right-short"></i>
+        </a>
+    </li>
+}
+else
+{
+    <li class="p-3 text-center text-muted">Đang cập nhật...</li>
+}
+
+<style>
+    .dropdown-menu .parent-item {
+        position: relative;
+    }
+
+    .submenu {
+        display: none;
+        position: absolute;
+        left: 100%;
+        top: 0;
+        margin-left: 0.1rem;
+        min-width: 240px;
+        background: #fff;
+    }
+
+    .dropdown-menu .parent-item:hover > .submenu {
+        display: block;
+        animation: fadeInRight 0.2s ease-in-out;
+    }
+
+    .dropdown-item {
+        transition: 0.2s;
+        color: #334155;
+    }
+
+        .dropdown-item:hover {
+            background-color: #f1f5f9;
+            color: var(--primary-color);
+        }
+
+    .child-link:hover {
+        padding-left: 1.2rem !important;
+    }
+
+        .child-link:hover i, .child-link:hover span {
+            color: var(--primary-color);
+        }
+
+    @@keyframes fadeInRight {
+        from {
+            opacity: 0;
+            transform: translateX(-10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @@media (max-width: 991.98px) {
+        .submenu {
+            position: static;
+            display: none;
+            margin-left: 1rem;
+            border-left: 2px solid #e2e8f0;
+            box-shadow: none !important;
+        }
+
+        .dropdown-menu .parent-item:hover > .submenu {
+            display: block;
+        }
+    }
+</style>

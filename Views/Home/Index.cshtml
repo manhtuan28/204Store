@@ -1,7 +1,8 @@
 ﻿@using System.Globalization
 @model _204Store.Models.ViewModels.HomeViewModel
 @{
-    ViewData["Title"] = "Trang chủ";
+    bool isFiltering = (bool)(ViewData["IsFiltering"] ?? false);
+    ViewData["Title"] = ViewData["PageTitle"];
     var culture = new CultureInfo("vi-VN");
 }
 
@@ -225,21 +226,19 @@
         pointer-events: none;
         box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     }
+
     @@keyframes shake-cart {
-        0%, 100%
+        0%, 100% {
+            transform: rotate(0deg);
+        }
 
-    {
-        transform: rotate(0deg);
-    }
+        25% {
+            transform: rotate(-10deg);
+        }
 
-    25% {
-        transform: rotate(-10deg);
-    }
-
-    75% {
-        transform: rotate(10deg);
-    }
-
+        75% {
+            transform: rotate(10deg);
+        }
     }
 
     .shake-cart {
@@ -248,102 +247,148 @@
     }
 </style>
 
-<section class="container mt-4 mb-5">
-    <div class="row g-4">
-        <div class="col-lg-8">
-            <div id="heroCarousel" class="carousel slide hero-container rounded-4 overflow-hidden shadow-sm" data-bs-ride="carousel">
-                <div class="carousel-indicators">
-                    <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"></button>
-                    <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
-                    <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2"></button>
-                </div>
-                <div class="carousel-inner">
-                    <div class="carousel-item active" data-bs-interval="3500">
-                        <img src="https://placehold.co/850x400/4f46e5/ffffff?text=IPHONE+15+SERIES%0ASẵn+Hàng+Đủ+Màu" class="hero-img w-100 object-fit-cover" style="height: 400px;" alt="Banner 1">
-                    </div>
-                    <div class="carousel-item" data-bs-interval="3500">
-                        <img src="https://placehold.co/850x400/1e293b/ffffff?text=MACBOOK+M3%0AHiệu+Năng+Đỉnh+Cao" class="hero-img w-100 object-fit-cover" style="height: 400px;" alt="Banner 2">
-                    </div>
-                    <div class="carousel-item" data-bs-interval="3500">
-                        <img src="https://placehold.co/850x400/dc2626/ffffff?text=SALE+SẬP+SÀN%0AGiảm+tới+50%" class="hero-img w-100 object-fit-cover" style="height: 400px;" alt="Banner 3">
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4 d-none d-lg-flex flex-column gap-3">
-            <a href="#" class="h-50 overflow-hidden rounded-4"><img src="https://placehold.co/400x190/f1f5f9/64748b?text=GIẢM+50%+PHỤ+KIỆN" class="w-100 h-100 object-fit-cover hover-scale" alt="Sub 1"></a>
-            <a href="#" class="h-50 overflow-hidden rounded-4"><img src="https://placehold.co/400x190/ecfdf5/059669?text=THU+CŨ+ĐỔI+MỚI" class="w-100 h-100 object-fit-cover hover-scale" alt="Sub 2"></a>
-        </div>
-    </div>
-</section>
-
-<section class="container mb-5">
-    <div class="section-header">
-        <h3 class="section-title">Danh mục nổi bật</h3>
-    </div>
-    <div class="row row-cols-3 row-cols-md-6 g-3">
-        @foreach (var cat in Model.Categories.Where(c => c.ParentId == null).Take(6))
-        {
-            <div class="col">
-                <a href="#" class="d-flex flex-column align-items-center p-3 bg-white rounded-4 border text-decoration-none shadow-sm h-100 hover-float">
-                    <span class="fs-1 text-primary mb-2">
-                        @if (cat.Name.Contains("Điện thoại"))
-                        {
-                            <i class="bi bi-phone"></i>
-                        }
-                        else if (cat.Name.Contains("Laptop"))
-                        {
-
-                            <i class="bi bi-laptop"></i>
-                        }
-                        else
-                        {
-
-                            <i class="bi bi-grid"></i>
-                        }
-                    </span>
-                    <span class="fw-bold text-dark small text-center">@cat.Name</span>
-                </a>
-            </div>
-        }
-    </div>
-</section>
-
-@if (Model.SaleProducts.Any())
+@if (isFiltering)
 {
-    <section class="container mb-5">
-        <div class="p-4 rounded-4" style="background: linear-gradient(135deg, #fff1f2 0%, #fff 100%); border: 1px solid #ffe4e6;">
-            <div class="section-header">
-                <div class="d-flex align-items-center gap-2">
-                    <h3 class="section-title text-danger mb-0"><i class="bi bi-lightning-fill"></i> FLASH SALE</h3>
-                    <span class="badge bg-danger">02:30:15</span>
-                </div>
-                <a href="#" class="btn-view-all">Xem tất cả</a>
+    <div class="container mt-4 mb-5">
+        <div class="d-flex align-items-center justify-content-between mb-4 pb-3 border-bottom">
+            <div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-1 small text-muted">
+                        <li class="breadcrumb-item"><a asp-action="Index" class="text-decoration-none text-muted">Trang chủ</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Danh sách sản phẩm</li>
+                    </ol>
+                </nav>
+                <h3 class="fw-bold text-main mb-0">@ViewData["PageTitle"]</h3>
+                <p class="text-muted small mt-1 mb-0">Tìm thấy @Model.FeaturedProducts.Count() sản phẩm</p>
             </div>
-            <div class="row row-cols-2 row-cols-md-5 g-3">
-                @foreach (var item in Model.SaleProducts.Take(5))
+
+            <div class="d-flex align-items-center gap-2">
+                <span class="small fw-bold text-muted">Sắp xếp:</span>
+                <select class="form-select form-select-sm border-0 bg-light fw-bold" style="width: 140px;">
+                    <option>Mới nhất</option>
+                    <option>Giá tăng dần</option>
+                    <option>Giá giảm dần</option>
+                </select>
+            </div>
+        </div>
+
+        @if (Model.FeaturedProducts.Any())
+        {
+            <div class="row row-cols-2 row-cols-md-4 row-cols-lg-5 g-3">
+                @foreach (var item in Model.FeaturedProducts)
                 {
                     await RenderProductCard(item);
                 }
             </div>
+        }
+        else
+        {
+            <div class="text-center py-5">
+                <img src="https://cdn-icons-png.flaticon.com/512/7486/7486744.png" width="120" class="opacity-50 mb-3" />
+                <h5 class="fw-bold text-secondary">Không tìm thấy sản phẩm nào</h5>
+                <p class="text-muted">Thử chọn danh mục khác hoặc tìm kiếm với từ khóa khác xem sao.</p>
+                <a asp-action="Index" class="btn btn-primary rounded-pill px-4">Về trang chủ</a>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <section class="container mt-4 mb-5">
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div id="heroCarousel" class="carousel slide hero-container rounded-4 overflow-hidden shadow-sm" data-bs-ride="carousel">
+                    <div class="carousel-indicators">
+                        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"></button>
+                        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
+                        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2"></button>
+                    </div>
+                    <div class="carousel-inner">
+                        <div class="carousel-item active" data-bs-interval="3500">
+                            <img src="https://placehold.co/850x400/4f46e5/ffffff?text=IPHONE+15+SERIES%0ASẵn+Hàng+Đủ+Màu" class="hero-img w-100 object-fit-cover" style="height: 400px;" alt="Banner 1">
+                        </div>
+                        <div class="carousel-item" data-bs-interval="3500">
+                            <img src="https://placehold.co/850x400/1e293b/ffffff?text=MACBOOK+M3%0AHiệu+Năng+Đỉnh+Cao" class="hero-img w-100 object-fit-cover" style="height: 400px;" alt="Banner 2">
+                        </div>
+                        <div class="carousel-item" data-bs-interval="3500">
+                            <img src="https://placehold.co/850x400/dc2626/ffffff?text=SALE+SẬP+SÀN%0AGiảm+tới+50%" class="hero-img w-100 object-fit-cover" style="height: 400px;" alt="Banner 3">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 d-none d-lg-flex flex-column gap-3">
+                <a href="#" class="h-50 overflow-hidden rounded-4"><img src="https://placehold.co/400x190/f1f5f9/64748b?text=GIẢM+50%+PHỤ+KIỆN" class="w-100 h-100 object-fit-cover hover-scale" alt="Sub 1"></a>
+                <a href="#" class="h-50 overflow-hidden rounded-4"><img src="https://placehold.co/400x190/ecfdf5/059669?text=THU+CŨ+ĐỔI+MỚI" class="w-100 h-100 object-fit-cover hover-scale" alt="Sub 2"></a>
+            </div>
         </div>
     </section>
-}
 
-@if (Model.FeaturedProducts.Any())
-{
     <section class="container mb-5">
         <div class="section-header">
-            <h3 class="section-title">Gợi ý cho bạn</h3>
-            <a href="#" class="btn-view-all">Xem tất cả</a>
+            <h3 class="section-title">Danh mục nổi bật</h3>
         </div>
-        <div class="row row-cols-2 row-cols-md-4 row-cols-lg-5 g-3">
-            @foreach (var item in Model.FeaturedProducts.Take(10))
+        <div class="row row-cols-3 row-cols-md-6 g-3">
+            @foreach (var cat in Model.Categories.Where(c => c.ParentId == null).Take(6))
             {
-                await RenderProductCard(item);
+                <div class="col">
+                    <a asp-action="Index" asp-route-category="@cat.Id" class="d-flex flex-column align-items-center p-3 bg-white rounded-4 border text-decoration-none shadow-sm h-100 hover-float">
+                        <span class="fs-1 text-primary mb-2">
+                            @if (!string.IsNullOrEmpty(cat.ImageUrl))
+                            {
+                                <img src="@cat.ImageUrl" class="rounded-circle object-fit-cover" width="40" height="40" />
+                            }
+                            else if (!string.IsNullOrEmpty(cat.Icon))
+                            {
+                                <i class="@cat.Icon"></i>
+                            }
+                            else
+                            {
+                                <i class="bi bi-grid"></i>
+                            }
+                        </span>
+                        <span class="fw-bold text-dark small text-center">@cat.Name</span>
+                    </a>
+                </div>
             }
         </div>
     </section>
+
+    @if (Model.SaleProducts.Any())
+    {
+        <section class="container mb-5">
+            <div class="p-4 rounded-4" style="background: linear-gradient(135deg, #fff1f2 0%, #fff 100%); border: 1px solid #ffe4e6;">
+                <div class="section-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <h3 class="section-title text-danger mb-0"><i class="bi bi-lightning-fill"></i> FLASH SALE</h3>
+                        <span class="badge bg-danger">02:30:15</span>
+                    </div>
+                    <a href="#" class="btn-view-all">Xem tất cả</a>
+                </div>
+                <div class="row row-cols-2 row-cols-md-5 g-3">
+                    @foreach (var item in Model.SaleProducts.Take(5))
+                    {
+                        await RenderProductCard(item);
+                    }
+                </div>
+            </div>
+        </section>
+    }
+
+    @if (Model.FeaturedProducts.Any())
+    {
+        <section class="container mb-5">
+            <div class="section-header">
+                <h3 class="section-title">Gợi ý cho bạn</h3>
+                <a href="#" class="btn-view-all">Xem tất cả</a>
+            </div>
+            <div class="row row-cols-2 row-cols-md-4 row-cols-lg-5 g-3">
+                @foreach (var item in Model.FeaturedProducts.Take(10))
+                {
+                    await RenderProductCard(item);
+                }
+            </div>
+        </section>
+    }
 }
 
 @{
@@ -353,6 +398,7 @@
         decimal minPrice = 0;
         int defaultDetailId = 0;
         bool hasPrice = false;
+
         if (item.ProductDetails != null && item.ProductDetails.Any())
         {
             var defaultVariant = item.ProductDetails.OrderBy(x => x.Price).FirstOrDefault();
@@ -402,20 +448,14 @@
                 <div class="product-actions">
                     @if (hasPrice)
                     {
-                        <button type="button" class="btn-action-cart" title="Thêm vào giỏ"
-                                onclick="addToCartAjax(@defaultDetailId, @item.Id)">
+                        <button type="button" class="btn-action-cart" title="Thêm vào giỏ" onclick="addToCartAjax(@defaultDetailId, @item.Id)">
                             <i class="bi bi-bag-plus-fill fs-5"></i>
                         </button>
-
-                        <a asp-controller="Home" asp-action="Details" asp-route-productId="@item.Id" class="btn-action-buy">
-                            Mua ngay
-                        </a>
+                        <a asp-controller="Home" asp-action="Details" asp-route-productId="@item.Id" class="btn-action-buy">Mua ngay</a>
                     }
                     else
                     {
-                        <a asp-controller="Home" asp-action="Details" asp-route-productId="@item.Id" class="btn-action-buy w-100">
-                            Xem chi tiết
-                        </a>
+                        <a asp-controller="Home" asp-action="Details" asp-route-productId="@item.Id" class="btn-action-buy w-100">Xem chi tiết</a>
                     }
                 </div>
             </div>
@@ -427,64 +467,41 @@
     <script>
         function addToCartAjax(productDetailId, productId) {
             flyToCart(productId);
-
             $.ajax({
                 url: '/Cart/AddToCart',
                 type: 'POST',
-                data: {
-                    productDetailId: productDetailId,
-                    quantity: 1
-                },
+                data: { productDetailId: productDetailId, quantity: 1 },
                 success: function (response) {
                     if (response.success) {
                         var badge = $('#cart-badge');
-
-                        badge.text(response.cartCount);
-
-                        badge.removeClass('d-none');
+                        if(badge.length) { badge.text(response.cartCount); badge.removeClass('d-none'); }
                     }
                 },
-                error: function () {
-                    window.location.href = '/Identity/Account/Login';
-                }
+                error: function () { window.location.href = '/Identity/Account/Login'; }
             });
         }
 
         function flyToCart(productId) {
-            var cartIcon = $('.btn-cart');
+            var cartIcon = $('.icon-btn[title="Giỏ hàng"]');
+            if(cartIcon.length === 0) cartIcon = $('.btn-cart');
             if(cartIcon.length === 0) return;
 
             var productImg = $('#img-' + productId);
             if(productImg.length === 0) return;
 
-            var flyImg = productImg.clone()
-                .addClass('flying-img')
-                .offset({
-                    top: productImg.offset().top,
-                    left: productImg.offset().left
-                })
-                .css({
-                    'opacity': '0.8',
-                    'position': 'absolute',
-                    'height': '150px',
-                    'width': '150px',
-                    'z-index': '9999',
-                    'object-fit': 'cover'
-                })
+            var flyImg = productImg.clone().addClass('flying-img')
+                .offset({ top: productImg.offset().top, left: productImg.offset().left })
+                .css({ 'opacity': '0.8', 'position': 'absolute', 'height': '150px', 'width': '150px', 'z-index': '9999', 'object-fit': 'cover' })
                 .appendTo($('body'));
 
             flyImg.animate({
                 'top': cartIcon.offset().top + 10,
                 'left': cartIcon.offset().left + 10,
-                'width': '20px',
-                'height': '20px',
-                'opacity': '0.5'
+                'width': '20px', 'height': '20px', 'opacity': '0.5'
             }, 800, 'swing', function () {
                 $(this).remove();
                 cartIcon.addClass('shake-cart');
-                setTimeout(function(){
-                    cartIcon.removeClass('shake-cart');
-                }, 500);
+                setTimeout(function(){ cartIcon.removeClass('shake-cart'); }, 500);
             });
         }
     </script>

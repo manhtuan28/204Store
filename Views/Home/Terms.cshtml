@@ -1,0 +1,141 @@
+﻿@{
+    ViewData["Title"] = "Điều khoản sử dụng";
+}
+
+<style>
+    .terms-hero {
+        background-color: #f8fafc;
+        padding: 60px 0;
+        border-bottom: 1px solid #e2e8f0;
+        margin-bottom: 40px;
+    }
+
+    .terms-nav {
+        position: sticky;
+        top: 100px;
+    }
+
+    .list-group-item {
+        border: none;
+        border-left: 3px solid transparent;
+        color: #64748b;
+        font-weight: 500;
+        transition: 0.2s;
+    }
+
+        .list-group-item:hover, .list-group-item.active {
+            background-color: #f1f5f9;
+            color: #0f172a;
+            border-left-color: #4f46e5;
+            font-weight: 600;
+        }
+
+    .terms-content h4 {
+        color: #0f172a;
+        font-weight: 700;
+        margin-top: 30px;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .terms-content p, .terms-content li {
+        color: #475569;
+        line-height: 1.7;
+        margin-bottom: 15px;
+        text-align: justify;
+    }
+
+    .terms-content ul {
+        padding-left: 20px;
+    }
+</style>
+
+<div class="terms-hero text-center">
+    <div class="container">
+        <h1 class="fw-bold mb-3">Điều khoản & Quy định sử dụng</h1>
+        <p class="text-muted fs-5 mb-0">Cập nhật lần cuối: @DateTime.Now.ToString("dd/MM/yyyy")</p>
+    </div>
+</div>
+
+<div class="container pb-5">
+    <div class="row">
+        <div class="col-lg-3 d-none d-lg-block">
+            <div class="terms-nav">
+                <h6 class="fw-bold text-uppercase text-muted mb-3 small ls-1">Mục lục</h6>
+                <div class="list-group" id="list-example">
+                    <a class="list-group-item list-group-item-action" href="#sec1">1. Giới thiệu chung</a>
+                    <a class="list-group-item list-group-item-action" href="#sec2">2. Tài khoản & Bảo mật</a>
+                    <a class="list-group-item list-group-item-action" href="#sec3">3. Thông tin sản phẩm & Giá</a>
+                    <a class="list-group-item list-group-item-action" href="#sec4">4. Quy định đặt hàng</a>
+                    <a class="list-group-item list-group-item-action" href="#sec5">5. Thanh toán & Giao hàng</a>
+                    <a class="list-group-item list-group-item-action" href="#sec6">6. Bản quyền thương hiệu</a>
+                    <a class="list-group-item list-group-item-action" href="#sec7">7. Luật pháp áp dụng</a>
+                </div>
+
+                <div class="mt-4 p-3 bg-light rounded-3 border">
+                    <small class="fw-bold d-block mb-2">Cần giải đáp thêm?</small>
+                    <a href="tel:19002044" class="btn btn-primary btn-sm w-100 fw-bold">Gọi Hotline 1900 2044</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-9 terms-content" data-bs-spy="scroll" data-bs-target="#list-example" data-bs-smooth-scroll="true" tabindex="0">
+
+            <div id="sec1">
+                <h4>1. Giới thiệu chung</h4>
+                <p>Chào mừng quý khách đến với trang web thương mại điện tử <strong>204Store</strong>. Khi quý khách truy cập vào trang web của chúng tôi, có nghĩa là quý khách đồng ý với các điều khoản này.</p>
+                <p>Trang web có quyền thay đổi, chỉnh sửa, thêm hoặc lược bỏ bất kỳ phần nào trong Quy định và Điều kiện sử dụng này, vào bất cứ lúc nào. Các thay đổi có hiệu lực ngay khi được đăng trên trang web mà không cần thông báo trước. Và khi quý khách tiếp tục sử dụng trang web, sau khi các thay đổi về Quy định và Điều kiện được đăng tải, có nghĩa là quý khách chấp nhận với những thay đổi đó.</p>
+            </div>
+
+            <div id="sec2">
+                <h4>2. Tài khoản và Bảo mật</h4>
+                <p>Khi sử dụng dịch vụ tại 204Store, quý khách sẽ cung cấp cho chúng tôi thông tin về địa chỉ email, mật khẩu và họ tên để có thể tạo ra một tài khoản sử dụng. Việc sử dụng và bảo mật thông tin tài khoản là trách nhiệm và quyền lợi của quý khách khi sử dụng 204Store.</p>
+                <ul>
+                    <li>Quý khách phải tự chịu trách nhiệm về việc bảo mật và lưu giữ mọi hoạt động sử dụng dịch vụ dưới tên đăng ký, mật khẩu và hộp thư điện tử của mình.</li>
+                    <li>Quý khách có trách nhiệm thông báo kịp thời cho 204Store về những hành vi sử dụng trái phép, lạm dụng, vi phạm bảo mật, lưu giữ tên đăng ký và mật khẩu của bên thứ ba để có biện pháp giải quyết phù hợp.</li>
+                </ul>
+            </div>
+
+            <div id="sec3">
+                <h4>3. Thông tin sản phẩm và Giá cả</h4>
+                <p>Chúng tôi cam kết cung cấp thông tin giá cả chính xác nhất cho người tiêu dùng. Tuy nhiên, đôi lúc vẫn có sai sót xảy ra, ví dụ như trường hợp giá sản phẩm không hiển thị chính xác trên trang web hoặc sai giá do lỗi hệ thống.</p>
+                <p>Nếu có lỗi về giá, tùy theo từng trường hợp chúng tôi sẽ liên hệ hướng dẫn hoặc thông báo hủy đơn hàng đó cho quý khách. Chúng tôi cũng có quyền từ chối hoặc hủy bỏ bất kỳ đơn hàng nào dù đơn hàng đó đã hay chưa được xác nhận hoặc đã thanh toán.</p>
+            </div>
+
+            <div id="sec4">
+                <h4>4. Quy định đặt hàng và Xác nhận</h4>
+                <p>Khi quý khách đặt hàng tại 204Store, chúng tôi sẽ nhận được yêu cầu đặt hàng và gửi đến quý khách mã số đơn hàng. Tuy nhiên, yêu cầu đặt hàng cần thông qua một bước xác nhận đơn hàng, 204Store chỉ xác nhận đơn hàng nếu yêu cầu đặt hàng của quý khách thỏa mãn các tiêu chí thực hiện đơn hàng tại 204Store.</p>
+                <p>Để yêu cầu đặt hàng được xác nhận nhanh chóng, quý khách vui lòng cung cấp đúng và đầy đủ các thông tin liên quan đến việc giao nhận, hoặc các điều khoản và điều kiện của chương trình khuyến mãi (nếu có) mà quý khách tham gia.</p>
+            </div>
+
+            <div id="sec5">
+                <h4>5. Thanh toán và Giao hàng</h4>
+                <p>204Store hỗ trợ các phương thức thanh toán sau:</p>
+                <ul>
+                    <li><strong>COD:</strong> Thanh toán tiền mặt khi nhận hàng.</li>
+                    <li><strong>Chuyển khoản / VNPay / Momo:</strong> Thanh toán trước qua các cổng thanh toán điện tử.</li>
+                </ul>
+                <p>Thời gian giao hàng tiêu chuẩn từ 1-3 ngày làm việc (đối với nội thành) và 3-5 ngày làm việc (đối với ngoại thành/tỉnh). Trong trường hợp bất khả kháng (thiên tai, dịch bệnh), thời gian giao hàng có thể kéo dài hơn dự kiến.</p>
+            </div>
+
+            <div id="sec6">
+                <h4>6. Thương hiệu và Bản quyền</h4>
+                <p>Mọi quyền sở hữu trí tuệ (đã đăng ký hoặc chưa đăng ký), nội dung thông tin và tất cả các thiết kế, văn bản, đồ họa, phần mềm, hình ảnh, video, âm nhạc, âm thanh, biên dịch phần mềm, mã nguồn và phần mềm cơ bản đều là tài sản của 204Store.</p>
+                <p>Nghiêm cấm mọi hành vi sao chép, sử dụng lại nội dung trang web cho mục đích thương mại mà không được sự chấp thuận bằng văn bản của 204Store.</p>
+            </div>
+
+            <div id="sec7">
+                <h4>7. Luật pháp áp dụng</h4>
+                <p>Quy chế của 204Store chính thức có hiệu lực thi hành kể từ ngày đăng tải lên website. Các Điều khoản và Điều kiện này được điều chỉnh và giải thích theo luật pháp của Việt Nam.</p>
+                <p>Mọi tranh chấp phát sinh giữa 204Store và người dùng sẽ được giải quyết trên cơ sở thương lượng. Nếu không đạt được thỏa thuận, vụ việc sẽ được đưa ra Tòa án có thẩm quyền tại Việt Nam để giải quyết.</p>
+            </div>
+
+            <hr class="my-5">
+            <div class="text-center text-muted fst-italic">
+                Cảm ơn quý khách đã tin tưởng và lựa chọn 204Store.
+            </div>
+
+        </div>
+    </div>
+</div>

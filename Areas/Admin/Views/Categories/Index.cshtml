@@ -25,15 +25,9 @@
             background-color: #4338ca;
             color: white;
         }
+
     .table-hover tbody tr:hover {
         background-color: rgba(79, 70, 229, 0.04);
-    }
-    .tree-line {
-        border-left: 2px dashed #cbd5e1;
-        height: 100%;
-        position: absolute;
-        left: 25px;
-        top: 0;
     }
 </style>
 
@@ -81,7 +75,8 @@
             <table class="table align-middle mb-0 table-hover">
                 <thead class="bg-light">
                     <tr>
-                        <th class="ps-4 py-3 text-uppercase text-secondary small fw-bold" style="width: 80px;">ID</th>
+                        <th class="ps-4 py-3 text-uppercase text-secondary small fw-bold" style="width: 60px;">ID</th>
+                        <th class="py-3 text-uppercase text-secondary small fw-bold" style="width: 80px;">Hình ảnh</th>
                         <th class="py-3 text-uppercase text-secondary small fw-bold">Tên Danh Mục</th>
                         <th class="py-3 text-uppercase text-secondary small fw-bold">Cấp độ</th>
                         <th class="py-3 text-uppercase text-secondary small fw-bold text-center">Thứ tự</th>
@@ -94,19 +89,27 @@
                         <tr class="bg-light bg-opacity-25">
                             <td class="ps-4 text-muted small fw-bold">#@parent.Id</td>
                             <td>
+                                @if (!string.IsNullOrEmpty(parent.ImageUrl))
+                                {
+                                    <img src="@parent.ImageUrl" class="rounded-3 border" style="width: 40px; height: 40px; object-fit: cover;" />
+                                }
+                                else
+                                {
+                                    <div class="bg-white rounded-3 border d-flex align-items-center justify-content-center text-muted" style="width: 40px; height: 40px;"><i class="bi bi-image"></i></div>
+                                }
+                            </td>
+                            <td>
                                 <div class="d-flex align-items-center">
-                                    <div class="bg-primary bg-opacity-10 rounded p-2 me-3 text-primary">
-                                        <i class="bi bi-folder-fill fs-5"></i>
+                                    <div class="bg-primary bg-opacity-10 rounded p-2 me-3 text-primary" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="@(string.IsNullOrEmpty(parent.Icon) ? "bi bi-folder-fill" : parent.Icon) fs-5"></i>
                                     </div>
                                     <div>
                                         <span class="fw-bold text-dark d-block text-uppercase">@parent.Name</span>
                                     </div>
                                 </div>
                             </td>
-                            <td><span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-10">Danh mục Gốc</span></td>
-                            <td class="text-center">
-                                <span class="fw-bold text-dark">@parent.DisplayOrder</span>
-                            </td>
+                            <td><span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-10">Gốc</span></td>
+                            <td class="text-center"><span class="fw-bold text-dark">@parent.DisplayOrder</span></td>
                             <td class="pe-4 text-end">
                                 <a asp-action="Edit" asp-route-id="@parent.Id" class="btn btn-light text-primary btn-sm rounded-2 me-1" title="Sửa"><i class="bi bi-pencil-square"></i></a>
                                 <a asp-action="Delete" asp-route-id="@parent.Id" class="btn btn-light text-danger btn-sm rounded-2" title="Xóa"><i class="bi bi-trash"></i></a>
@@ -119,17 +122,20 @@
                             <tr>
                                 <td class="ps-4 text-muted small">#@child.Id</td>
                                 <td>
-                                    <div class="d-flex align-items-center" style="padding-left: 40px; position: relative;">
+                                    @if (!string.IsNullOrEmpty(child.ImageUrl))
+                                    {
+                                        <img src="@child.ImageUrl" class="rounded-3 border" style="width: 40px; height: 40px; object-fit: cover;" />
+                                    }
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center" style="padding-left: 40px;">
                                         <i class="bi bi-arrow-return-right text-muted me-2 fs-5"></i>
-                                        <div>
-                                            <span class="fw-medium text-secondary d-block">@child.Name</span>
-                                        </div>
+                                        <i class="@(string.IsNullOrEmpty(child.Icon) ? "bi bi-circle" : child.Icon) text-secondary me-2"></i>
+                                        <span class="fw-medium text-secondary">@child.Name</span>
                                     </div>
                                 </td>
-                                <td><span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-10">Danh mục Con</span></td>
-                                <td class="text-center">
-                                    <span class="text-muted small">@child.DisplayOrder</span>
-                                </td>
+                                <td><span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-10">Con</span></td>
+                                <td class="text-center"><span class="text-muted small">@child.DisplayOrder</span></td>
                                 <td class="pe-4 text-end">
                                     <a asp-action="Edit" asp-route-id="@child.Id" class="btn btn-light text-primary btn-sm rounded-2 me-1" title="Sửa"><i class="bi bi-pencil-square"></i></a>
                                     <a asp-action="Delete" asp-route-id="@child.Id" class="btn btn-light text-danger btn-sm rounded-2" title="Xóa"><i class="bi bi-trash"></i></a>
@@ -144,14 +150,9 @@
         @if (!Model.Any())
         {
             <div class="text-center py-5">
-                <div class="mb-3">
-                    <i class="bi bi-inbox text-muted opacity-25" style="font-size: 4rem;"></i>
-                </div>
-                <h5 class="fw-bold text-secondary">Chưa có dữ liệu</h5>
-                <p class="text-muted mb-4">Hiện chưa có danh mục nào được tạo.</p>
-                <a asp-action="Create" class="btn btn-outline-primary rounded-3 px-4">
-                    Tạo ngay danh mục đầu tiên
-                </a>
+                <i class="bi bi-inbox text-muted opacity-25" style="font-size: 4rem;"></i>
+                <h5 class="fw-bold text-secondary mt-3">Chưa có dữ liệu</h5>
+                <a asp-action="Create" class="btn btn-outline-primary rounded-3 px-4 mt-2">Tạo ngay danh mục đầu tiên</a>
             </div>
         }
     </div>
