@@ -404,7 +404,7 @@ else
             var defaultVariant = item.ProductDetails.OrderBy(x => x.Price).FirstOrDefault();
             if (defaultVariant != null)
             {
-                minPrice = defaultVariant.Price;
+                minPrice = (decimal)defaultVariant.Price;
                 defaultDetailId = defaultVariant.Id;
                 hasPrice = true;
             }

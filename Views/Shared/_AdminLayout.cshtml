@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var currentCtrl = ViewContext.RouteData.Values["Controller"]?.ToString();
+    bool isUserGroupActive = currentCtrl == "User" || currentCtrl == "Customers";
+}
+
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="utf-8" />
@@ -22,6 +27,32 @@
             background-color: var(--body-bg);
             color: #1e293b;
             overflow-x: hidden;
+        }
+
+        .transition-all {
+            transition: all 0.2s ease;
+        }
+
+        .transition-icon {
+            transition: transform 0.3s ease;
+        }
+
+        [aria-expanded="true"] .transition-icon {
+            transform: rotate(180deg);
+        }
+
+        .hover-light:hover {
+            background-color: rgba(255,255,255,0.05);
+            color: #fff !important;
+        }
+
+        .hover-text-white:hover {
+            color: #fff !important;
+            background-color: rgba(255,255,255,0.05);
+        }
+
+        .border-transparent {
+            border-color: transparent !important;
         }
 
         #sidebar-wrapper {
@@ -150,7 +181,29 @@
 
                 <div class="sidebar-label">Hệ thống</div>
                 <a asp-area="Admin" asp-controller="Order" asp-action="Index" class="list-group-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Order" ? "active-menu" : "")"><i class="bi bi-receipt-cutoff"></i> Đơn hàng</a>
-                <a asp-area="Admin" asp-controller="User" asp-action="Index" class="list-group-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "User" ? "active-menu" : "")"><i class="bi bi-people-fill"></i> Quản lý tài khoản</a>
+                <a href="#userCollapse" data-bs-toggle="collapse"
+                   class="list-group-item border-0 d-flex justify-content-between align-items-center px-3 py-2 mb-1 rounded-3 transition-all @(isUserGroupActive ? "bg-primary text-white shadow" : "bg-transparent text-white-50 hover-light")"
+                   aria-expanded="@(isUserGroupActive ? "true" : "false")">
+                    <span class="fw-bold">
+                        <i class="bi bi-people-fill me-2"></i> Người dùng
+                    </span>
+                    <i class="bi bi-chevron-down small transition-icon" style="font-size: 0.7em;"></i>
+                </a>
+
+                <div class="collapse @(isUserGroupActive ? "show" : "")" id="userCollapse">
+                    <div class="mt-1 rounded-3 overflow-hidden" style="background-color: rgba(0, 0, 0, 0.2);">
+                        <a asp-area="Admin" asp-controller="User" asp-action="Index"
+                           class="d-block py-2 px-3 text-decoration-none small transition-all ps-4 border-start border-3 @(currentCtrl == "User" ? "border-primary text-white bg-white bg-opacity-10" : "border-transparent text-white-50 hover-text-white")">
+                            <i class="bi bi-person-gear me-2"></i> Tài khoản hệ thống
+                        </a>
+
+                        <a asp-area="Admin" asp-controller="Customers" asp-action="Index"
+                           class="d-block py-2 px-3 text-decoration-none small transition-all ps-4 border-start border-3 @(currentCtrl == "Customers" ? "border-primary text-white bg-white bg-opacity-10" : "border-transparent text-white-50 hover-text-white")">
+                            <i class="bi bi-person-vcard me-2"></i> Hồ sơ khách hàng
+                        </a>
+
+                    </div>
+                </div>
             </div>
 
             <a href="/" class="bottom-link">
