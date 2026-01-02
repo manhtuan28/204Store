@@ -150,7 +150,7 @@
 
                 <div class="sidebar-label">Hệ thống</div>
                 <a asp-area="Admin" asp-controller="Order" asp-action="Index" class="list-group-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Order" ? "active-menu" : "")"><i class="bi bi-receipt-cutoff"></i> Đơn hàng</a>
-                <a href="#" class="list-group-item"><i class="bi bi-people-fill"></i> Khách hàng</a>
+                <a asp-area="Admin" asp-controller="User" asp-action="Index" class="list-group-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "User" ? "active-menu" : "")"><i class="bi bi-people-fill"></i> Quản lý tài khoản</a>
             </div>
 
             <a href="/" class="bottom-link">

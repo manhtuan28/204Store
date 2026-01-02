@@ -1,0 +1,117 @@
+﻿@model IEnumerable<_204Store.Models.ViewModels.UserVM>
+
+@{
+    ViewData["Title"] = "Quản lý Người dùng";
+}
+
+<div class="container-fluid px-4 mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-dark"><i class="bi bi-people-fill me-2"></i>Quản lý Tài khoản</h2>
+        <a href="/Identity/Account/Register" class="btn btn-primary rounded-3 shadow-sm">
+            <i class="bi bi-person-plus-fill me-2"></i>Thêm Admin mới
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table align-middle table-hover mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="ps-4 py-3">Họ và tên</th>
+                            <th class="py-3">Email / SĐT</th>
+                            <th class="py-3">Vai trò (Role)</th>
+                            <th class="py-3 text-center">Trạng thái</th>
+                            <th class="pe-4 py-3 text-end">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-sm bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center text-primary fw-bold me-3" style="width: 40px; height: 40px;">
+                                            @if (!string.IsNullOrEmpty(item.FullName))
+                                            {
+                                                <span>@item.FullName.Substring(0, 1).ToUpper()</span>
+                                            }
+                                            else
+                                            {
+                                                <span>U</span>
+                                            }
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0 fw-bold">@item.FullName</h6>
+                                            <small class="text-muted">
+                                                ID: @(item.Id.Length > 8 ? item.Id.Substring(0, 8) + "..." : item.Id)
+                                            </small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex flex-column">
+                                        <span>@item.Email</span>
+                                        <small class="text-muted">@item.PhoneNumber</small>
+                                    </div>
+                                </td>
+                                <td>
+                                    @if (item.Role == "Admin")
+                                    {
+                                        <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-10 px-3 py-2 rounded-pill">Admin</span>
+                                    }
+                                    else if (item.Role == "Manager")
+                                    {
+                                        <span class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-10 px-3 py-2 rounded-pill">Quản lý</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-10 px-3 py-2 rounded-pill">Khách hàng</span>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    @if (item.IsLocked)
+                                    {
+                                        <span class="badge bg-secondary"><i class="bi bi-lock-fill me-1"></i>Đang khóa</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success"><i class="bi bi-check-circle-fill me-1"></i>Hoạt động</span>
+                                    }
+                                </td>
+                                <td class="pe-4 text-end">
+                                    <form asp-action="LockUnlock" method="post" class="d-inline">
+                                        <input type="hidden" name="id" value="@item.Id" />
+                                        @if (item.IsLocked)
+                                        {
+                                            <button type="submit" class="btn btn-sm btn-success rounded-2 me-1" title="Mở khóa">
+                                                <i class="bi bi-unlock-fill"></i>
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <button type="submit" class="btn btn-sm btn-warning rounded-2 me-1" title="Khóa tài khoản" onclick="return confirm('Bạn có chắc muốn khóa tài khoản này?')">
+                                                <i class="bi bi-lock-fill"></i>
+                                            </button>
+                                        }
+                                    </form>
+
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-primary rounded-2 me-1" title="Sửa quyền">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+
+                                    <form asp-action="Delete" method="post" class="d-inline">
+                                        <input type="hidden" name="id" value="@item.Id" />
+                                        <button type="submit" class="btn btn-sm btn-danger rounded-2" title="Xóa vĩnh viễn" onclick="return confirm('Xóa tài khoản này? Dữ liệu đơn hàng liên quan có thể bị ảnh hưởng!')">
+                                            <i class="bi bi-trash-fill"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
