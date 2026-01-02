@@ -101,6 +101,8 @@ app.UseAuthorization();
 
 app.UseMiddleware<_204Store.Middleware.LoginHistoryMiddleware>();
 
+Rotativa.AspNetCore.RotativaConfiguration.Setup(app.Environment.WebRootPath, "Rotativa");
+
 app.MapControllerRoute(
     name: "areas",
     pattern: "{area:exists}/{controller=Dashboard}/{action=Index}/{id?}");

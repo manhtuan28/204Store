@@ -152,9 +152,15 @@
             <h3 class="fw-bold m-0">Đơn hàng <span class="text-primary font-monospace">#@Model.Id</span></h3>
             <div class="small text-muted mt-1">Đặt ngày: @Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</div>
         </div>
-        <a asp-action="Index" class="btn btn-white border shadow-sm fw-bold text-secondary">
-            <i class="bi bi-arrow-left me-2"></i>Quay lại
-        </a>
+        <div>
+            <a asp-action="Invoice" asp-route-id="@Model.Id" target="_blank" class="btn btn-primary shadow-sm fw-bold me-2">
+                <i class="bi bi-printer-fill me-2"></i>Xuất Hóa Đơn
+            </a>
+
+            <a asp-action="Index" class="btn btn-white border shadow-sm fw-bold text-secondary">
+                <i class="bi bi-arrow-left me-2"></i>Quay lại
+            </a>
+        </div>
     </div>
 
     <div class="row g-4">
