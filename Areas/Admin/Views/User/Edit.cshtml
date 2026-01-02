@@ -1,0 +1,43 @@
+﻿@model _204Store.Models.ViewModels.UserVM
+
+@{
+    ViewData["Title"] = "Cập nhật người dùng";
+}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-header bg-white border-0 pt-4 px-4">
+                <h4 class="fw-bold mb-0">Cập nhật tài khoản</h4>
+                <p class="text-muted small">@Model.Email</p>
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="Edit" method="post">
+                    <input type="hidden" asp-for="Id" />
+                    <input type="hidden" asp-for="Email" /> <div class="mb-3">
+                        <label asp-for="FullName" class="form-label fw-bold small text-secondary">HỌ VÀ TÊN</label>
+                        <input asp-for="FullName" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="PhoneNumber" class="form-label fw-bold small text-secondary">SỐ ĐIỆN THOẠI</label>
+                        <input asp-for="PhoneNumber" class="form-control" />
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Role" class="form-label fw-bold small text-secondary">PHÂN QUYỀN HỆ THỐNG</label>
+                        <select asp-for="Role" asp-items="@Model.RoleList" class="form-select form-select-lg bg-light border-0">
+                            <option disabled selected>-- Chọn vai trò --</option>
+                        </select>
+                        <div class="form-text text-danger"><i class="bi bi-shield-exclamation me-1"></i>Lưu ý: Quyền Admin có thể truy cập toàn bộ hệ thống.</div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary py-2 fw-bold">Lưu thay đổi</button>
+                        <a asp-action="Index" class="btn btn-light text-muted">Quay lại danh sách</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
