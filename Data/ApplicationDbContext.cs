@@ -19,6 +19,7 @@ namespace _204Store.Data
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<Promotion> Promotions { get; set; }
         public DbSet<ProductImage> ProductImages { get; set; }
+        public DbSet<LoginHistory> LoginHistories { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

@@ -1,0 +1,177 @@
+﻿@model _204Store.Models.ViewModels.CustomerDetailVM
+@using System.Globalization
+@{
+    ViewData["Title"] = "Hồ sơ khách hàng: " + Model.UserInfo.FullName;
+    var culture = new CultureInfo("vi-VN");
+}
+
+<div class="container-fluid py-4">
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+        <div class="card-body p-4">
+            <div class="d-flex align-items-center">
+                <div class="position-relative me-4">
+                    @if (!string.IsNullOrEmpty(Model.UserInfo.ProfilePictureUrl))
+                    {
+                        <img src="@Model.UserInfo.ProfilePictureUrl" class="rounded-circle border border-3 border-white shadow-sm" style="width: 100px; height: 100px; object-fit: cover;" />
+                    }
+                    else
+                    {
+                        <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center text-primary fw-bold display-4" style="width: 100px; height: 100px;">
+                            @Model.UserInfo.Email?.Substring(0, 1).ToUpper()
+                        </div>
+                    }
+                </div>
+                <div class="flex-grow-1">
+                    <h2 class="fw-bold mb-1">@Model.UserInfo.FullName</h2>
+                    <div class="d-flex gap-3 text-muted mb-2">
+                        <span><i class="bi bi-envelope me-1"></i>@Model.UserInfo.Email</span>
+                        <span><i class="bi bi-telephone me-1"></i>@(Model.UserInfo.PhoneNumber ?? "Chưa có SĐT")</span>
+                        <span><i class="bi bi-geo-alt me-1"></i>@(Model.UserInfo.Address ?? "Chưa có địa chỉ")</span>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill border border-success border-opacity-10">
+                            <i class="bi bi-bag-check me-1"></i>@Model.TotalOrders đơn hàng
+                        </span>
+                        <span class="badge bg-warning bg-opacity-10 text-warning px-3 py-2 rounded-pill border border-warning border-opacity-10">
+                            <i class="bi bi-currency-dollar me-1"></i>Chi tiêu: @Model.TotalSpent.ToString("#,##0", culture)đ
+                        </span>
+                    </div>
+                </div>
+                <div>
+                    <a asp-action="Index" class="btn btn-light rounded-3 fw-bold"><i class="bi bi-arrow-left me-2"></i>Quay lại</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <ul class="nav nav-pills mb-3 gap-2" id="pills-tab" role="tablist">
+                <li class="nav-item">
+                    <button class="nav-link active fw-bold rounded-pill px-4" id="pills-orders-tab" data-bs-toggle="pill" data-bs-target="#pills-orders" type="button">
+                        <i class="bi bi-box-seam me-2"></i>Lịch sử mua hàng
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link fw-bold rounded-pill px-4" id="pills-returns-tab" data-bs-toggle="pill" data-bs-target="#pills-returns" type="button">
+                        <i class="bi bi-arrow-counterclockwise me-2"></i>Đơn hoàn trả (@Model.ReturnHistory.Count)
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link fw-bold rounded-pill px-4" id="pills-login-tab" data-bs-toggle="pill" data-bs-target="#pills-login" type="button">
+                        <i class="bi bi-clock-history me-2"></i>Nhật ký hoạt động
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="pills-tabContent">
+
+                <div class="tab-pane fade show active" id="pills-orders">
+                    <div class="card border-0 shadow-sm rounded-4">
+                        <div class="card-body p-0">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="bg-light">
+                                    <tr>
+                                        <th class="ps-4 py-3">Mã đơn</th>
+                                        <th>Ngày đặt</th>
+                                        <th>Sản phẩm đã mua</th>
+                                        <th>Tổng tiền</th>
+                                        <th>Trạng thái</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var order in Model.OrderHistory)
+                                    {
+                                        <tr>
+                                            <td class="ps-4 fw-bold">#@order.Id</td>
+                                            <td>@order.OrderDate.ToString("dd/MM/yyyy HH:mm")</td>
+                                            <td>
+                                                <div class="d-flex flex-column gap-1">
+                                                    @foreach (var detail in order.OrderDetails)
+                                                    {
+                                                        <small class="text-muted">
+                                                            <i class="bi bi-dot"></i> @detail.ProductDetail?.Product?.Name (@detail.Count x @detail.Price.ToString("#,##0"))
+                                                        </small>
+                                                    }
+                                                </div>
+                                            </td>
+                                            <td class="fw-bold text-primary">@order.OrderTotal.ToString("#,##0", culture)đ</td>
+                                            <td>
+                                                @if (order.OrderStatus == "Completed")
+                                                {
+                                                    <span class="badge bg-success">Hoàn thành</span>
+                                                }
+                                                else if (order.OrderStatus == "Cancelled")
+                                                {
+
+                                                    <span class="badge bg-danger">Đã hủy</span>
+                                                }
+                                                else
+                                                {
+
+                                                    <span class="badge bg-info">@order.OrderStatus</span>
+                                                }
+                                            </td>
+                                            <td class="pe-4 text-end">
+                                                <a href="#" class="btn btn-sm btn-light border"><i class="bi bi-eye"></i></a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="pills-returns">
+                    @if (Model.ReturnHistory.Any())
+                    {
+                        <div class="alert alert-warning">Danh sách các đơn hàng đã yêu cầu hoàn trả.</div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5 text-muted">
+                            <i class="bi bi-emoji-smile fs-1"></i>
+                            <p class="mt-2">Khách hàng này chưa có đơn hoàn trả nào.</p>
+                        </div>
+                    }
+                </div>
+
+                <div class="tab-pane fade" id="pills-login">
+                    <div class="card border-0 shadow-sm rounded-4">
+                        <div class="card-header bg-white py-3 fw-bold">Lần đăng nhập gần nhất</div>
+                        <div class="card-body p-0">
+                            <table class="table table-striped mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="ps-4">Thời gian</th>
+                                        <th>IP Address</th>
+                                        <th>Thiết bị</th>
+                                        <th>Địa điểm (Ước tính)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var log in Model.LoginLogs)
+                                    {
+                                        <tr>
+                                            <td class="ps-4">@log.LoginTime.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                                            <td class="font-monospace">@log.IpAddress</td>
+                                            <td>@(log.DeviceInfo ?? "Không xác định")</td>
+                                            <td>@(log.Location ?? "Vietnam")</td>
+                                        </tr>
+                                    }
+                                    @if (!Model.LoginLogs.Any())
+                                    {
+                                        <tr><td colspan="4" class="text-center py-4">Chưa có dữ liệu ghi nhận.</td></tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

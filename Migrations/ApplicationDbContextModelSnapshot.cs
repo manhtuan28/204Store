@@ -294,6 +294,37 @@ namespace _204Store.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("_204Store.Models.LoginHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("DeviceInfo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IpAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Location")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("LoginTime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.ToTable("LoginHistories");
+                });
+
             modelBuilder.Entity("_204Store.Models.OrderDetail", b =>
                 {
                     b.Property<int>("Id")
@@ -592,6 +623,17 @@ namespace _204Store.Migrations
                         .HasForeignKey("ParentId");
 
                     b.Navigation("ParentCategory");
+                });
+
+            modelBuilder.Entity("_204Store.Models.LoginHistory", b =>
+                {
+                    b.HasOne("_204Store.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
                 });
 
             modelBuilder.Entity("_204Store.Models.OrderDetail", b =>
