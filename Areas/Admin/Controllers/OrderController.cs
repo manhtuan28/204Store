@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using _204Store.Data;
 using _204Store.Models;
+using Rotativa.AspNetCore;
 
 namespace _204Store.Areas.Admin.Controllers
 {
@@ -101,6 +102,26 @@ namespace _204Store.Areas.Admin.Controllers
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Details), new { id = id });
+        }
+
+        public async Task<IActionResult> Invoice(int id)
+        {
+            var orderHeader = await _context.OrderHeaders
+                .Include(o => o.ApplicationUser)
+                .Include(o => o.OrderDetails)
+                .ThenInclude(od => od.ProductDetail)
+                .ThenInclude(p => p.Product)
+                .FirstOrDefaultAsync(o => o.Id == id);
+
+            if (orderHeader == null) return NotFound();
+
+            return new ViewAsPdf("Invoice", orderHeader)
+            {
+                FileName = $"Invoice_{orderHeader.Id}.pdf",
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,
+                PageSize = Rotativa.AspNetCore.Options.Size.A4,
+                CustomSwitches = "--disable-smart-shrinking"
+            };
         }
     }
 }

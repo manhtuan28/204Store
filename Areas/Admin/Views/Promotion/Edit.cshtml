@@ -1,0 +1,122 @@
+﻿@model _204Store.Models.Promotion
+
+@{
+    ViewData["Title"] = "Chỉnh sửa mã giảm giá";
+}
+
+<div class="container-fluid px-4 mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold">Sửa Mã: <span class="text-primary">@Model.Code</span></h3>
+        <a asp-action="Index" class="btn btn-secondary shadow-sm">
+            <i class="bi bi-arrow-left me-2"></i>Quay lại
+        </a>
+    </div>
+
+    <div class="card shadow-sm rounded-4 border-0">
+        <div class="card-body p-4">
+            <form asp-action="Edit" method="post" id="promoForm">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                <input type="hidden" asp-for="Id" />
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <h6 class="fw-bold text-primary mb-3"><i class="bi bi-info-circle me-2"></i>Thông tin mã</h6>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Mã Code</label>
+                            <input asp-for="Code" class="form-control text-uppercase fw-bold" required />
+                            <span asp-validation-for="Code" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Ngày bắt đầu</label>
+                                <input asp-for="StartDate" class="form-control" type="datetime-local" required />
+                                <span asp-validation-for="StartDate" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Ngày kết thúc</label>
+                                <input asp-for="EndDate" class="form-control" type="datetime-local" required />
+                                <span asp-validation-for="EndDate" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-check form-switch mt-2">
+                            <input class="form-check-input" type="checkbox" asp-for="IsActive">
+                            <label class="form-check-label fw-bold" asp-for="IsActive">Đang kích hoạt</label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 bg-light rounded-3 p-3">
+                        <h6 class="fw-bold text-success mb-3"><i class="bi bi-cash-coin me-2"></i>Giá trị giảm</h6>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Loại giảm giá:</label>
+                            <div class="btn-group w-100" role="group">
+                                <input type="radio" class="btn-check" name="discountType" id="typePercent" autocomplete="off" onchange="toggleDiscountInput()">
+                                <label class="btn btn-outline-primary" for="typePercent">Theo Phần trăm (%)</label>
+
+                                <input type="radio" class="btn-check" name="discountType" id="typeAmount" autocomplete="off" onchange="toggleDiscountInput()">
+                                <label class="btn btn-outline-primary" for="typeAmount">Theo Số tiền (VND)</label>
+                            </div>
+                        </div>
+
+                        <div id="inputPercent" class="mb-3">
+                            <label class="form-label fw-bold">Giảm bao nhiêu %?</label>
+                            <div class="input-group">
+                                <input asp-for="DiscountPercent" class="form-control fw-bold text-primary" type="number" min="0" max="100" />
+                                <span class="input-group-text">%</span>
+                            </div>
+                            <span asp-validation-for="DiscountPercent" class="text-danger"></span>
+                        </div>
+
+                        <div id="inputAmount" class="mb-3 d-none">
+                            <label class="form-label fw-bold">Số tiền giảm (VND)</label>
+                            <div class="input-group">
+                                <input asp-for="DiscountAmount" class="form-control fw-bold text-success" type="number" min="0" />
+                                <span class="input-group-text">đ</span>
+                            </div>
+                            <span asp-validation-for="DiscountAmount" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end mt-4 pt-3 border-top">
+                    <button type="submit" class="btn btn-primary px-4 fw-bold shadow-sm">
+                        <i class="bi bi-save me-2"></i>Lưu thay đổi
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function() {
+            var percent = parseFloat('@Model.DiscountPercent');
+            var amount = parseFloat('@Model.DiscountAmount');
+
+            if (amount > 0) {
+                document.getElementById('typeAmount').checked = true;
+                toggleDiscountInput();
+            } else {
+                document.getElementById('typePercent').checked = true;
+                toggleDiscountInput();
+            }
+        });
+
+        function toggleDiscountInput() {
+            if (document.getElementById('typePercent').checked) {
+                document.getElementById('inputPercent').classList.remove('d-none');
+                document.getElementById('inputAmount').classList.add('d-none');
+                document.querySelector('input[name="DiscountAmount"]').value = 0;
+            } else {
+                document.getElementById('inputPercent').classList.add('d-none');
+                document.getElementById('inputAmount').classList.remove('d-none');
+                document.querySelector('input[name="DiscountPercent"]').value = 0;
+            }
+        }
+    </script>
+}

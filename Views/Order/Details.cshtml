@@ -227,6 +227,20 @@
                         <div class="small text-muted">@Model.City</div>
                     </div>
 
+                    <div class="mb-4">
+                        <div class="info-label">Ghi chú giao hàng</div>
+                        @if (!string.IsNullOrEmpty(Model.OrderNotes))
+                        {
+                            <div class="info-value text-break fst-italic" style="background: #fffbeb; padding: 10px; border-radius: 8px; border: 1px dashed #fcd34d;">
+                                "@Model.OrderNotes"
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="small text-muted">Không có ghi chú.</div>
+                        }
+                    </div>
+
                     <hr class="my-4 border-light" />
 
                     <div class="mb-4">
