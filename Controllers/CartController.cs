@@ -105,5 +105,41 @@ namespace _204Store.Controllers
             }
             return RedirectToAction("Index");
         }
+
+        [HttpPost]
+        public async Task<IActionResult> ApplyCoupon(string couponCode)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            var promo = await _context.Promotions.FirstOrDefaultAsync(p => p.Code == couponCode && p.IsActive);
+            if (promo == null || promo.EndDate < DateTime.Now || promo.StartDate > DateTime.Now)
+            {
+                TempData["error"] = "Mã giảm giá không hợp lệ!";
+                return RedirectToAction(nameof(Index));
+            }
+
+            var cartItems = await _context.CartItems
+                .Include(c => c.ProductDetail)
+                .Where(c => c.UserId == user.Id)
+                .ToListAsync();
+
+            decimal currentTotal = (decimal)cartItems.Sum(c => c.ProductDetail.Price * c.Quantity);
+
+            decimal discount = 0;
+            if (promo.DiscountPercent > 0)
+            {
+                discount = currentTotal * (promo.DiscountPercent / 100);
+            }
+            else
+            {
+                discount = promo.DiscountAmount;
+            }
+
+            HttpContext.Session.SetString("CouponCode", promo.Code);
+            HttpContext.Session.SetString("DiscountAmount", discount.ToString());
+
+            TempData["success"] = $"Áp dụng mã {promo.Code} thành công! -{discount:N0}đ";
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

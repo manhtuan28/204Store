@@ -1,6 +1,8 @@
 ﻿@{
     var currentCtrl = ViewContext.RouteData.Values["Controller"]?.ToString();
+
     bool isUserGroupActive = currentCtrl == "User" || currentCtrl == "Customers";
+    bool isInventoryGroupActive = currentCtrl == "Categories" || currentCtrl == "Products" || currentCtrl == "Promotion";
 }
 
 <!DOCTYPE html>
@@ -170,17 +172,37 @@
                 </a>
 
                 <div class="sidebar-label">Quản lý kho</div>
-                <a asp-area="Admin" asp-controller="Categories" asp-action="Index"
-                   class="list-group-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Categories" ? "active-menu" : "")">
-                    <i class="bi bi-tags-fill"></i> Danh mục
-                </a>
-                <a asp-area="Admin" asp-controller="Products" asp-action="Index"
-                   class="list-group-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Products" ? "active-menu" : "")">
-                    <i class="bi bi-box-seam-fill"></i> Sản phẩm
+
+                <a href="#inventoryCollapse" data-bs-toggle="collapse"
+                   class="list-group-item border-0 d-flex justify-content-between align-items-center px-3 py-2 mb-1 rounded-3 transition-all @(isInventoryGroupActive ? "bg-primary text-white shadow" : "bg-transparent text-white-50 hover-light")"
+                   aria-expanded="@(isInventoryGroupActive ? "true" : "false")">
+                    <span class="fw-bold">
+                        <i class="bi bi-box-seam-fill me-2"></i> Kho hàng
+                    </span>
+                    <i class="bi bi-chevron-down small transition-icon" style="font-size: 0.7em;"></i>
                 </a>
 
+                <div class="collapse @(isInventoryGroupActive ? "show" : "")" id="inventoryCollapse">
+                    <div class="mt-1 rounded-3 overflow-hidden" style="background-color: rgba(0, 0, 0, 0.2);">
+                        <a asp-area="Admin" asp-controller="Categories" asp-action="Index"
+                           class="d-block py-2 px-3 text-decoration-none small transition-all ps-4 border-start border-3 @(currentCtrl == "Categories" ? "border-primary text-white bg-white bg-opacity-10" : "border-transparent text-white-50 hover-text-white")">
+                            <i class="bi bi-tags-fill me-2"></i> Danh mục
+                        </a>
+
+                        <a asp-area="Admin" asp-controller="Products" asp-action="Index"
+                           class="d-block py-2 px-3 text-decoration-none small transition-all ps-4 border-start border-3 @(currentCtrl == "Products" ? "border-primary text-white bg-white bg-opacity-10" : "border-transparent text-white-50 hover-text-white")">
+                            <i class="bi bi-box-seam me-2"></i> Sản phẩm
+                        </a>
+
+                        <a asp-area="Admin" asp-controller="Promotion" asp-action="Index"
+                           class="d-block py-2 px-3 text-decoration-none small transition-all ps-4 border-start border-3 @(currentCtrl == "Promotion" ? "border-primary text-white bg-white bg-opacity-10" : "border-transparent text-white-50 hover-text-white")">
+                            <i class="bi bi-ticket-perforated-fill me-2"></i> Mã giảm giá
+                        </a>
+                    </div>
+                </div>
                 <div class="sidebar-label">Hệ thống</div>
                 <a asp-area="Admin" asp-controller="Order" asp-action="Index" class="list-group-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Order" ? "active-menu" : "")"><i class="bi bi-receipt-cutoff"></i> Đơn hàng</a>
+
                 <a href="#userCollapse" data-bs-toggle="collapse"
                    class="list-group-item border-0 d-flex justify-content-between align-items-center px-3 py-2 mb-1 rounded-3 transition-all @(isUserGroupActive ? "bg-primary text-white shadow" : "bg-transparent text-white-50 hover-light")"
                    aria-expanded="@(isUserGroupActive ? "true" : "false")">
@@ -201,7 +223,6 @@
                            class="d-block py-2 px-3 text-decoration-none small transition-all ps-4 border-start border-3 @(currentCtrl == "Customers" ? "border-primary text-white bg-white bg-opacity-10" : "border-transparent text-white-50 hover-text-white")">
                             <i class="bi bi-person-vcard me-2"></i> Hồ sơ khách hàng
                         </a>
-
                     </div>
                 </div>
             </div>

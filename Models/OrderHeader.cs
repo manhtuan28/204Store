@@ -34,5 +34,9 @@ namespace _204Store.Models
         public ICollection<OrderDetail> OrderDetails { get; set; }
         public string? ReturnReason { get; set; }
         public int ReturnAttempts { get; set; } = 0;
+        public string? CouponCode { get; set; }
+        [Column(TypeName = "decimal(18,0)")]
+        public decimal DiscountAmount { get; set; }
+        public string? OrderNotes { get; set; }
     }
 }
