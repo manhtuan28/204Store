@@ -2,337 +2,305 @@
 @{
     Layout = null;
     var culture = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
-    string themeColor = "#4f46e5";
-    string lightBg = "#f3f4f6";
+
+    string primaryColor = "#4f46e5";
+    string secondaryColor = "#818cf8";
+    string textDark = "#0f172a";
+    string textGray = "#64748b";
+    string borderLight = "#e2e8f0";
+    string bgLight = "#f8fafc";
 }
 
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
     <meta charset="utf-8" />
-    <title>Hóa đơn #@Model.Id</title>
-    <link href="https://fonts.googleapis.com/css2?family=Libre+Barcode+39+Text&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hóa đơn #@Model.Id - 204Store</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Libre+Barcode+128&display=swap" rel="stylesheet">
+    
     <style>
         body {
-            font-family: 'Roboto', sans-serif;
-            color: #1f2937;
-            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            background-color: #525252;
             margin: 0;
-            padding: 0;
-            line-height: 1.5;
+            padding: 40px 0;
+            color: @textDark;
+            -webkit-font-smoothing: antialiased;
         }
 
-        .page-container {
-            padding: 40px;
+        .invoice-box {
             max-width: 800px;
-            margin: 0 auto;
+            margin: auto;
+            background: #fff;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+            position: relative;
         }
 
+        .brand-strip {
+            height: 6px;
+            background: linear-gradient(90deg, @primaryColor 0%, @secondaryColor 100%);
+            width: 100%;
+        }
+
+        .content {
+            padding: 40px 50px;
+        }
+
+        .header-table { width: 100%; margin-bottom: 40px; }
         .brand-name {
             font-size: 28px;
             font-weight: 800;
-            color: @themeColor;
-            text-transform: uppercase;
-            letter-spacing: -1px;
+            color: @primaryColor;
             margin: 0;
+            letter-spacing: -1px;
+            text-transform: uppercase;
         }
-
-        .brand-sub {
-            font-size: 12px;
-            color: #6b7280;
-            margin-top: 5px;
-        }
-
+        .brand-info { font-size: 13px; color: @textGray; margin-top: 5px; line-height: 1.5; }
+        
         .invoice-title {
+            text-align: right;
             font-size: 32px;
             font-weight: 300;
-            color: #d1d5db;
-            text-align: right;
+            color: @textGray;
             text-transform: uppercase;
+            letter-spacing: 2px;
             margin: 0;
         }
+        .invoice-meta { text-align: right; margin-top: 10px; }
+        .meta-item { display: block; font-size: 13px; color: @textDark; margin-bottom: 3px; }
+        .meta-label { color: @textGray; font-weight: 500; display: inline-block; width: 80px; }
 
-        .layout-table {
+        .address-section {
             width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
+            margin-bottom: 40px;
+            border-top: 1px solid @borderLight;
+            border-bottom: 1px solid @borderLight;
+            padding: 20px 0;
         }
-
-            .layout-table td {
-                vertical-align: top;
-            }
-
-        .info-box {
-            background-color: @lightBg;
-            border-radius: 8px;
-            padding: 20px;
-            margin-top: 20px;
-        }
-
-        .info-label {
+        .addr-col { width: 48%; vertical-align: top; }
+        .addr-label {
             font-size: 11px;
             font-weight: 700;
-            color: #6b7280;
+            color: @textGray;
             text-transform: uppercase;
-            margin-bottom: 5px;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
             display: block;
         }
+        .addr-name { font-size: 16px; font-weight: 700; color: @textDark; margin-bottom: 5px; display: block; }
+        .addr-detail { font-size: 14px; color: #475569; line-height: 1.6; }
 
-        .info-value {
+        .product-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+        .product-table th {
+            background-color: @bgLight;
+            color: @textGray;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 2px solid @borderLight;
+        }
+        .product-table td {
+            padding: 15px;
+            border-bottom: 1px solid @borderLight;
             font-size: 14px;
-            font-weight: 500;
-            color: #111827;
-            margin: 0;
+            color: @textDark;
+            vertical-align: middle;
         }
+        .item-name { font-weight: 600; display: block; }
+        .item-desc { font-size: 12px; color: @textGray; margin-top: 4px; display: block; }
+        .text-right { text-align: right; }
+        .text-center { text-align: center; }
 
-        .product-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 30px;
-        }
-
-            .product-table th {
-                background-color: @themeColor;
-                color: white;
-                text-align: left;
-                padding: 12px 15px;
-                font-size: 12px;
-                text-transform: uppercase;
-                font-weight: 600;
-            }
-                .product-table th:first-child {
-                    border-top-left-radius: 6px;
-                }
-
-                .product-table th:last-child {
-                    border-top-right-radius: 6px;
-                }
-
-            .product-table td {
-                padding: 12px 15px;
-                border-bottom: 1px solid #e5e7eb;
-                color: #374151;
-            }
-            .product-table tr:nth-child(even) {
-                background-color: #f9fafb;
-            }
-
-        .total-section {
-            width: 100%;
-            margin-top: 20px;
-        }
-
-        .total-row td {
-            padding: 8px 15px;
-            text-align: right;
-        }
-
-        .total-label {
-            font-weight: 600;
-            color: #6b7280;
-        }
-
-        .total-value {
-            font-weight: 600;
-            color: #111827;
-        }
-
-        .grand-total {
-            font-size: 20px;
+        .total-section { width: 100%; }
+        .total-table { width: 100%; border-collapse: collapse; }
+        .total-row td { padding: 8px 0; font-size: 14px; color: @textGray; }
+        .total-row .val { color: @textDark; font-weight: 600; width: 160px; text-align: right; }
+        
+        .grand-total td {
+            padding-top: 15px;
+            border-top: 2px solid @textDark;
+            font-size: 18px;
             font-weight: 800;
-            color: @themeColor;
-            padding-top: 10px !important;
-            border-top: 2px solid #e5e7eb;
+            color: @textDark;
+        }
+        .grand-total .val { color: @primaryColor; font-size: 22px; }
+
+        .footer-note {
+            margin-top: 50px;
+            padding: 20px;
+            background-color: @bgLight;
+            border-radius: 8px;
+            border: 1px dashed #cbd5e1;
+            font-size: 13px;
+            color: @textGray;
+            line-height: 1.6;
         }
 
         .barcode {
-            font-family: 'Libre Barcode 39 Text', cursive;
-            font-size: 48px;
-            color: #000;
-            line-height: 1;
-            display: block;
+            font-family: 'Libre Barcode 128', cursive;
+            font-size: 40px;
+            color: @textDark;
+            text-align: center;
             margin-top: 10px;
         }
 
-        .footer {
-            margin-top: 50px;
-            padding-top: 20px;
-            border-top: 1px dashed #d1d5db;
-            text-align: center;
-            font-size: 12px;
-            color: #9ca3af;
-        }
-
-        .status-badge {
+        .badge {
             display: inline-block;
-            padding: 4px 12px;
-            border-radius: 50px;
+            padding: 6px 12px;
+            border-radius: 4px;
             font-size: 11px;
             font-weight: 700;
             text-transform: uppercase;
-            border: 1px solid;
+            letter-spacing: 0.5px;
         }
+        .bg-paid { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+        .bg-unpaid { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
 
-        .paid {
-            background: #dcfce7;
-            color: #166534;
-            border-color: #bbf7d0;
+        @@media print {
+            body { background: none; padding: 0; }
+            .invoice-box { box-shadow: none; max-width: 100%; width: 100%; }
+            .no-print { display: none; }
         }
-
-        .unpaid {
-            background: #fee2e2;
-            color: #991b1b;
-            border-color: #fecaca;
-        }
-
     </style>
 </head>
 <body>
-    <div class="page-container">
 
-        <table class="layout-table">
-            <tr>
-                <td style="width: 60%;">
-                    <h1 class="brand-name">204 STORE</h1>
-                    <div class="brand-sub">Hệ thống bán lẻ công nghệ chính hãng</div>
-                    <div style="margin-top: 10px; font-size: 13px;">
-                        123 Đại Cồ Việt, Hai Bà Trưng, Hà Nội<br />
-                        Hotline: 1900 2044 | Web: 204store.vn
-                    </div>
-                </td>
-                <td style="width: 40%; text-align: right;">
-                    <h2 class="invoice-title">HÓA ĐƠN</h2>
-                    <div style="margin-top: 10px;">
-                        <span class="info-label" style="display:inline;">Mã đơn: </span>
-                        <span class="info-value">#@Model.Id</span>
-                    </div>
-                    <div>
-                        <span class="info-label" style="display:inline;">Ngày đặt: </span>
-                        <span class="info-value">@Model.OrderDate.ToString("dd/MM/yyyy")</span>
-                    </div>
-                    <div class="barcode">*ORD-@Model.Id*</div>
-                </td>
-            </tr>
-        </table>
-
-        <div class="info-box">
-            <table class="layout-table" style="margin: 0;">
+    <div class="invoice-box">
+        <div class="brand-strip"></div>
+        
+        <div class="content">
+            <table class="header-table">
                 <tr>
-                    <td style="width: 50%; border-right: 1px solid #e5e7eb; padding-right: 20px;">
-                        <span class="info-label">KHÁCH HÀNG (Bill To)</span>
-                        <div class="info-value" style="font-size: 16px; margin-bottom: 4px;">@Model.Name</div>
-                        <div style="color: #4b5563;">
-                            @Model.PhoneNumber<br />
-                            @(Model.ApplicationUser != null ? Model.ApplicationUser.Email : "")
+                    <td style="vertical-align: top;">
+                        <h1 class="brand-name">204 STORE</h1>
+                        <div class="brand-info">
+                            Số 1 Đại Cồ Việt, Hai Bà Trưng, Hà Nội<br>
+                            Hotline: 1900 2044<br>
+                            Website: www.204store.vn
                         </div>
                     </td>
-                    <td style="width: 50%; padding-left: 20px;">
-                        <span class="info-label">GIAO ĐẾN (Ship To)</span>
-                        <div style="color: #4b5563; line-height: 1.6;">
-                            <strong>@Model.StreetAddress</strong><br />
-                            @Model.City<br />
-
-                            <div style="margin-top: 8px; font-style: italic; font-size: 13px; color: #555; border-top: 1px dashed #ddd; padding-top: 4px;">
-                                <span style="font-weight: bold;">Ghi chú:</span>
-                                @(string.IsNullOrEmpty(Model.OrderNotes) ? "Không có" : Model.OrderNotes)
-                            </div>
+                    <td style="vertical-align: top;">
+                        <h2 class="invoice-title">HÓA ĐƠN</h2>
+                        <div class="invoice-meta">
+                            <span class="meta-item"><span class="meta-label">Số HĐ:</span> <strong>#@Model.Id</strong></span>
+                            <span class="meta-item"><span class="meta-label">Ngày:</span> @Model.OrderDate.ToString("dd/MM/yyyy")</span>
+                            <span class="meta-item"><span class="meta-label">Trạng thái:</span> 
+                                @if(Model.PaymentStatus == "Approved") {
+                                    <span class="badge bg-paid">Đã thanh toán</span>
+                                } else {
+                                    <span class="badge bg-unpaid">Chờ thanh toán</span>
+                                }
+                            </span>
                         </div>
                     </td>
                 </tr>
             </table>
-        </div>
 
-        <table class="product-table">
-            <thead>
+            <table class="address-section">
                 <tr>
-                    <th style="width: 5%;">#</th>
-                    <th style="width: 45%;">Sản phẩm</th>
-                    <th style="width: 15%; text-align: center;">Số lượng</th>
-                    <th style="width: 15%; text-align: right;">Đơn giá</th>
-                    <th style="width: 20%; text-align: right;">Thành tiền</th>
+                    <td class="addr-col">
+                        <span class="addr-label">Người đặt hàng</span>
+                        <span class="addr-name">@Model.Name</span>
+                        <div class="addr-detail">
+                            SĐT: @Model.PhoneNumber<br>
+                            Email: @(Model.ApplicationUser?.Email ?? "N/A")
+                        </div>
+                    </td>
+                    <td style="width: 4%;"></td> <td class="addr-col">
+                        <span class="addr-label">Giao đến</span>
+                        <span class="addr-name">@Model.Name</span>
+                        <div class="addr-detail">
+                            @Model.StreetAddress<br>
+                            @Model.City
+                        </div>
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-                @{
-                    int i = 1;
-                }
-                @foreach (var item in Model.OrderDetails)
-                {
+            </table>
+
+            <table class="product-table">
+                <thead>
                     <tr>
-                        <td>@(i++)</td>
-                        <td>
-                            <div style="font-weight: 500; color: #111827;">@item.ProductDetail.Product.Name</div>
-                            <div style="font-size: 11px; color: #6b7280;">Màu: @item.ProductDetail.Color | @item.ProductDetail.Rom</div>
-                        </td>
-                        <td style="text-align: center;">@item.Count</td>
-                        <td style="text-align: right;">@item.Price.ToString("#,##0", culture)</td>
-                        <td style="text-align: right; font-weight: 500;">@((item.Price * item.Count).ToString("#,##0", culture))</td>
+                        <th style="width: 5%">#</th>
+                        <th style="width: 45%">Sản phẩm / Mô tả</th>
+                        <th class="text-center" style="width: 15%">Số lượng</th>
+                        <th class="text-right" style="width: 15%">Đơn giá</th>
+                        <th class="text-right" style="width: 20%">Thành tiền</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @{ int i = 1; }
+                    @foreach (var item in Model.OrderDetails)
+                    {
+                        <tr>
+                            <td style="color: #94a3b8;">@(i++)</td>
+                            <td>
+                                <span class="item-name">@item.ProductDetail.Product.Name</span>
+                                <span class="item-desc">Phân loại: @item.ProductDetail.Color / @item.ProductDetail.Rom</span>
+                            </td>
+                            <td class="text-center">@item.Count</td>
+                            <td class="text-right">@item.Price.ToString("#,##0")</td>
+                            <td class="text-right" style="font-weight: 600;">@((item.Price * item.Count).ToString("#,##0"))</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
 
-        <table class="layout-table" style="margin-top: 10px;">
-            <tr>
-                <td style="width: 60%; padding-top: 20px;">
-                    <span class="info-label">TRẠNG THÁI THANH TOÁN</span>
-                    <div style="margin-top: 5px;">
-                        @if (Model.PaymentStatus == "Approved")
-                        {
-                            <span class="status-badge paid">ĐÃ THANH TOÁN</span>
-                            <div style="margin-top: 8px; font-size: 12px; color: #6b7280;">
-                                Phương thức: Chuyển khoản / Thẻ
+            <table class="total-section">
+                <tr>
+                    <td style="width: 55%; vertical-align: top; padding-right: 40px;">
+                        <div style="font-size: 13px; color: #64748b;">
+                            <strong>Ghi chú đơn hàng:</strong><br>
+                            @if (!string.IsNullOrEmpty(Model.OrderNotes)) {
+                                <em style="color: #334155;">@Model.OrderNotes</em>
+                            } else {
+                                <span>Không có ghi chú.</span>
+                            }
+                            
+                            <div style="margin-top: 20px;">
+                                <div class="barcode">@Model.Id</div>
+                                <div style="text-align:center; font-size:10px; color:#94a3b8;">MÃ TRA CỨU</div>
                             </div>
-                        }
-                        else
-                        {
-                            <span class="status-badge unpaid">CHƯA THANH TOÁN</span>
-                            <div style="margin-top: 8px; font-size: 12px; color: #6b7280;">
-                                Phương thức: Thu hộ (COD)<br />
-                                Vui lòng thanh toán cho shipper khi nhận hàng.
-                            </div>
-                        }
-                    </div>
-                </td>
+                        </div>
+                    </td>
+                    <td style="width: 45%; vertical-align: top;">
+                        <table class="total-table">
+                            <tr class="total-row">
+                                <td>Tổng tiền hàng</td>
+                                <td class="val">@Model.OrderTotal.ToString("#,##0", culture) đ</td>
+                            </tr>
+                            <tr class="total-row">
+                                <td>Phí vận chuyển</td>
+                                <td class="val" style="color: #166534;">Miễn phí</td>
+                            </tr>
+                            <tr class="total-row">
+                                <td>Thuế (VAT)</td>
+                                <td class="val">0 đ</td>
+                            </tr>
+                            <tr><td colspan="2" style="height: 15px;"></td></tr>
+                            <tr class="grand-total">
+                                <td>TỔNG CỘNG</td>
+                                <td class="val">@Model.OrderTotal.ToString("#,##0", culture) đ</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
 
-                <td style="width: 40%;">
-                    <table style="width: 100%; border-collapse: collapse;">
-                        <tr class="total-row">
-                            <td class="total-label">Tạm tính:</td>
-                            <td class="total-value">@Model.OrderTotal.ToString("#,##0", culture)</td>
-                        </tr>
-                        <tr class="total-row">
-                            <td class="total-label">Vận chuyển:</td>
-                            <td class="total-value">Miễn phí</td>
-                        </tr>
-                        <tr class="total-row">
-                            <td class="total-label" style="padding-top: 15px;">TỔNG CỘNG:</td>
-                            <td class="grand-total" style="text-align: right;">@Model.OrderTotal.ToString("#,##0", culture) đ</td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-        </table>
-
-        <table class="layout-table" style="margin-top: 50px;">
-            <tr>
-                <td style="text-align: center; width: 50%;">
-                    <div class="info-label">NGƯỜI MUA HÀNG</div>
-                    <div style="font-size: 10px; color: #9ca3af; margin-bottom: 60px;">(Ký và ghi rõ họ tên)</div>
-                    <div style="border-top: 1px solid #e5e7eb; width: 60%; margin: 0 auto;"></div>
-                </td>
-                <td style="text-align: center; width: 50%;">
-                    <div class="info-label">204 STORE</div>
-                    <div style="font-size: 10px; color: #9ca3af; margin-bottom: 60px;">(Đóng dấu)</div>
-                    <div style="border-top: 1px solid #e5e7eb; width: 60%; margin: 0 auto;"></div>
-                </td>
-            </tr>
-        </table>
-
-        <div class="footer">
-            <p>Cảm ơn quý khách đã tin tưởng và ủng hộ 204Store!</p>
-            <p>Mọi thắc mắc về đơn hàng vui lòng liên hệ hotline <strong>1900 2044</strong> để được hỗ trợ.</p>
+            <div class="footer-note">
+                <strong>Cảm ơn quý khách đã mua sắm tại 204Store!</strong><br>
+                Sản phẩm được đổi trả trong vòng 30 ngày nếu có lỗi từ nhà sản xuất. Vui lòng giữ lại hóa đơn này để được hỗ trợ bảo hành tốt nhất.
+            </div>
+            
+            <div style="margin-top: 40px; text-align: center; color: #94a3b8; font-size: 12px;">
+                Generated automatically by 204Store System on @DateTime.Now.ToString("dd/MM/yyyy HH:mm")
+            </div>
         </div>
     </div>
+
 </body>
 </html>
