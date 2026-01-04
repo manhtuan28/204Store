@@ -145,9 +145,9 @@
         <div class="d-flex flex-wrap gap-2">
             @if (Model.PaymentStatus != "Approved" && Model.OrderStatus != "Cancelled" && Model.OrderStatus != "Completed" && Model.OrderStatus != "Refunded" && Model.OrderStatus != "ReturnRequested")
             {
-                <a asp-controller="Checkout" asp-action="Repay" asp-route-orderId="@Model.Id" class="btn btn-success fw-bold rounded-pill px-4 shadow-sm">
+                <button type="button" class="btn btn-success fw-bold rounded-pill px-4 shadow-sm" data-bs-toggle="modal" data-bs-target="#repayModal">
                     <i class="bi bi-credit-card-2-front-fill me-2"></i>Thanh toán ngay
-                </a>
+                </button>
             }
 
             @if (Model.OrderStatus == "Pending")
@@ -382,6 +382,56 @@
                 <div class="modal-footer border-top-0 pt-0">
                     <button type="button" class="btn btn-light rounded-pill px-4 fw-bold" data-bs-dismiss="modal">Hủy bỏ</button>
                     <button type="submit" class="btn btn-warning text-dark fw-bold rounded-pill px-4 shadow-sm">Gửi yêu cầu</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="repayModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0 shadow-lg">
+            <div class="modal-header border-bottom-0">
+                <h5 class="modal-title fw-bold text-dark">Chọn phương thức thanh toán</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-controller="Checkout" asp-action="Repay" method="post">
+                <div class="modal-body pt-0">
+                    <input type="hidden" name="orderId" value="@Model.Id" />
+
+                    <p class="text-muted small mb-3">Vui lòng chọn một trong các cổng thanh toán dưới đây để hoàn tất đơn hàng.</p>
+
+                    <div class="d-flex flex-column gap-3">
+                        <div class="position-relative">
+                            <input class="form-check-input position-absolute top-50 start-0 translate-middle-y ms-3" type="radio" name="paymentMethod" id="repayVnpay" value="VNPAY" checked>
+                            <label class="d-flex align-items-center p-3 border rounded-3 w-100 ps-5 cursor-pointer" for="repayVnpay" style="cursor:pointer;">
+                                <div class="me-3">
+                                    <img src="https://vnpay.vn/assets/images/logo-icon/logo-primary.svg" height="35" alt="VNPay">
+                                </div>
+                                <div>
+                                    <div class="fw-bold text-dark">Ví VNPAY / Ngân hàng</div>
+                                    <div class="small text-muted" style="font-size: 0.8rem;">Quét mã QR hoặc thẻ ATM/Visa</div>
+                                </div>
+                            </label>
+                        </div>
+
+                        <div class="position-relative">
+                            <input class="form-check-input position-absolute top-50 start-0 translate-middle-y ms-3" type="radio" name="paymentMethod" id="repayMomo" value="MOMO">
+                            <label class="d-flex align-items-center p-3 border rounded-3 w-100 ps-5 cursor-pointer" for="repayMomo" style="cursor:pointer;">
+                                <div class="me-3">
+                                    <img src="https://i.ibb.co/GvLyg5Pz/MOMO-Logo-App.png" height="35" width="35" style="object-fit: contain;" alt="MoMo">
+                                </div>
+                                <div>
+                                    <div class="fw-bold text-dark">Ví MoMo</div>
+                                    <div class="small text-muted" style="font-size: 0.8rem;">Quét mã QR qua ứng dụng MoMo</div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-top-0 pt-2">
+                    <button type="button" class="btn btn-light rounded-pill px-4 fw-bold" data-bs-dismiss="modal">Đóng</button>
+                    <button type="submit" class="btn btn-primary fw-bold rounded-pill px-4 shadow-sm">Tiến hành thanh toán</button>
                 </div>
             </form>
         </div>
