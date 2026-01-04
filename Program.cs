@@ -1,6 +1,8 @@
 ﻿using _204Store.Data;
 using _204Store.Models;
 using _204Store.Services;
+using _204Store.Models.Momo;
+using _204Store.Services;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -48,6 +50,9 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
+builder.Services.Configure<MomoOptionModel>(builder.Configuration.GetSection("Momo"));
+builder.Services.AddHttpClient<MomoService>();
+
 
 var app = builder.Build();
 
