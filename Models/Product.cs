@@ -30,5 +30,6 @@ namespace _204Store.Models
         public int Sold { get; set; } = 0;
         public ICollection<ProductImage> ProductImages { get; set; } = new List<ProductImage>();
         public string? Specifications { get; set; }
+        public bool IsActive { get; set; } = true;
     }
 }

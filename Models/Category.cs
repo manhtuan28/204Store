@@ -27,6 +27,8 @@ namespace _204Store.Models
 
         [ForeignKey("ParentId")]
         public virtual Category? ParentCategory { get; set; }
+        public string? Alias { get; set; }
+        public bool IsActive { get; set; } = true;
 
         public virtual ICollection<Category>? ChildCategories { get; set; }
     }

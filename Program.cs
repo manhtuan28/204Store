@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-
+OfficeOpenXml.ExcelPackage.License.SetNonCommercialPersonal("Dev");
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
@@ -37,6 +37,7 @@ builder.Services.AddAuthentication()
         options.AppId = fbAuthNSection["AppId"] ?? "TAM_THOI_BO_QUA";
         options.AppSecret = fbAuthNSection["AppSecret"] ?? "TAM_THOI_BO_QUA";
     });
+
 
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 builder.Logging.ClearProviders();
