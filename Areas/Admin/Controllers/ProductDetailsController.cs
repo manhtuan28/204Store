@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using _204Store.Data;
 using _204Store.Models;
+using OfficeOpenXml;
 
 namespace _204Store.Areas.Admin.Controllers
 {
@@ -156,6 +157,151 @@ namespace _204Store.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index), new { productId = detail.ProductId });
             }
             return NotFound();
+        }
+
+        [HttpGet]
+        public IActionResult Import()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Import(IFormFile file)
+        {
+            if (file == null || file.Length <= 0)
+            {
+                TempData["error"] = "Vui lòng chọn file Excel.";
+                return View();
+            }
+
+            if (!Path.GetExtension(file.FileName).Equals(".xlsx", StringComparison.OrdinalIgnoreCase))
+            {
+                TempData["error"] = "Chỉ hỗ trợ file .xlsx";
+                return View();
+            }
+
+            try
+            {
+                using (var stream = new MemoryStream())
+                {
+                    await file.CopyToAsync(stream);
+
+                    using (var package = new ExcelPackage(stream))
+                    {
+                        var worksheet = package.Workbook.Worksheets[0];
+                        var rowCount = worksheet.Dimension.Rows;
+
+                        for (int row = 2; row <= rowCount; row++)
+                        {
+                            var productName = worksheet.Cells[row, 1].Value?.ToString().Trim();
+                            var categoryName = worksheet.Cells[row, 2].Value?.ToString().Trim();
+                            var color = worksheet.Cells[row, 3].Value?.ToString().Trim();
+                            var rom = worksheet.Cells[row, 4].Value?.ToString().Trim();
+                            var ram = worksheet.Cells[row, 5].Value?.ToString().Trim();
+
+                            double.TryParse(worksheet.Cells[row, 6].Value?.ToString(), out double price);
+                            int.TryParse(worksheet.Cells[row, 7].Value?.ToString(), out int quantity);
+                            var imageUrl = worksheet.Cells[row, 8].Value?.ToString().Trim();
+
+                            if (string.IsNullOrEmpty(productName)) continue;
+
+                            int categoryId;
+                            var category = await _context.Categories.FirstOrDefaultAsync(c => c.Name == categoryName);
+                            if (category != null)
+                            {
+                                categoryId = category.Id;
+                            }
+                            else
+                            {
+                                var firstCategory = await _context.Categories.FirstOrDefaultAsync();
+                                categoryId = firstCategory?.Id ?? 1;
+                            }
+
+                            var product = await _context.Products.FirstOrDefaultAsync(p => p.Name == productName);
+                            if (product == null)
+                            {
+                                product = new Product
+                                {
+                                    Name = productName,
+                                    Description = $"Nhập từ Excel {DateTime.Now:dd/MM}",
+                                    ImageUrl = imageUrl ?? "https://placehold.co/300",
+                                    CategoryId = categoryId,
+                                    IsActive = true
+                                };
+                                _context.Products.Add(product);
+                                await _context.SaveChangesAsync();
+                            }
+
+                            var existingVariant = await _context.ProductDetails
+                                .FirstOrDefaultAsync(d => d.ProductId == product.Id && d.Color == color && d.Rom == rom && d.Ram == ram);
+
+                            if (existingVariant != null)
+                            {
+                                existingVariant.Quantity += quantity;
+                                existingVariant.Price = (decimal)price;
+                                _context.ProductDetails.Update(existingVariant);
+                            }
+                            else
+                            {
+                                var newVariant = new ProductDetail
+                                {
+                                    ProductId = product.Id,
+                                    Color = color ?? "Mặc định",
+                                    Rom = rom ?? "128GB",
+                                    Ram = ram ?? "8GB",
+                                    Price = (decimal)price,
+                                    Quantity = quantity,
+                                    ImageUrl = imageUrl ?? product.ImageUrl,
+                                    IsActive = true
+                                };
+                                _context.ProductDetails.Add(newVariant);
+                            }
+
+                            await _context.SaveChangesAsync();
+                        }
+                    }
+                }
+
+                TempData["success"] = "Nhập hàng thành công!";
+                return RedirectToAction("Index", "Products");
+            }
+            catch (Exception ex)
+            {
+                var msg = ex.Message;
+                if (ex.InnerException != null) msg += " | Chi tiết: " + ex.InnerException.Message;
+                TempData["error"] = "Lỗi: " + msg;
+                return View();
+            }
+        }
+        public IActionResult DownloadTemplate()
+        {
+            using (var package = new ExcelPackage())
+            {
+                var worksheet = package.Workbook.Worksheets.Add("NhapHang");
+
+                worksheet.Cells[1, 1].Value = "Tên Sản Phẩm";
+                worksheet.Cells[1, 2].Value = "Danh Mục";
+                worksheet.Cells[1, 3].Value = "Màu Sắc";
+                worksheet.Cells[1, 4].Value = "Bộ Nhớ (ROM)";
+                worksheet.Cells[1, 5].Value = "RAM";
+                worksheet.Cells[1, 6].Value = "Giá Bán";
+                worksheet.Cells[1, 7].Value = "Số Lượng";
+                worksheet.Cells[1, 8].Value = "Link Ảnh";
+
+                using (var range = worksheet.Cells[1, 1, 1, 8])
+                {
+                    range.Style.Font.Bold = true;
+                    range.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    range.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+                }
+                worksheet.Cells.AutoFitColumns();
+
+                var stream = new MemoryStream();
+                package.SaveAs(stream);
+                stream.Position = 0;
+                string excelName = $"Mau_Nhap_Hang_Co_RAM_{DateTime.Now:yyyyMMdd}.xlsx";
+                return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
+            }
         }
     }
 }
