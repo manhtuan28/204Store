@@ -365,6 +365,17 @@
             margin-top: 3rem;
             font-size: 0.85rem;
         }
+
+        .btn-subscribe {
+            background-color: #0d6efd;
+            color: white;
+            border: none;
+        }
+
+            .btn-subscribe:hover {
+                background-color: #0b5ed7;
+                color: white;
+            }
     </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
@@ -514,10 +525,13 @@
                     </div>
 
                     <h5 class="footer-heading mt-4 mb-3">Đăng ký nhận tin</h5>
-                    <p class="small mb-3">Nhận thông tin khuyến mãi mới nhất từ chúng tôi.</p>
-                    <form class="input-group">
-                        <input type="email" class="form-control newsletter-input" placeholder="Email của bạn...">
-                        <button class="btn btn-subscribe" type="button"><i class="bi bi-send-fill"></i></button>
+                    <p class="small mb-3">Nhận mã giảm giá & khuyến mãi mới nhất.</p>
+
+                    <form id="newsletterForm" class="input-group">
+                        <input type="email" id="newsletterEmail" class="form-control newsletter-input" placeholder="Email của bạn..." required>
+                        <button class="btn btn-subscribe" type="submit" id="btnSubscribe">
+                            <i class="bi bi-send-fill"></i>
+                        </button>
                     </form>
                 </div>
             </div>
@@ -546,6 +560,70 @@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        document.getElementById('newsletterForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                var email = document.getElementById('newsletterEmail').value;
+                var btn = document.getElementById('btnSubscribe');
+
+                Swal.fire({
+                    title: 'Đang gửi yêu cầu...',
+                    text: 'Vui lòng chờ trong giây lát',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                fetch('/Home/Subscribe', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'email=' + encodeURIComponent(email)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire({
+                            title: 'Đăng ký thành công! 🎉',
+                            text: 'Chúng tôi đã gửi một món quà nhỏ vào email của bạn. Hãy kiểm tra ngay nhé!',
+                            icon: 'success',
+                            confirmButtonText: 'Tuyệt vời',
+                            confirmButtonColor: '#0d6efd',
+                            backdrop: `
+                                rgba(0,0,123,0.4)
+                                url("/images/confetti.gif")
+                                left top
+                                no-repeat
+                            `
+                        });
+
+                        document.getElementById('newsletterEmail').value = '';
+                    } else {
+                        Swal.fire({
+                            title: 'Rất tiếc!',
+                            text: data.message,
+                            icon: 'warning',
+                            confirmButtonText: 'Đã hiểu',
+                            confirmButtonColor: '#ffc107'
+                        });
+                    }
+                })
+                .catch(error => {
+                    Swal.fire({
+                        title: 'Lỗi hệ thống',
+                        text: 'Không thể kết nối đến máy chủ.',
+                        icon: 'error',
+                        confirmButtonText: 'Thử lại'
+                    });
+                });
+            });
+    </script>
 </body>
 </html>
