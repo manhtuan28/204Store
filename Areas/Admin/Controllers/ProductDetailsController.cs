@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using _204Store.Data;
 using _204Store.Models;
 using OfficeOpenXml;
+using Newtonsoft.Json;
 
 namespace _204Store.Areas.Admin.Controllers
 {
@@ -185,7 +186,6 @@ namespace _204Store.Areas.Admin.Controllers
                 using (var stream = new MemoryStream())
                 {
                     await file.CopyToAsync(stream);
-
                     using (var package = new ExcelPackage(stream))
                     {
                         var worksheet = package.Workbook.Worksheets[0];
@@ -194,41 +194,91 @@ namespace _204Store.Areas.Admin.Controllers
                         for (int row = 2; row <= rowCount; row++)
                         {
                             var productName = worksheet.Cells[row, 1].Value?.ToString().Trim();
-                            var categoryName = worksheet.Cells[row, 2].Value?.ToString().Trim();
-                            var color = worksheet.Cells[row, 3].Value?.ToString().Trim();
-                            var rom = worksheet.Cells[row, 4].Value?.ToString().Trim();
-                            var ram = worksheet.Cells[row, 5].Value?.ToString().Trim();
-
-                            double.TryParse(worksheet.Cells[row, 6].Value?.ToString(), out double price);
-                            int.TryParse(worksheet.Cells[row, 7].Value?.ToString(), out int quantity);
-                            var imageUrl = worksheet.Cells[row, 8].Value?.ToString().Trim();
-
                             if (string.IsNullOrEmpty(productName)) continue;
+
+                            var categoryName = worksheet.Cells[row, 2].Value?.ToString().Trim();
+                            var description = worksheet.Cells[row, 3].Value?.ToString().Trim();
+
+                            var rawSpecs = worksheet.Cells[row, 4].Value?.ToString().Trim();
+                            string jsonSpecs = "[]";
+
+                            if (!string.IsNullOrEmpty(rawSpecs))
+                            {
+                                var specList = new List<object>();
+                                var pairs = rawSpecs.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+
+                                foreach (var pair in pairs)
+                                {
+                                    var parts = pair.Split(new[] { ':' }, 2);
+                                    if (parts.Length == 2)
+                                    {
+                                        specList.Add(new
+                                        {
+                                            Key = parts[0].Trim(),
+                                            Value = parts[1].Trim()
+                                        });
+                                    }
+                                }
+                                jsonSpecs = JsonConvert.SerializeObject(specList);
+                            }
+                            var isFeaturedStr = worksheet.Cells[row, 5].Value?.ToString().Trim().ToUpper();
+                            bool isFeatured = (isFeaturedStr == "TRUE" || isFeaturedStr == "1" || isFeaturedStr == "YES");
+
+                            double.TryParse(worksheet.Cells[row, 6].Value?.ToString(), out double discountRate);
+
+                            var color = worksheet.Cells[row, 7].Value?.ToString().Trim();
+                            var rom = worksheet.Cells[row, 8].Value?.ToString().Trim();
+                            var ram = worksheet.Cells[row, 9].Value?.ToString().Trim();
+
+                            double.TryParse(worksheet.Cells[row, 10].Value?.ToString(), out double price);
+                            int.TryParse(worksheet.Cells[row, 11].Value?.ToString(), out int quantity);
+
+                            var avatarUrl = worksheet.Cells[row, 12].Value?.ToString().Trim();
+                            var albumUrls = worksheet.Cells[row, 13].Value?.ToString().Trim();
 
                             int categoryId;
                             var category = await _context.Categories.FirstOrDefaultAsync(c => c.Name == categoryName);
-                            if (category != null)
-                            {
-                                categoryId = category.Id;
-                            }
+                            if (category != null) categoryId = category.Id;
                             else
                             {
-                                var firstCategory = await _context.Categories.FirstOrDefaultAsync();
-                                categoryId = firstCategory?.Id ?? 1;
+                                var firstCat = await _context.Categories.FirstOrDefaultAsync();
+                                categoryId = firstCat?.Id ?? 1;
                             }
 
                             var product = await _context.Products.FirstOrDefaultAsync(p => p.Name == productName);
+                            bool isNewProduct = false;
+
                             if (product == null)
                             {
+                                isNewProduct = true;
                                 product = new Product
                                 {
                                     Name = productName,
-                                    Description = $"Nhập từ Excel {DateTime.Now:dd/MM}",
-                                    ImageUrl = imageUrl ?? "https://placehold.co/300",
                                     CategoryId = categoryId,
                                     IsActive = true
                                 };
                                 _context.Products.Add(product);
+                            }
+
+                            product.Description = description ?? "";
+                            product.Specifications = jsonSpecs;
+                            product.IsFeatured = isFeatured;
+                            product.DiscountRate = discountRate;
+                            product.ImageUrl = avatarUrl ?? "https://placehold.co/300";
+
+                            await _context.SaveChangesAsync();
+
+                            if (isNewProduct && !string.IsNullOrEmpty(albumUrls))
+                            {
+                                var urls = albumUrls.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries);
+                                foreach (var url in urls)
+                                {
+                                    _context.ProductImages.Add(new ProductImage
+                                    {
+                                        ProductId = product.Id,
+                                        Url = url.Trim()
+                                    });
+                                }
                                 await _context.SaveChangesAsync();
                             }
 
@@ -247,28 +297,26 @@ namespace _204Store.Areas.Admin.Controllers
                                 {
                                     ProductId = product.Id,
                                     Color = color ?? "Mặc định",
-                                    Rom = rom ?? "128GB",
+                                    Rom = rom ?? "Tiêu chuẩn",
                                     Ram = ram ?? "8GB",
                                     Price = (decimal)price,
                                     Quantity = quantity,
-                                    ImageUrl = imageUrl ?? product.ImageUrl,
+                                    ImageUrl = avatarUrl,
                                     IsActive = true
                                 };
                                 _context.ProductDetails.Add(newVariant);
                             }
-
                             await _context.SaveChangesAsync();
                         }
                     }
                 }
-
                 TempData["success"] = "Nhập hàng thành công!";
                 return RedirectToAction("Index", "Products");
             }
             catch (Exception ex)
             {
                 var msg = ex.Message;
-                if (ex.InnerException != null) msg += " | Chi tiết: " + ex.InnerException.Message;
+                if (ex.InnerException != null) msg += " | " + ex.InnerException.Message;
                 TempData["error"] = "Lỗi: " + msg;
                 return View();
             }
@@ -277,29 +325,33 @@ namespace _204Store.Areas.Admin.Controllers
         {
             using (var package = new ExcelPackage())
             {
-                var worksheet = package.Workbook.Worksheets.Add("NhapHang");
+                var worksheet = package.Workbook.Worksheets.Add("NhapHangFull");
 
-                worksheet.Cells[1, 1].Value = "Tên Sản Phẩm";
-                worksheet.Cells[1, 2].Value = "Danh Mục";
-                worksheet.Cells[1, 3].Value = "Màu Sắc";
-                worksheet.Cells[1, 4].Value = "Bộ Nhớ (ROM)";
-                worksheet.Cells[1, 5].Value = "RAM";
-                worksheet.Cells[1, 6].Value = "Giá Bán";
-                worksheet.Cells[1, 7].Value = "Số Lượng";
-                worksheet.Cells[1, 8].Value = "Link Ảnh";
+                string[] headers = {
+                    "Tên Sản Phẩm", "Danh Mục", "Mô Tả Chi Tiết", "Thông Số Kỹ Thuật (Key:Value; Key2:Value2)",
+                    "Nổi Bật (TRUE/FALSE)", "Giảm Giá (%)",
+                    "Màu Sắc", "ROM", "RAM", "Giá Bán", "Số Lượng",
+                    "Ảnh Đại Diện", "Album Ảnh Phụ"
+                };
 
-                using (var range = worksheet.Cells[1, 1, 1, 8])
+                for (int i = 0; i < headers.Length; i++)
+                {
+                    worksheet.Cells[1, i + 1].Value = headers[i];
+                }
+
+                using (var range = worksheet.Cells[1, 1, 1, headers.Length])
                 {
                     range.Style.Font.Bold = true;
                     range.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                    range.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+                    range.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightBlue);
+                    range.Style.Border.Bottom.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
                 }
                 worksheet.Cells.AutoFitColumns();
 
                 var stream = new MemoryStream();
                 package.SaveAs(stream);
                 stream.Position = 0;
-                string excelName = $"Mau_Nhap_Hang_Co_RAM_{DateTime.Now:yyyyMMdd}.xlsx";
+                string excelName = $"Mau_Nhap_Hang_V3_{DateTime.Now:ddMMyyyy}.xlsx";
                 return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
             }
         }

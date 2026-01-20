@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using System.Security.Cryptography.X509Certificates;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace _204Store.Controllers
 {
@@ -12,6 +13,7 @@ namespace _204Store.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _context;
+        private readonly IEmailSender _emailSender;
 
         public IActionResult Terms()
         {
@@ -53,10 +55,11 @@ namespace _204Store.Controllers
         {
             return View();
         }
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context, IEmailSender emailSender)
         {
             _logger = logger;
             _context = context;
+            _emailSender = emailSender;
         }
 
         [HttpPost]
@@ -186,6 +189,67 @@ namespace _204Store.Controllers
                 return TrackingOrder(orderId.Value, phone).Result;
             }
             return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Subscribe(string email)
+        {
+            if (string.IsNullOrEmpty(email))
+            {
+                return Json(new { success = false, message = "Vui lòng nhập email." });
+            }
+
+            var exists = await _context.Subscribers.AnyAsync(s => s.Email == email);
+            if (exists)
+            {
+                return Json(new { success = false, message = "Email này đã đăng ký nhận tin rồi!" });
+            }
+
+            var sub = new Subscriber { Email = email };
+            _context.Subscribers.Add(sub);
+            await _context.SaveChangesAsync();
+
+            string baseUrl = $"{Request.Scheme}://{Request.Host}";
+
+            string voucherCode = "CHAO206";
+            string subject = "🎁 Quà làm quen: Tặng bạn mã giảm giá 20%";
+
+            string htmlMessage = $@"
+            <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;'>
+                <div style='background-color: #0d6efd; padding: 20px; text-align: center; color: white;'>
+                    <h2 style='margin: 0;'>Chào mừng bạn đến với 204Store!</h2>
+                </div>
+                <div style='padding: 30px; background-color: #ffffff;'>
+                    <p>Chào bạn,</p>
+                    <p>Cảm ơn bạn đã đăng ký nhận bản tin. Chúng tôi rất vui được đồng hành cùng bạn.</p>
+                    <p>Như một món quà làm quen, 204Store gửi tặng bạn mã giảm giá cho đơn hàng đầu tiên:</p>
+                    
+                    <div style='background-color: #f8f9fa; border: 2px dashed #0d6efd; padding: 15px; text-align: center; margin: 20px 0; font-size: 24px; font-weight: bold; color: #0d6efd; letter-spacing: 2px;'>
+                        {voucherCode}
+                    </div>
+
+                    <p>Hãy sử dụng mã này tại bước thanh toán để được giảm ngay <strong>20%</strong> (hoặc 150.000đ).</p>
+                    
+                    <div style='text-align: center; margin-top: 30px;'>
+                        <a href='{baseUrl}' style='background-color: #0d6efd; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;'>Mua sắm ngay</a>
+                    </div>
+                </div>
+                <div style='background-color: #f1f1f1; padding: 15px; text-align: center; font-size: 12px; color: #666;'>
+                    <p>© 2026 204Store. All rights reserved.</p>
+                    <p>Truy cập website: <a href='{baseUrl}'>{baseUrl}</a></p>
+                </div>
+            </div>
+        ";
+
+            try
+            {
+                await _emailSender.SendEmailAsync(email, subject, htmlMessage);
+                return Json(new { success = true, message = "Đăng ký thành công! Hãy kiểm tra email để nhận quà nhé." });
+            }
+            catch (Exception)
+            {
+                return Json(new { success = false, message = "Lỗi gửi email, vui lòng thử lại sau." });
+            }
         }
 
         [HttpPost]
