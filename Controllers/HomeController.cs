@@ -82,6 +82,7 @@ namespace _204Store.Controllers
         public async Task<IActionResult> Index(int? category, string? query)
         {
             var productsQuery = _context.Products
+                //.Where(p => p.IsActive)
                 .Include(p => p.Category)
                 .Include(p => p.ProductDetails)
                 .AsQueryable();
@@ -274,6 +275,48 @@ namespace _204Store.Controllers
             }
 
             return View("Tracking", order);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> SearchLive(string query)
+        {
+            if (string.IsNullOrEmpty(query)) return Json(new List<object>());
+
+            query = query.Trim();
+
+            var products = await _context.Products
+                .Include(p => p.ProductDetails)
+                .Where(p => EF.Functions.Like(p.Name, $"%{query}%"))
+                .OrderByDescending(p => p.Id)
+                .Take(5)
+                .Select(p => new
+                {
+                    id = p.Id,
+                    name = p.Name,
+                    image = p.ImageUrl,
+                    price = p.ProductDetails.Any() ? p.ProductDetails.Min(d => d.Price) : 0
+                })
+                .ToListAsync();
+
+            return Json(products);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Search(string query)
+        {
+            ViewBag.Keyword = query;
+            if (string.IsNullOrEmpty(query)) return View(new List<Product>());
+
+            query = query.Trim();
+
+            var products = await _context.Products
+                .Include(p => p.Category)
+                .Include(p => p.ProductDetails)
+                .Where(p => EF.Functions.Like(p.Name, $"%{query}%"))
+                .OrderByDescending(p => p.Id)
+                .ToListAsync();
+
+            return View(products);
         }
 
         public IActionResult StoreLocator(string? city)
