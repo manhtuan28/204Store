@@ -3,74 +3,98 @@
 @{
     bool isFiltering = (bool)(ViewData["IsFiltering"] ?? false);
     ViewData["Title"] = ViewData["PageTitle"];
-    var culture = new CultureInfo("vi-VN");}
+    var culture = new CultureInfo("vi-VN");
+}
 
 <style>
     :root {
-
-        --bg-light: #f8fafc;
+        --primary-color: #4f46e5;
+        --primary-hover: #4338ca;
+        --secondary-color: #64748b;
+        --text-dark: #0f172a;
+        --text-light: #f8fafc;
+        --danger-color: #ef4444;
+        --bg-body: #f8fafc;
         --card-bg: #ffffff;
-        --text-main: #1e293b;
-        --text-sub: #64748b;
-        --accent: #4f46e5;
-        --accent-hover: #4338ca;
+        --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        --shadow-hover: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        --radius-md: 12px;
+        --radius-lg: 16px;
+        --hero-height-desktop: 450px;
+        --hero-height-mobile: 280px;
+        --hero-gap: 1rem;
     }
 
-    .hover-float {
-        transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    body {
+        background-color: var(--bg-body);
+        color: var(--text-dark);
     }
-
-        .hover-float:hover {
-            transform: translateY(-4px);
-        }
 
     .section-header {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-bottom: 25px;
+        margin-bottom: 2rem;
+        position: relative;
     }
 
     .section-title {
-        font-size: 1.35rem;
+        font-size: 1.5rem;
         font-weight: 800;
-        color: var(--text-main);
-        letter-spacing: -0.5px;
+        color: var(--text-dark);
+        letter-spacing: -0.025em;
+        position: relative;
+        padding-left: 15px;
     }
 
+        .section-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 24px;
+            background-color: var(--primary-color);
+            border-radius: 4px;
+        }
+
     .btn-view-all {
-        font-size: 0.9rem;
+        font-size: 0.875rem;
         font-weight: 600;
-        color: var(--text-sub);
-        padding: 6px 12px;
-        border-radius: 20px;
-        background: #f1f5f9;
+        color: var(--primary-color);
+        padding: 8px 16px;
+        border-radius: 99px;
+        background: rgba(79, 70, 229, 0.1);
         text-decoration: none;
-        transition: 0.2s;
+        transition: all 0.2s ease;
     }
 
         .btn-view-all:hover {
-            background: var(--accent);
+            background: var(--primary-color);
             color: white;
+            transform: translateX(4px);
         }
 
     .product-card {
-        background: white;
-        border-radius: 16px;
+        background: var(--card-bg);
+        border-radius: var(--radius-lg);
         overflow: hidden;
-        transition: all 0.3s ease;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         height: 100%;
-        border: 1px solid #f1f5f9;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+        border: 1px solid transparent;
+        box-shadow: var(--shadow-sm);
         position: relative;
         display: flex;
         flex-direction: column;
     }
 
         .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.08);
-            border-color: #e2e8f0;
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-hover);
+            border-color: rgba(79, 70, 229, 0.1);
         }
 
     .card-img-wrap {
@@ -87,75 +111,81 @@
             width: 100%;
             height: 100%;
             object-fit: contain;
-            padding: 25px;
-            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 20px;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
     .product-card:hover .card-img-wrap img {
-        transform: scale(1.05);
+        transform: scale(1.08);
     }
 
     .badge-float {
         position: absolute;
-        top: 10px;
-        left: 10px;
+        top: 12px;
+        left: 12px;
         padding: 4px 10px;
         border-radius: 6px;
         font-size: 0.75rem;
         font-weight: 700;
         z-index: 2;
-        background: #ef4444;
+        background: var(--danger-color);
         color: white;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
     }
 
     .card-info {
-        padding: 15px;
+        padding: 16px;
         flex-grow: 1;
         display: flex;
         flex-direction: column;
+        border-top: 1px solid #f1f5f9;
     }
 
     .cat-tag {
-        font-size: 0.75rem;
-        color: #94a3b8;
-        font-weight: 500;
+        font-size: 0.7rem;
+        color: var(--secondary-color);
+        font-weight: 600;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-bottom: 4px;
+        letter-spacing: 0.05em;
+        margin-bottom: 6px;
     }
 
     .prod-name {
         font-size: 1rem;
         font-weight: 600;
-        color: var(--text-main);
-        line-height: 1.4;
-        margin-bottom: 8px;
+        color: var(--text-dark);
+        line-height: 1.5;
+        margin-bottom: 12px;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
-        height: 2.8em;
+        height: 3em;
+        transition: color 0.2s;
+    }
+
+    .product-card:hover .prod-name {
+        color: var(--primary-color);
     }
 
     .price-box {
         display: flex;
         align-items: baseline;
         gap: 8px;
-        flex-wrap: wrap;
         margin-top: auto;
     }
 
     .price-current {
-        font-size: 1.1rem;
+        font-size: 1.15rem;
         font-weight: 800;
-        color: #ef4444;
+        color: var(--danger-color);
     }
 
     .price-old {
         font-size: 0.85rem;
         color: #94a3b8;
         text-decoration: line-through;
+        font-weight: 500;
     }
 
     .product-actions {
@@ -163,14 +193,14 @@
         bottom: 0;
         left: 0;
         right: 0;
-        padding: 15px;
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(4px);
-        transform: translateY(100%);
-        transition: transform 0.3s ease;
+        padding: 12px 16px;
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(8px);
+        transform: translateY(101%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         display: flex;
-        gap: 8px;
-        border-top: 1px solid #f1f5f9;
+        gap: 10px;
+        border-top: 1px solid rgba(0,0,0,0.05);
     }
 
     .product-card:hover .product-actions {
@@ -178,50 +208,61 @@
     }
 
     .btn-action-cart {
-        width: 40px;
-        height: 40px;
+        width: 42px;
+        height: 42px;
         display: flex;
         align-items: center;
         justify-content: center;
-        border-radius: 8px;
+        border-radius: 10px;
         border: 1px solid #e2e8f0;
         background: #fff;
-        color: var(--text-main);
-        transition: 0.2s;
+        color: var(--text-dark);
+        transition: all 0.2s;
         cursor: pointer;
     }
 
         .btn-action-cart:hover {
-            background: var(--accent);
+            background: var(--primary-color);
             color: white;
-            border-color: var(--accent);
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.3);
         }
 
     .btn-action-buy {
         flex-grow: 1;
-        height: 40px;
+        height: 42px;
         display: flex;
         align-items: center;
         justify-content: center;
-        border-radius: 8px;
-        background: var(--text-main);
+        border-radius: 10px;
+        background: var(--text-dark);
         color: white;
         font-weight: 600;
         font-size: 0.9rem;
         text-decoration: none;
-        transition: 0.2s;
+        transition: all 0.2s;
     }
 
         .btn-action-buy:hover {
-            background: var(--accent);
-            color: white;
+            background: var(--primary-color);
+            box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.3);
+        }
+
+    .hover-float {
+        transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+    }
+
+        .hover-float:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg) !important;
+            z-index: 10;
         }
 
     .flying-img {
         position: fixed;
         z-index: 9999;
         border-radius: 50%;
-        border: 2px solid var(--accent);
+        border: 2px solid var(--primary-color);
         opacity: 0.8;
         pointer-events: none;
         box-shadow: 0 5px 15px rgba(0,0,0,0.2);
@@ -243,7 +284,93 @@
 
     .shake-cart {
         animation: shake-cart 0.4s ease-in-out;
-        color: var(--accent) !important;
+        color: var(--primary-color) !important;
+    }
+
+    .hero-container {
+        box-shadow: var(--shadow-md);
+    }
+
+    .form-select {
+        background-color: #fff;
+        box-shadow: var(--shadow-sm);
+        cursor: pointer;
+    }
+
+    .hero-carousel {
+        height: var(--hero-height-mobile);
+        border-radius: 1rem;
+        overflow: hidden;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .hero-carousel-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .side-banner-col {
+        display: flex;
+        flex-direction: column;
+        gap: var(--hero-gap);
+        height: var(--hero-height-desktop);
+    }
+
+    .side-banner-link {
+        display: block;
+        position: relative;
+        flex: 1;
+        border-radius: 1rem;
+        overflow: hidden;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .side-banner-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .side-banner-link:hover .side-banner-img {
+        transform: scale(1.08);
+    }
+
+    .side-banner-link::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: rgba(0,0,0,0);
+        transition: background 0.3s;
+        pointer-events: none;
+    }
+
+    .side-banner-link:hover::after {
+        background: rgba(0,0,0,0.05);
+    }
+
+    @@media (min-width: 992px) {
+        .hero-carousel {
+            height: var(--hero-height-desktop);
+        }
+    }
+
+    .carousel-indicators [data-bs-target] {
+        background-color: #fff;
+        height: 4px;
+        border-radius: 2px;
+        border: none;
+        opacity: 0.6;
+        width: 20px;
+        margin: 0 4px;
+        transition: all 0.3s;
+    }
+
+    .carousel-indicators .active {
+        opacity: 1;
+        width: 35px;
+        background-color: #4f46e5;
     }
 </style>
 
@@ -254,17 +381,19 @@
             <div>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb mb-1 small text-muted">
-                        <li class="breadcrumb-item"><a asp-action="Index" class="text-decoration-none text-muted">Trang chủ</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Danh sách sản phẩm</li>
+                        <li class="breadcrumb-item"><a asp-action="Index" class="text-decoration-none text-muted hover-primary">Trang chủ</a></li>
+                        <li class="breadcrumb-item active fw-semibold" aria-current="page">Danh sách sản phẩm</li>
                     </ol>
                 </nav>
-                <h3 class="fw-bold text-main mb-0">@ViewData["PageTitle"]</h3>
-                <p class="text-muted small mt-1 mb-0">Tìm thấy @Model.FeaturedProducts.Count() sản phẩm</p>
+                <div class="d-flex align-items-baseline gap-3">
+                    <h3 class="fw-bold text-dark mb-0">@ViewData["PageTitle"]</h3>
+                    <span class="badge bg-light text-secondary border rounded-pill">@Model.FeaturedProducts.Count() sản phẩm</span>
+                </div>
             </div>
 
             <div class="d-flex align-items-center gap-2">
                 <span class="small fw-bold text-muted">Sắp xếp:</span>
-                <select class="form-select form-select-sm border-0 bg-light fw-bold" style="width: 140px;">
+                <select class="form-select form-select-sm border-0 shadow-sm fw-bold text-dark" style="width: 150px; padding: 0.5rem 2rem 0.5rem 1rem;">
                     <option>Mới nhất</option>
                     <option>Giá tăng dần</option>
                     <option>Giá giảm dần</option>
@@ -274,7 +403,7 @@
 
         @if (Model.FeaturedProducts.Any())
         {
-            <div class="row row-cols-2 row-cols-md-4 row-cols-lg-5 g-3">
+            <div class="row row-cols-2 row-cols-md-4 row-cols-lg-5 g-4">
                 @foreach (var item in Model.FeaturedProducts)
                 {
                     await RenderProductCard(item);
@@ -283,11 +412,11 @@
         }
         else
         {
-            <div class="text-center py-5">
-                <img src="https://cdn-icons-png.flaticon.com/512/7486/7486744.png" width="120" class="opacity-50 mb-3" />
+            <div class="text-center py-5 bg-white rounded-4 border border-dashed">
+                <img src="https://cdn-icons-png.flaticon.com/512/7486/7486744.png" width="100" class="opacity-25 mb-3" />
                 <h5 class="fw-bold text-secondary">Không tìm thấy sản phẩm nào</h5>
-                <p class="text-muted">Thử chọn danh mục khác hoặc tìm kiếm với từ khóa khác xem sao.</p>
-                <a asp-action="Index" class="btn btn-primary rounded-pill px-4">Về trang chủ</a>
+                <p class="text-muted small mb-4">Hãy thử tìm kiếm với từ khóa khác xem sao.</p>
+                <a asp-action="Index" class="btn btn-primary rounded-pill px-5 shadow-sm">Về trang chủ</a>
             </div>
         }
     </div>
@@ -295,34 +424,53 @@
 else
 {
     <section class="container mt-4 mb-5">
-        <div class="row g-4">
+        <div class="row g-3">
             <div class="col-lg-8">
-                <div id="heroCarousel" class="carousel slide hero-container rounded-4 overflow-hidden shadow-sm" data-bs-ride="carousel">
-                    <div class="carousel-indicators">
+                <div id="heroCarousel" class="carousel slide hero-carousel" data-bs-ride="carousel">
+                    <div class="carousel-indicators mb-3">
                         <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"></button>
                         <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
                         <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2"></button>
                     </div>
-                    <div class="carousel-inner">
-                        <div class="carousel-item active" data-bs-interval="3500">
-                            <img src="https://image.dienthoaivui.com.vn/x,webp,q90/https://dashboard.dienthoaivui.com.vn/uploads/dashboard/editor_upload/hinh-anh-iphone-17-pro-max-01.jpg" class="hero-img w-100 object-fit-cover" style="height: 400px;" alt="Banner 1">
+
+                    <div class="carousel-inner h-100">
+                        <div class="carousel-item active h-100" data-bs-interval="3500">
+                            <img src="https://image.dienthoaivui.com.vn/x,webp,q90/https://dashboard.dienthoaivui.com.vn/uploads/dashboard/editor_upload/hinh-anh-iphone-17-pro-max-01.jpg"
+                                 class="hero-carousel-img" alt="Banner 1">
                         </div>
-                        <div class="carousel-item" data-bs-interval="3500">
-                            <img src="https://clickbuy.com.vn/uploads/images/tin%20tuc/ip14/macbook-air-m4-series-co-gi-noi-bat.jpg" class="hero-img w-100 object-fit-cover" style="height: 400px;" alt="Banner 2">
+                        <div class="carousel-item h-100" data-bs-interval="3500">
+                            <img src="https://clickbuy.com.vn/uploads/images/tin%20tuc/ip14/macbook-air-m4-series-co-gi-noi-bat.jpg"
+                                 class="hero-carousel-img" alt="Banner 2">
                         </div>
-                        <div class="carousel-item" data-bs-interval="3500">
-                            <img src="https://png.pngtree.com/thumb_back/fw800/background/20220209/pngtree-flash-sale-30-percent-off-wide-banner-background-image_985893.jpg" class="hero-img w-100 object-fit-cover" style="height: 400px;" alt="Banner 3">
+                        <div class="carousel-item h-100" data-bs-interval="3500">
+                            <img src="https://png.pngtree.com/thumb_back/fw800/background/20220209/pngtree-flash-sale-30-percent-off-wide-banner-background-image_985893.jpg"
+                                 class="hero-carousel-img" alt="Banner 3">
                         </div>
                     </div>
+
+                    <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon p-3 rounded-circle bg-dark bg-opacity-25" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon p-3 rounded-circle bg-dark bg-opacity-25" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
                 </div>
             </div>
-            <div class="col-lg-4 d-none d-lg-flex flex-column gap-3">
-                <a href="#" class="h-50 overflow-hidden rounded-4"><img src="https://cdn.tgdd.vn/Files/2017/07/20/1004912/banner_1200x628-800-resize.jpg" class="w-100 h-100 object-fit-cover hover-scale" alt="Sub 1"></a>
-                <a href="#" class="h-50 overflow-hidden rounded-4"><img src="https://file.hstatic.net/1000329106/file/thu_doi_web_85f4d23b5df94f4fbe073cc02264b4dc_1024x1024.jpg" class="w-100 h-100 object-fit-cover hover-scale" alt="Sub 2"></a>
+
+            <div class="col-lg-4 d-none d-lg-flex side-banner-col">
+                <a href="#" class="side-banner-link">
+                    <img src="https://cdn.tgdd.vn/Files/2017/07/20/1004912/banner_1200x628-800-resize.jpg"
+                         class="side-banner-img" alt="Sub Banner 1">
+                </a>
+                <a href="#" class="side-banner-link">
+                    <img src="https://file.hstatic.net/1000329106/file/thu_doi_web_85f4d23b5df94f4fbe073cc02264b4dc_1024x1024.jpg"
+                         class="side-banner-img" alt="Sub Banner 2">
+                </a>
             </div>
         </div>
     </section>
-
     <section class="container mb-5">
         <div class="section-header">
             <h3 class="section-title">Danh mục nổi bật</h3>
@@ -331,22 +479,22 @@ else
             @foreach (var cat in Model.Categories.Where(c => c.ParentId == null).Take(6))
             {
                 <div class="col">
-                    <a asp-action="Index" asp-route-category="@cat.Id" class="d-flex flex-column align-items-center p-3 bg-white rounded-4 border text-decoration-none shadow-sm h-100 hover-float">
-                        <span class="fs-1 text-primary mb-2">
+                    <a asp-action="Index" asp-route-category="@cat.Id" class="d-flex flex-column align-items-center justify-content-center p-3 bg-white rounded-4 border-0 shadow-sm h-100 hover-float text-decoration-none" style="min-height: 110px;">
+                        <div class="mb-2 p-2 rounded-circle bg-light d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
                             @if (!string.IsNullOrEmpty(cat.ImageUrl))
                             {
-                                <img src="@cat.ImageUrl" class="rounded-circle object-fit-cover" width="40" height="40" />
+                                <img src="@cat.ImageUrl" class="rounded-circle object-fit-cover" width="100%" height="100%" />
                             }
                             else if (!string.IsNullOrEmpty(cat.Icon))
                             {
-                                <i class="@cat.Icon"></i>
+                                <i class="@cat.Icon fs-4 text-primary"></i>
                             }
                             else
                             {
-                                <i class="bi bi-grid"></i>
+                                <i class="bi bi-grid fs-4 text-primary"></i>
                             }
-                        </span>
-                        <span class="fw-bold text-dark small text-center">@cat.Name</span>
+                        </div>
+                        <span class="fw-bold text-dark small text-center px-1">@cat.Name</span>
                     </a>
                 </div>
             }
@@ -356,19 +504,27 @@ else
     @if (Model.SaleProducts.Any())
     {
         <section class="container mb-5">
-            <div class="p-4 rounded-4" style="background: linear-gradient(135deg, #fff1f2 0%, #fff 100%); border: 1px solid #ffe4e6;">
-                <div class="section-header">
-                    <div class="d-flex align-items-center gap-2">
-                        <h3 class="section-title text-danger mb-0"><i class="bi bi-lightning-fill"></i> FLASH SALE</h3>
-                        <span class="badge bg-danger">02:30:15</span>
+            <div class="p-1 rounded-4 position-relative overflow-hidden" style="background: linear-gradient(45deg, #ff0055, #ffcc00, #4f46e5);">
+                <div class="bg-white p-4 rounded-4 h-100">
+                    <div class="section-header mb-4">
+                        <div class="d-flex align-items-center gap-3">
+                            <h3 class="section-title text-danger mb-0 fst-italic" style="text-shadow: 1px 1px 0px rgba(0,0,0,0.1);">
+                                <i class="bi bi-lightning-charge-fill"></i> FLASH SALE
+                            </h3>
+                            <div class="d-flex gap-1 align-items-center">
+                                <span class="badge bg-dark text-white p-2 rounded-2 shadow-sm font-monospace">02</span>:
+                                <span class="badge bg-dark text-white p-2 rounded-2 shadow-sm font-monospace">30</span>:
+                                <span class="badge bg-dark text-white p-2 rounded-2 shadow-sm font-monospace">15</span>
+                            </div>
+                        </div>
+                        <a href="#" class="btn-view-all">Xem tất cả</a>
                     </div>
-                    <a href="#" class="btn-view-all">Xem tất cả</a>
-                </div>
-                <div class="row row-cols-2 row-cols-md-5 g-3">
-                    @foreach (var item in Model.SaleProducts.Take(5))
-                    {
-                        await RenderProductCard(item);
-                    }
+                    <div class="row row-cols-2 row-cols-md-5 g-3">
+                        @foreach (var item in Model.SaleProducts.Take(5))
+                        {
+                            await RenderProductCard(item);
+                        }
+                    </div>
                 </div>
             </div>
         </section>
@@ -381,7 +537,7 @@ else
                 <h3 class="section-title">Gợi ý cho bạn</h3>
                 <a href="#" class="btn-view-all">Xem tất cả</a>
             </div>
-            <div class="row row-cols-2 row-cols-md-4 row-cols-lg-5 g-3">
+            <div class="row row-cols-2 row-cols-md-4 row-cols-lg-5 g-4">
                 @foreach (var item in Model.FeaturedProducts.Take(10))
                 {
                     await RenderProductCard(item);
@@ -398,7 +554,6 @@ else
         decimal minPrice = 0;
         int defaultDetailId = 0;
         bool hasPrice = false;
-
         if (item.ProductDetails != null && item.ProductDetails.Any())
         {
             var defaultVariant = item.ProductDetails.OrderBy(x => x.Price).FirstOrDefault();
@@ -415,8 +570,8 @@ else
         <div class="col">
             <div class="product-card" id="card-@item.Id">
                 <div class="card-img-wrap">
-                    <a asp-controller="Home" asp-action="Details" asp-route-productId="@item.Id">
-                        <img src="@item.ImageUrl" id="img-@item.Id" alt="@item.Name" onerror="this.src='https://placehold.co/300x300/f1f5f9/cbd5e1?text=NO+IMAGE'" />
+                    <a asp-controller="Home" asp-action="Details" asp-route-productId="@item.Id" class="d-block w-100 h-100">
+                        <img src="@item.ImageUrl" id="img-@item.Id" alt="@item.Name" loading="lazy" onerror="this.src='https://placehold.co/300x300/f1f5f9/cbd5e1?text=NO+IMAGE'" />
                     </a>
                     @if (discountRate > 0)
                     {
@@ -448,14 +603,14 @@ else
                 <div class="product-actions">
                     @if (hasPrice)
                     {
-                        <button type="button" class="btn-action-cart" title="Thêm vào giỏ" onclick="addToCartAjax(@defaultDetailId, @item.Id)">
+                        <button type="button" class="btn-action-cart shadow-sm" title="Thêm vào giỏ" onclick="addToCartAjax(@defaultDetailId, @item.Id)">
                             <i class="bi bi-bag-plus-fill fs-5"></i>
                         </button>
-                        <a asp-controller="Home" asp-action="Details" asp-route-productId="@item.Id" class="btn-action-buy">Mua ngay</a>
+                        <a asp-controller="Home" asp-action="Details" asp-route-productId="@item.Id" class="btn-action-buy shadow-sm">Mua ngay</a>
                     }
                     else
                     {
-                        <a asp-controller="Home" asp-action="Details" asp-route-productId="@item.Id" class="btn-action-buy w-100">Xem chi tiết</a>
+                        <a asp-controller="Home" asp-action="Details" asp-route-productId="@item.Id" class="btn-action-buy w-100 shadow-sm">Xem chi tiết</a>
                     }
                 </div>
             </div>
