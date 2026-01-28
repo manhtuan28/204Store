@@ -545,6 +545,77 @@ else
             </div>
         </section>
     }
+
+    @if (Model.LaptopProducts.Any())
+    {
+        <section class="container mb-5">
+            <div class="section-header">
+                <div class="d-flex align-items-center gap-2">
+                    <h3 class="section-title">Laptop Nổi Bật</h3>
+                    <i class="bi bi-laptop fs-4 text-primary"></i>
+                </div>
+                <a asp-controller="Home" asp-action="Index" asp-route-query="Laptop" class="btn-view-all">Xem tất cả</a>
+            </div>
+
+            <div class="mb-4 rounded-4 overflow-hidden shadow-sm">
+                <img src="https://store974.com/cdn/shop/files/CB_Gaming_Laptops_copy.jpg" class="w-100 object-fit-cover" alt="Banner Laptop">
+            </div>
+
+            <div class="row row-cols-2 row-cols-md-4 row-cols-lg-4 g-4">
+                @foreach (var item in Model.LaptopProducts)
+                {
+                    await RenderProductCard(item);
+                }
+            </div>
+        </section>
+    }
+
+    @if (Model.AppleProducts.Any() || Model.SamsungProducts.Any())
+    {
+        <section class="container mb-5">
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <div class="section-header">
+                        <h3 class="section-title">Apple</h3>
+                    </div>
+                    <div class="row row-cols-2 g-3">
+                        @foreach (var item in Model.AppleProducts.Take(4))
+                        {
+                            await RenderProductCard(item);
+                        }
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="section-header">
+                        <h3 class="section-title">Samsung</h3>
+                    </div>
+                    <div class="row row-cols-2 g-3">
+                        @foreach (var item in Model.SamsungProducts.Take(4))
+                        {
+                            await RenderProductCard(item);
+                        }
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+
+    @if (Model.AccessoryProducts.Any())
+    {
+        <section class="container mb-5">
+            <div class="section-header">
+                <h3 class="section-title">Phụ Kiện Chính Hãng</h3>
+                <a asp-controller="Home" asp-action="Index" asp-route-query="Phụ kiện" class="btn-view-all">Xem tất cả</a>
+            </div>
+            <div class="row row-cols-2 row-cols-md-4 row-cols-lg-6 g-3">
+                @foreach (var item in Model.AccessoryProducts)
+                {
+                    await RenderProductCard(item);
+                }
+            </div>
+        </section>
+    }
 }
 
 @{
