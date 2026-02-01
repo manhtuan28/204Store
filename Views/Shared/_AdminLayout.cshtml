@@ -2,7 +2,7 @@
     var currentCtrl = ViewContext.RouteData.Values["Controller"]?.ToString();
 
     bool isUserGroupActive = currentCtrl == "User" || currentCtrl == "Customers";
-    bool isInventoryGroupActive = currentCtrl == "Categories" || currentCtrl == "Products" || currentCtrl == "Promotion";
+    bool isInventoryGroupActive = currentCtrl == "Categories" || currentCtrl == "Products" || currentCtrl == "Promotion" || currentCtrl == "ProductDetails";
 }
 
 <!DOCTYPE html>
@@ -201,7 +201,7 @@
                         </a>
 
                         <a asp-area="Admin" asp-controller="ProductDetails" asp-action="Import"
-                           class="d-block py-2 px-3 text-decoration-none small transition-all ps-4 border-start border-3 @(currentCtrl == "ImportExcel" ? "border-primary text-white bg-white bg-opacity-10" : "border-transparent text-white-50 hover-text-white")">
+                           class="d-block py-2 px-3 text-decoration-none small transition-all ps-4 border-start border-3 @(currentCtrl == "ProductDetails" ? "border-primary text-white bg-white bg-opacity-10" : "border-transparent text-white-50 hover-text-white")">
                             <i class="bi bi-file-earmark-spreadsheet me-2"></i> Nhập hàng bằng Excel
                         </a>
 
