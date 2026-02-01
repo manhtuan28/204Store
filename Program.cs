@@ -30,12 +30,26 @@ builder.Services.AddAuthentication()
 
         options.ClientId = googleAuthNSection["ClientId"] ?? "TAM_THOI_BO_QUA";
         options.ClientSecret = googleAuthNSection["ClientSecret"] ?? "TAM_THOI_BO_QUA";
+
+        options.Events.OnRemoteFailure = context =>
+        {
+            context.Response.Redirect("/Identity/Account/Login");
+            context.HandleResponse();
+            return Task.CompletedTask;
+        };
     })
     .AddFacebook(options =>
     {
         IConfigurationSection fbAuthNSection = builder.Configuration.GetSection("Authentication:Facebook");
         options.AppId = fbAuthNSection["AppId"] ?? "TAM_THOI_BO_QUA";
         options.AppSecret = fbAuthNSection["AppSecret"] ?? "TAM_THOI_BO_QUA";
+
+        options.Events.OnRemoteFailure = context =>
+        {
+            context.Response.Redirect("/Identity/Account/Login");
+            context.HandleResponse();
+            return Task.CompletedTask;
+        };
     });
 
 
