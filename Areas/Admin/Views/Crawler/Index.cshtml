@@ -1,0 +1,127 @@
+﻿@{
+    ViewData["Title"] = "Crawler V2 - Cellphones";
+}
+
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Crawler Dữ liệu Đa năng</h1>
+
+    <div class="card mb-4 shadow-sm border-0">
+        <div class="card-header bg-primary text-white">
+            <i class="fas fa-spider me-1"></i> Nhập Link Cellphones bất kỳ
+        </div>
+        <div class="card-body">
+            <div class="row g-3 align-items-center justify-content-center mb-4">
+                <div class="col-md-8">
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-text bg-white"><i class="fas fa-link text-muted"></i></span>
+                        <input type="text" id="crawlUrl" class="form-control"
+                               placeholder="Ví dụ: https://cellphones.com.vn/laptop/asus.html"
+                               value="https://cellphones.com.vn/laptop/asus.html">
+                        <button id="btnCrawlCustom" class="btn btn-primary fw-bold px-4">
+                            <i class="fas fa-download me-2"></i> Lấy Dữ Liệu
+                        </button>
+                    </div>
+                    <div class="form-text text-muted mt-2">
+                        Hỗ trợ: Điện thoại, Laptop, Tablet, Phụ kiện... (Dán link danh mục vào đây)
+                    </div>
+                </div>
+            </div>
+
+            <div id="loadingArea" class="d-none text-center py-4 bg-light rounded-3">
+                <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status"></div>
+                <h5 class="mt-3 fw-bold text-primary">Đang phân tích dữ liệu...</h5>
+                <p class="mb-0 text-muted" id="loadingText">Đang khởi động Chrome Driver...</p>
+                <div class="progress w-50 mx-auto mt-3" style="height: 8px;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 100%"></div>
+                </div>
+            </div>
+
+            <div id="resultArea" class="d-none mt-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold text-success"><i class="fas fa-check-circle me-2"></i>Kết quả thu thập</h5>
+                    <span class="badge bg-secondary" id="countResult">0 sản phẩm</span>
+                </div>
+
+                <div class="table-responsive" style="max-height: 600px; overflow-y: auto; border: 1px solid #dee2e6;">
+                    <table class="table table-striped table-hover align-middle mb-0">
+                        <thead class="table-dark sticky-top">
+                            <tr>
+                                <th width="80">Ảnh</th>
+                                <th>Tên sản phẩm</th>
+                                <th>Thông số (RAM/ROM)</th>
+                                <th>Giá bán</th>
+                                <th>Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        $(document).ready(function() {
+            const formatMoney = (amount) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+
+            $('#btnCrawlCustom').click(function() {
+                var url = $('#crawlUrl').val();
+                if(!url) { Swal.fire('Lỗi', 'Vui lòng nhập đường dẫn!', 'warning'); return; }
+
+                // UI Loading
+                $(this).prop('disabled', true);
+                $('#loadingArea').removeClass('d-none');
+                $('#resultArea').addClass('d-none');
+                $('#resultTableBody').empty();
+                $('#loadingText').text('Đang truy cập: ' + url);
+
+                $.ajax({
+                    url: '/Admin/Crawler/RunCrawlUrl', // Gọi Action mới
+                    type: 'POST',
+                    data: { url: url },
+                    success: function(res) {
+                        $('#loadingArea').addClass('d-none');
+                        $('#btnCrawlCustom').prop('disabled', false);
+
+                        if (res.success) {
+                            $('#resultArea').removeClass('d-none');
+                            $('#countResult').text(res.data.length + ' sản phẩm');
+
+                            if(res.data.length === 0) {
+                                $('#resultTableBody').html('<tr><td colspan="5" class="text-center py-3">Không tìm thấy sản phẩm nào hoặc lỗi Selector.</td></tr>');
+                            }
+
+                            res.data.forEach(item => {
+                                let badgeInfo = item.status === 'Mới' ? 'bg-success' : 'bg-info text-dark';
+                                let row = `
+                                    <tr>
+                                        <td class="text-center"><img src="${item.image}" style="width: 50px; height: 50px; object-fit: contain;" onerror="this.src='https://placehold.co/50'"/></td>
+                                        <td class="fw-bold small">${item.name}</td>
+                                        <td>
+                                            <span class="badge bg-secondary mb-1">${item.ram}</span>
+                                            <span class="badge bg-secondary">${item.rom}</span>
+                                        </td>
+                                        <td class="text-danger fw-bold">${formatMoney(item.price)}</td>
+                                        <td><span class="badge ${badgeInfo}">${item.status}</span></td>
+                                    </tr>`;
+                                $('#resultTableBody').append(row);
+                            });
+                            Swal.fire('Thành công', `Đã xử lý ${res.data.length} sản phẩm`, 'success');
+                        } else {
+                            Swal.fire('Thất bại', res.message, 'error');
+                        }
+                    },
+                    error: function(err) {
+                        $('#loadingArea').addClass('d-none');
+                        $('#btnCrawlCustom').prop('disabled', false);
+                        console.error(err);
+                        Swal.fire('Lỗi Server (500)', 'Có lỗi xảy ra phía máy chủ. Hãy kiểm tra console.', 'error');
+                    }
+                });
+            });
+        });
+    </script>
+}

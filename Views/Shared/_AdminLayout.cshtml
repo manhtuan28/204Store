@@ -213,6 +213,7 @@
                 </div>
                 <div class="sidebar-label">Hệ thống</div>
                 <a asp-area="Admin" asp-controller="Order" asp-action="Index" class="list-group-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Order" ? "active-menu" : "")"><i class="bi bi-receipt-cutoff"></i> Đơn hàng</a>
+                <a asp-area="Admin" asp-controller="Crawler" asp-action="Index" class="list-group-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Crawler" ? "active-menu" : "")"><i class="bi bi-layer-backward"></i> Crawl</a>
 
                 <a href="#userCollapse" data-bs-toggle="collapse"
                    class="list-group-item border-0 d-flex justify-content-between align-items-center px-3 py-2 mb-1 rounded-3 transition-all @(isUserGroupActive ? "bg-primary text-white shadow" : "bg-transparent text-white-50 hover-light")"
