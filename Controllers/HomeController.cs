@@ -4,7 +4,6 @@ using _204Store.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
-using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace _204Store.Controllers
@@ -138,8 +137,20 @@ namespace _204Store.Controllers
                 viewModel.FeaturedProducts = allProducts.Where(p => p.IsFeatured).Take(8).ToList();
                 viewModel.BestSellerProducts = allProducts.OrderByDescending(p => p.Sold).Take(8).ToList();
                 viewModel.SaleProducts = allProducts.Where(p => p.DiscountRate > 0).OrderByDescending(p => p.DiscountRate).Take(8).ToList();
-                viewModel.AppleProducts = allProducts.Where(p => p.Category.Name.Contains("Apple") || p.Category.Name.Contains("iPhone")).OrderByDescending(p => p.Id).Take(4).ToList(); // Tăng lên 4 cho đẹp
-                viewModel.SamsungProducts = allProducts.Where(p => p.Category.Name.Contains("Samsung") || p.Category.Name.Contains("Galaxy")).OrderByDescending(p => p.Id).Take(4).ToList();
+
+                viewModel.AppleProducts = allProducts.Where(p => (p.Category?.Name?.Contains("Apple") == true) || (p.Category?.Name?.Contains("iPhone") == true)).OrderByDescending(p => p.Id).Take(4).ToList();
+                viewModel.SamsungProducts = allProducts.Where(p => (p.Category?.Name?.Contains("Samsung") == true) || (p.Category?.Name?.Contains("Galaxy") == true)).OrderByDescending(p => p.Id).Take(4).ToList();
+                viewModel.LaptopProducts = allProducts
+                    .Where(p => (p.Category?.Name?.Contains("Laptop") == true) || (p.Category?.Name?.Contains("MacBook") == true))
+                    .OrderByDescending(p => p.Id)
+                    .Take(8)
+                    .ToList();
+
+                viewModel.AccessoryProducts = allProducts
+                    .Where(p => (p.Category?.Name?.Contains("Phụ kiện") == true) || (p.Category?.Name?.Contains("Tai nghe") == true) || (p.Category?.Name?.Contains("Sạc") == true))
+                    .OrderByDescending(p => p.Id)
+                    .Take(8)
+                    .ToList();
             }
 
             ViewData["IsFiltering"] = isFiltering;
@@ -322,30 +333,33 @@ namespace _204Store.Controllers
         public IActionResult StoreLocator(string? city)
         {
             var allStores = new List<StoreLocation>
-    {
-        new StoreLocation { Id=1, City="Hà Nội", Name="204Store Đại Cồ Việt", Address="Số 1 Đại Cồ Việt, Q. Hai Bà Trưng", Phone="0988.111.111", MapUrl="https://goo.gl/maps/example" },
-        new StoreLocation { Id=2, City="Hà Nội", Name="204Store Thái Hà", Address="120 Thái Hà, Q. Đống Đa", Phone="0988.222.222", MapUrl="#" },
-        new StoreLocation { Id=3, City="Hà Nội", Name="204Store Cầu Giấy", Address="255 Cầu Giấy, Q. Cầu Giấy", Phone="0988.333.333", MapUrl="#" },
-        new StoreLocation { Id=4, City="Hà Nội", Name="204Store Hà Đông", Address="10 Trần Phú, Q. Hà Đông", Phone="0988.444.444", MapUrl="#" },
-        new StoreLocation { Id=5, City="Hà Nội", Name="204Store Aeon Long Biên", Address="Tầng 1 Aeon Mall Long Biên", Phone="0988.555.555", MapUrl="#" },
-        new StoreLocation { Id=6, City="Hà Nội", Name="204Store Xã Đàn", Address="450 Xã Đàn, Q. Đống Đa", Phone="0988.666.666", MapUrl="#" },
+        {
+            // VIỆT TRÌ
+            new StoreLocation { Id=1, City="Việt Trì", Name="204Store Hùng Vương",       Address="Số 1 Đường Hùng Vương, P. Tiên Cát, TP. Việt Trì, Phú Thọ", Phone="0988.111.111", MapUrl="https://www.google.com/maps?q=Số+1+Đường+Hùng+Vương,+Tiên+Cát,+Việt+Trì,+Phú+Thọ" },
+            new StoreLocation { Id=2, City="Việt Trì", Name="204Store Trần Phú",         Address="120 Trần Phú, P. Gia Cẩm, TP. Việt Trì, Phú Thọ",            Phone="0988.222.222", MapUrl="https://www.google.com/maps?q=120+Trần+Phú,+Gia+Cẩm,+Việt+Trì,+Phú+Thọ" },
+            new StoreLocation { Id=3, City="Việt Trì", Name="204Store Nguyễn Tất Thành", Address="255 Nguyễn Tất Thành, P. Nông Trang, TP. Việt Trì, Phú Thọ", Phone="0988.333.333", MapUrl="https://www.google.com/maps?q=255+Nguyễn+Tất+Thành,+Nông+Trang,+Việt+Trì,+Phú+Thọ" },
+            new StoreLocation { Id=4, City="Việt Trì", Name="204Store Vincom Việt Trì",  Address="Vincom Plaza Việt Trì, P. Vân Phú, TP. Việt Trì, Phú Thọ",   Phone="0988.444.444", MapUrl="https://www.google.com/maps?q=Vincom+Plaza+Việt+Trì,+Vân+Phú,+Việt+Trì,+Phú+Thọ" },
 
-        new StoreLocation { Id=7, City="TP.HCM", Name="204Store Quận 1", Address="123 Nguyễn Huệ, Quận 1", Phone="0909.111.111", MapUrl="#" },
-        new StoreLocation { Id=8, City="TP.HCM", Name="204Store Quận 10", Address="456 Đường 3/2, Quận 10", Phone="0909.222.222", MapUrl="#" },
-        new StoreLocation { Id=9, City="TP.HCM", Name="204Store Gò Vấp", Address="789 Quang Trung, Gò Vấp", Phone="0909.333.333", MapUrl="#" },
-        new StoreLocation { Id=10, City="TP.HCM", Name="204Store Bình Thạnh", Address="200 Xô Viết Nghệ Tĩnh, Bình Thạnh", Phone="0909.444.444", MapUrl="#" },
-        new StoreLocation { Id=11, City="TP.HCM", Name="204Store Thủ Đức", Address="15 Võ Văn Ngân, TP. Thủ Đức", Phone="0909.555.555", MapUrl="#" },
-        new StoreLocation { Id=12, City="TP.HCM", Name="204Store Quận 7", Address="101 Nguyễn Thị Thập, Quận 7", Phone="0909.666.666", MapUrl="#" },
-        new StoreLocation { Id=13, City="TP.HCM", Name="204Store Tân Bình", Address="300 Cộng Hòa, Tân Bình", Phone="0909.777.777", MapUrl="#" },
-        new StoreLocation { Id=14, City="TP.HCM", Name="204Store Quận 5", Address="150 Nguyễn Trãi, Quận 5", Phone="0909.888.888", MapUrl="#" },
+            // HÀ NỘI
+            new StoreLocation { Id=5, City="Hà Nội", Name="204Store Đại Cồ Việt", Address="Số 1 Đại Cồ Việt, Q. Hai Bà Trưng", Phone="0988.555.555", MapUrl="https://www.google.com/maps?q=Số+1+Đại+Cồ+Việt,+Hai+Bà+Trưng,+Hà+Nội" },
+            new StoreLocation { Id=6, City="Hà Nội", Name="204Store Thái Hà",     Address="120 Thái Hà, Q. Đống Đa",           Phone="0988.666.666", MapUrl="https://www.google.com/maps?q=120+Thái+Hà,+Đống+Đa,+Hà+Nội" },
+            new StoreLocation { Id=7, City="Hà Nội", Name="204Store Cầu Giấy",    Address="255 Cầu Giấy, Q. Cầu Giấy",        Phone="0988.777.777", MapUrl="https://www.google.com/maps?q=255+Cầu+Giấy,+Cầu+Giấy,+Hà+Nội" },
+            new StoreLocation { Id=8, City="Hà Nội", Name="204Store Hà Đông",     Address="10 Trần Phú, Q. Hà Đông",          Phone="0988.888.888", MapUrl="https://www.google.com/maps?q=10+Trần+Phú,+Hà+Đông,+Hà+Nội" },
 
-        new StoreLocation { Id=15, City="Đà Nẵng", Name="204Store Nguyễn Văn Linh", Address="123 Nguyễn Văn Linh, Q. Hải Châu", Phone="0911.111.111", MapUrl="#" },
-        new StoreLocation { Id=16, City="Đà Nẵng", Name="204Store Lê Duẩn", Address="45 Lê Duẩn, Q. Hải Châu", Phone="0911.222.222", MapUrl="#" },
-        new StoreLocation { Id=17, City="Hải Phòng", Name="204Store Lạch Tray", Address="100 Lạch Tray, Q. Ngô Quyền", Phone="0922.111.111", MapUrl="#" },
-        new StoreLocation { Id=18, City="Cần Thơ", Name="204Store Ninh Kiều", Address="50 Đường 30/4, Q. Ninh Kiều", Phone="0933.111.111", MapUrl="#" },
-        new StoreLocation { Id=19, City="Nha Trang", Name="204Store Nha Trang", Address="20 Thái Nguyên, TP. Nha Trang", Phone="0944.111.111", MapUrl="#" },
-        new StoreLocation { Id=20, City="Bình Dương", Name="204Store Thủ Dầu Một", Address="500 Đại Lộ Bình Dương", Phone="0955.111.111", MapUrl="#" },
-    };
+            // HỒ CHÍ MINH
+            new StoreLocation { Id=9,  City="Hồ Chí Minh", Name="204Store Quận 1",      Address="123 Nguyễn Huệ, Quận 1",       Phone="0909.111.111", MapUrl="https://www.google.com/maps?q=123+Nguyễn+Huệ,+Quận+1,+TP.+Hồ+Chí+Minh" },
+            new StoreLocation { Id=10, City="Hồ Chí Minh", Name="204Store Quận 10",     Address="456 Đường 3/2, Quận 10",       Phone="0909.222.222", MapUrl="https://www.google.com/maps?q=456+Đường+3/2,+Quận+10,+TP.+Hồ+Chí+Minh" },
+            new StoreLocation { Id=11, City="Hồ Chí Minh", Name="204Store Gò Vấp",      Address="789 Quang Trung, Gò Vấp",      Phone="0909.333.333", MapUrl="https://www.google.com/maps?q=789+Quang+Trung,+Gò+Vấp,+TP.+Hồ+Chí+Minh" },
+            new StoreLocation { Id=12, City="Hồ Chí Minh", Name="204Store Thủ Đức",     Address="15 Võ Văn Ngân, TP. Thủ Đức",  Phone="0909.444.444", MapUrl="https://www.google.com/maps?q=15+Võ+Văn+Ngân,+Thủ+Đức,+TP.+Hồ+Chí+Minh" },
+
+            // ĐÀ NẴNG
+            new StoreLocation { Id=13, City="Đà Nẵng", Name="204Store Nguyễn Văn Linh", Address="123 Nguyễn Văn Linh, Q. Hải Châu", Phone="0911.111.111", MapUrl="https://www.google.com/maps?q=123+Nguyễn+Văn+Linh,+Hải+Châu,+Đà+Nẵng" },
+            new StoreLocation { Id=14, City="Đà Nẵng", Name="204Store Lê Duẩn",         Address="45 Lê Duẩn, Q. Hải Châu",          Phone="0911.222.222", MapUrl="https://www.google.com/maps?q=45+Lê+Duẩn,+Hải+Châu,+Đà+Nẵng" },
+
+            // HẢI PHÒNG
+            new StoreLocation { Id=15, City="Hải Phòng", Name="204Store Lạch Tray",     Address="100 Lạch Tray, Q. Ngô Quyền", Phone="0922.111.111", MapUrl="https://www.google.com/maps?q=100+Lạch+Tray,+Ngô+Quyền,+Hải+Phòng" },
+            new StoreLocation { Id=16, City="Hải Phòng", Name="204Store Cầu Đất",       Address="50 Cầu Đất, Q. Ngô Quyền",     Phone="0922.222.222", MapUrl="https://www.google.com/maps?q=50+Cầu+Đất,+Ngô+Quyền,+Hải+Phòng" },
+        };
 
             if (!string.IsNullOrEmpty(city) && city != "All")
             {

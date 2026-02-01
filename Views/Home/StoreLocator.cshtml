@@ -72,17 +72,14 @@
         flex-grow: 1;
         background: #e2e8f0;
         position: relative;
+        min-height: 600px;
     }
 
-    .map-iframe-placeholder {
+    .map-iframe {
         width: 100%;
         height: 100%;
-        background-image: url('https://media.wired.com/photos/59269cd37034dc5f91becd50/191:100/w_1280,c_limit/GoogleMapTA.jpg');
-        background-size: cover;
-        background-position: center;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        border: 0;
+        display: block;
     }
 
     .panel-header {
@@ -91,12 +88,20 @@
         border-bottom: 1px solid #e2e8f0;
         z-index: 10;
     }
+
+    .map-overlay-card {
+        position: absolute;
+        top: 18px;
+        left: 18px;
+        max-width: 320px;
+        z-index: 5;
+    }
 </style>
 
 <div class="container py-4">
     <div class="mb-4 text-center">
         <h2 class="fw-bold"><i class="bi bi-shop me-2"></i>Tìm siêu thị 204Store</h2>
-        <p class="text-muted">Hệ thống 20 cửa hàng chính hãng trên toàn quốc</p>
+        <p class="text-muted">Hệ thống cửa hàng chính hãng trên toàn quốc</p>
     </div>
 
     <div class="locator-container shadow">
@@ -107,13 +112,13 @@
                     <div class="input-group">
                         <select class="form-select fw-bold" name="city" onchange="this.form.submit()">
                             <!option value="All" @(ViewBag.CurrentCity == null ? "selected" : "")>Toàn quốc (@Model.Count())</!option>
+                            <!option value="Việt Trì" @(ViewBag.CurrentCity == "Việt Trì" ? "selected" : "")>Việt Trì</!option>
                             <!option value="Hà Nội" @(ViewBag.CurrentCity == "Hà Nội" ? "selected" : "")>Hà Nội</!option>
-                            <!option value="TP.HCM" @(ViewBag.CurrentCity == "TP.HCM" ? "selected" : "")>TP. Hồ Chí Minh</!option>
+                            <!option value="Hồ Chí Minh" @(ViewBag.CurrentCity == "Hồ Chí Minh" ? "selected" : "")>Hồ Chí Minh</!option>
                             <!option value="Đà Nẵng" @(ViewBag.CurrentCity == "Đà Nẵng" ? "selected" : "")>Đà Nẵng</!option>
                             <!option value="Hải Phòng" @(ViewBag.CurrentCity == "Hải Phòng" ? "selected" : "")>Hải Phòng</!option>
-                            <!option value="Cần Thơ" @(ViewBag.CurrentCity == "Cần Thơ" ? "selected" : "")>Cần Thơ</!option>
                         </select>
-                        <button class="btn btn-primary"><i class="bi bi-search"></i></button>
+                        <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i></button>
                     </div>
                 </form>
             </div>
@@ -123,17 +128,39 @@
                 {
                     foreach (var store in Model)
                     {
-                        <div class="store-item" onclick="focusStore('@store.Name', '@store.Address')">
+                        <div class="store-item"
+                             onclick="focusStore(this)"
+                             data-name="@store.Name"
+                             data-address="@store.Address"
+                             data-city="@store.City"
+                             data-phone="@store.Phone"
+                             data-map="@store.MapUrl">
                             <div class="d-flex justify-content-between align-items-start mb-2">
                                 <h6 class="fw-bold text-primary mb-0">@store.Name</h6>
                                 <span class="badge bg-light text-secondary border">@store.City</span>
                             </div>
-                            <p class="small text-muted mb-2"><i class="bi bi-geo-alt-fill me-1"></i>@store.Address</p>
+
+                            <p class="small text-muted mb-2">
+                                <i class="bi bi-geo-alt-fill me-1"></i>@store.Address
+                            </p>
+
                             <div class="d-flex justify-content-between align-items-center mt-3">
-                                <a href="tel:@store.Phone" class="btn btn-sm btn-outline-success rounded-pill px-3 fw-bold">
+                                <a href="tel:@store.Phone"
+                                   class="btn btn-sm btn-outline-success rounded-pill px-3 fw-bold"
+                                   onclick="event.stopPropagation()">
                                     <i class="bi bi-telephone-fill me-1"></i>@store.Phone
                                 </a>
-                                <a href="https://www.google.com/maps/search/?api=1&query=@(store.Name + " " + store.City)" target="_blank" class="btn btn-sm btn-primary rounded-pill px-3">
+
+                                @{
+                                    var openMap = (!string.IsNullOrWhiteSpace(store.MapUrl) && store.MapUrl != "#")
+                                    ? store.MapUrl
+                                    : $"https://www.google.com/maps/search/?api=1&query={Uri.EscapeDataString(store.Name + " " + store.Address + " " + store.City)}";
+                                }
+
+                                <a href="@openMap"
+                                   target="_blank"
+                                   class="btn btn-sm btn-primary rounded-pill px-3"
+                                   onclick="event.stopPropagation()">
                                     <i class="bi bi-cursor-fill me-1"></i>Chỉ đường
                                 </a>
                             </div>
@@ -156,21 +183,70 @@
         </div>
 
         <div class="map-panel d-none d-md-block">
-            <div class="map-iframe-placeholder position-relative">
-                <div class="bg-white p-3 rounded-3 shadow text-center" style="max-width: 300px;">
-                    <i class="bi bi-geo-alt-fill text-danger fs-1"></i>
-                    <h5 class="fw-bold mt-2" id="mapStoreName">204Store Việt Nam</h5>
-                    <p class="small text-muted" id="mapStoreAddr">Chọn một cửa hàng bên trái để xem vị trí.</p>
-                    <a href="https://www.google.com/maps" target="_blank" class="btn btn-primary w-100 rounded-pill">Mở Google Maps</a>
-                </div>
+            <iframe id="mapFrame"
+                    class="map-iframe"
+                    src="https://www.google.com/maps?q=204Store%20Việt%20Nam&output=embed"
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"
+                    allowfullscreen>
+            </iframe>
+
+            <div class="map-overlay-card bg-white p-3 rounded-3 shadow text-center">
+                <i class="bi bi-geo-alt-fill text-danger fs-1"></i>
+                <h5 class="fw-bold mt-2" id="mapStoreName">204Store Việt Nam</h5>
+                <p class="small text-muted" id="mapStoreAddr">Chọn một cửa hàng bên trái để xem vị trí.</p>
+                <a id="mapOpenLink"
+                   href="https://www.google.com/maps"
+                   target="_blank"
+                   class="btn btn-primary w-100 rounded-pill">
+                    Mở Google Maps
+                </a>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    function focusStore(name, address) {
-        document.getElementById('mapStoreName').innerText = name;
-        document.getElementById('mapStoreAddr').innerText = address;
+    function toEmbedUrl(mapUrl, name, address, city) {
+        if (mapUrl && mapUrl !== "#") {
+            try {
+                const url = new URL(mapUrl);
+
+                if (url.hostname.includes("google.") && url.pathname.startsWith("/maps")) {
+                    url.searchParams.set("output", "embed");
+                    return url.toString();
+                }
+            } catch (e) {}
+        }
+
+        const q = encodeURIComponent(`${name} ${address} ${city}`);
+        return `https://www.google.com/maps?q=${q}&output=embed`;
     }
+
+    function toOpenMapUrl(mapUrl, name, address, city) {
+        if (mapUrl && mapUrl !== "#") return mapUrl;
+        const q = encodeURIComponent(`${name} ${address} ${city}`);
+        return `https://www.google.com/maps/search/?api=1&query=${q}`;
+    }
+
+    function focusStore(el) {
+        document.querySelectorAll(".store-item").forEach(x => x.classList.remove("active"));
+        el.classList.add("active");
+
+        const name = el.dataset.name || "";
+        const address = el.dataset.address || "";
+        const city = el.dataset.city || "";
+        const mapUrl = el.dataset.map || "";
+
+        document.getElementById("mapStoreName").innerText = name;
+        document.getElementById("mapStoreAddr").innerText = `${address}${city ? " • " + city : ""}`;
+
+        document.getElementById("mapFrame").src = toEmbedUrl(mapUrl, name, address, city);
+        document.getElementById("mapOpenLink").href = toOpenMapUrl(mapUrl, name, address, city);
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+        const first = document.querySelector(".store-item");
+        if (first) focusStore(first);
+    });
 </script>
