@@ -35,4 +35,6 @@
     <Folder Include="wwwroot\Rotativa\" />
   </ItemGroup>
 
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="https://4lando.github.io/lando-spec/landofile-spec.json" /></VisualStudio></ProjectExtensions>
+
 </Project>
