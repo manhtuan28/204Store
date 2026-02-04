@@ -1,4 +1,4 @@
-﻿﻿@using System.Globalization
+﻿@using System.Globalization
 @model _204Store.Models.ViewModels.HomeViewModel
 @{
     bool isFiltering = (bool)(ViewData["IsFiltering"] ?? false);
@@ -638,6 +638,17 @@ else
         decimal discountRate = (decimal)item.DiscountRate;
         decimal finalPrice = minPrice * (1 - discountRate / 100);
 
+        // Lấy tên danh mục từ ProductCategories hoặc Category
+        string categoryName = "Sản phẩm";
+        if (item.ProductCategories != null && item.ProductCategories.Any())
+        {
+            categoryName = item.ProductCategories.FirstOrDefault()?.Category?.Name ?? "Sản phẩm";
+        }
+        else if (item.Category != null)
+        {
+            categoryName = item.Category.Name;
+        }
+
         <div class="col">
             <div class="product-card" id="card-@item.Id">
                 <div class="card-img-wrap">
@@ -651,7 +662,7 @@ else
                 </div>
 
                 <div class="card-info">
-                    <div class="cat-tag">@(item.Category?.Name ?? "Sản phẩm")</div>
+                    <div class="cat-tag">@categoryName</div>
                     <a asp-controller="Home" asp-action="Details" asp-route-productId="@item.Id" class="text-decoration-none">
                         <h6 class="prod-name" title="@item.Name">@item.Name</h6>
                     </a>

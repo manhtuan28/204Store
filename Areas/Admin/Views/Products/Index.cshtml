@@ -24,6 +24,17 @@
         background-color: rgba(245, 158, 11, 0.1);
         color: #b45309;
     }
+
+    .category-badge {
+        display: inline-block;
+        background-color: #f1f5f9;
+        color: #475569;
+        font-size: 0.75rem;
+        padding: 2px 8px;
+        border-radius: 4px;
+        margin: 2px;
+        border: 1px solid #e2e8f0;
+    }
 </style>
 
 <div class="container-fluid px-0">
@@ -88,9 +99,33 @@
                                 </div>
                             </td>
                             <td>
-                                <span class="badge bg-light text-dark border px-2 py-1 fw-normal">
-                                    <i class="bi bi-folder2 me-1 text-muted"></i>@(item.Category?.Name ?? "N/A")
-                                </span>
+                                <div class="d-flex flex-wrap" style="max-width: 200px;">
+                                    @if (item.ProductCategories != null && item.ProductCategories.Any())
+                                    {
+                                        @foreach (var pc in item.ProductCategories.Take(3))
+                                        {
+                                            <span class="category-badge">
+                                                <i class="bi bi-folder2 me-1"></i>@pc.Category?.Name
+                                            </span>
+                                        }
+                                        @if (item.ProductCategories.Count > 3)
+                                        {
+                                            <span class="category-badge bg-primary bg-opacity-10 text-primary border-primary">
+                                                +@(item.ProductCategories.Count - 3)
+                                            </span>
+                                        }
+                                    }
+                                    else if (item.Category != null)
+                                    {
+                                        <span class="category-badge">
+                                            <i class="bi bi-folder2 me-1"></i>@item.Category.Name
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted small">N/A</span>
+                                    }
+                                </div>
                             </td>
                             <td>
                                 @if (item.ProductDetails != null && item.ProductDetails.Any())

@@ -25,6 +25,10 @@ namespace _204Store.Models
         public int CategoryId { get; set; }
         [ForeignKey("CategoryId")]
         public virtual Category? Category { get; set; }
+        
+        // Quan hệ nhiều-nhiều với Category
+        public virtual ICollection<ProductCategory> ProductCategories { get; set; } = new List<ProductCategory>();
+        
         public virtual ICollection<ProductDetail>? ProductDetails { get; set; }
         [Display(Name = "Đã bán")]
         public int Sold { get; set; } = 0;
