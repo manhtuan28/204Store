@@ -21,6 +21,8 @@ namespace _204Store.Data
         public DbSet<ProductImage> ProductImages { get; set; }
         public DbSet<LoginHistory> LoginHistories { get; set; }
         public DbSet<Subscriber> Subscribers { get; set; }
+        public DbSet<ProductCategory> ProductCategories { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -32,6 +34,21 @@ namespace _204Store.Data
             builder.Entity<ProductDetail>().HasKey(m => m.Id);
             builder.Entity<OrderHeader>().HasKey(m => m.Id);
             builder.Entity<Promotion>().HasKey(m => m.Id);
+
+            builder.Entity<ProductCategory>()
+                .HasKey(pc => new { pc.ProductId, pc.CategoryId });
+
+            builder.Entity<ProductCategory>()
+                .HasOne(pc => pc.Product)
+                .WithMany(p => p.ProductCategories)
+                .HasForeignKey(pc => pc.ProductId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<ProductCategory>()
+                .HasOne(pc => pc.Category)
+                .WithMany(c => c.ProductCategories)
+                .HasForeignKey(pc => pc.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

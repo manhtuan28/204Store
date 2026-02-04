@@ -31,5 +31,8 @@ namespace _204Store.Models
         public bool IsActive { get; set; } = true;
 
         public virtual ICollection<Category>? ChildCategories { get; set; }
+        
+        // Quan hệ nhiều-nhiều với Product
+        public virtual ICollection<ProductCategory> ProductCategories { get; set; } = new List<ProductCategory>();
     }
 }

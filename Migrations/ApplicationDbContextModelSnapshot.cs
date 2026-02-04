@@ -467,6 +467,21 @@ namespace _204Store.Migrations
                     b.ToTable("Products");
                 });
 
+            modelBuilder.Entity("_204Store.Models.ProductCategory", b =>
+                {
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProductId", "CategoryId");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("ProductCategories");
+                });
+
             modelBuilder.Entity("_204Store.Models.ProductDetail", b =>
                 {
                     b.Property<int>("Id")
@@ -717,6 +732,25 @@ namespace _204Store.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("_204Store.Models.ProductCategory", b =>
+                {
+                    b.HasOne("_204Store.Models.Category", "Category")
+                        .WithMany("ProductCategories")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("_204Store.Models.Product", "Product")
+                        .WithMany("ProductCategories")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("_204Store.Models.ProductDetail", b =>
                 {
                     b.HasOne("_204Store.Models.Product", "Product")
@@ -742,6 +776,8 @@ namespace _204Store.Migrations
             modelBuilder.Entity("_204Store.Models.Category", b =>
                 {
                     b.Navigation("ChildCategories");
+
+                    b.Navigation("ProductCategories");
                 });
 
             modelBuilder.Entity("_204Store.Models.OrderHeader", b =>
@@ -751,6 +787,8 @@ namespace _204Store.Migrations
 
             modelBuilder.Entity("_204Store.Models.Product", b =>
                 {
+                    b.Navigation("ProductCategories");
+
                     b.Navigation("ProductDetails");
 
                     b.Navigation("ProductImages");

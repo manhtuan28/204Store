@@ -20,25 +20,48 @@ namespace _204Store.Areas.Admin.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
+        // Lấy danh mục theo cấu trúc cha-con
+        private async Task<List<Category>> GetHierarchicalCategories()
+        {
+            var allCategories = await _context.Categories
+                .OrderBy(c => c.DisplayOrder)
+                .ToListAsync();
+            
+            var result = new List<Category>();
+            var parentCategories = allCategories.Where(c => c.ParentId == null || c.ParentId == 0).ToList();
+            
+            foreach (var parent in parentCategories)
+            {
+                result.Add(parent);
+                var children = allCategories.Where(c => c.ParentId == parent.Id).OrderBy(c => c.DisplayOrder);
+                result.AddRange(children);
+            }
+            
+            return result;
+        }
+
         public async Task<IActionResult> Index()
         {
             var products = await _context.Products
                 .Include(p => p.Category)
+                .Include(p => p.ProductCategories)
+                    .ThenInclude(pc => pc.Category)
                 .Include(p => p.ProductDetails)
                 .Include(p => p.ProductImages)
                 .ToListAsync();
             return View(products);
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name");
+            ViewData["Categories"] = await GetHierarchicalCategories();
+            ViewData["AllCategories"] = await _context.Categories.ToListAsync();
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Product product, IFormFile? file, List<IFormFile>? galleryFiles)
+        public async Task<IActionResult> Create(Product product, IFormFile? file, List<IFormFile>? galleryFiles, List<int>? selectedCategories)
         {
             if (ModelState.IsValid)
             {
@@ -62,8 +85,28 @@ namespace _204Store.Areas.Admin.Controllers
                     product.ImageUrl = "";
                 }
 
+                // Đặt CategoryId mặc định từ danh mục đầu tiên được chọn (tương thích ngược)
+                if (selectedCategories != null && selectedCategories.Any())
+                {
+                    product.CategoryId = selectedCategories.First();
+                }
+
                 _context.Add(product);
                 await _context.SaveChangesAsync();
+
+                // Lưu quan hệ nhiều-nhiều
+                if (selectedCategories != null && selectedCategories.Any())
+                {
+                    foreach (var categoryId in selectedCategories)
+                    {
+                        _context.ProductCategories.Add(new ProductCategory
+                        {
+                            ProductId = product.Id,
+                            CategoryId = categoryId
+                        });
+                    }
+                    await _context.SaveChangesAsync();
+                }
 
                 if (galleryFiles != null && galleryFiles.Count > 0)
                 {
@@ -91,7 +134,8 @@ namespace _204Store.Areas.Admin.Controllers
                 TempData["success"] = "Thêm sản phẩm thành công";
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", product.CategoryId);
+            ViewData["Categories"] = await GetHierarchicalCategories();
+            ViewData["AllCategories"] = await _context.Categories.ToListAsync();
             return View(product);
         }
 
@@ -101,17 +145,20 @@ namespace _204Store.Areas.Admin.Controllers
 
             var product = await _context.Products
                 .Include(p => p.ProductImages)
+                .Include(p => p.ProductCategories)
                 .FirstOrDefaultAsync(p => p.Id == id);
 
             if (product == null) return NotFound();
 
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", product.CategoryId);
+            ViewData["Categories"] = await GetHierarchicalCategories();
+            ViewData["AllCategories"] = await _context.Categories.ToListAsync();
+            ViewData["SelectedCategories"] = product.ProductCategories.Select(pc => pc.CategoryId).ToList();
             return View(product);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Product product, IFormFile? file, List<IFormFile>? galleryFiles)
+        public async Task<IActionResult> Edit(int id, Product product, IFormFile? file, List<IFormFile>? galleryFiles, List<int>? selectedCategories)
         {
             if (id != product.Id) return NotFound();
 
@@ -161,6 +208,25 @@ namespace _204Store.Areas.Admin.Controllers
                         }
                     }
 
+                    var existingCategories = await _context.ProductCategories
+                        .Where(pc => pc.ProductId == product.Id)
+                        .ToListAsync();
+                    _context.ProductCategories.RemoveRange(existingCategories);
+
+                    if (selectedCategories != null && selectedCategories.Any())
+                    {
+                        product.CategoryId = selectedCategories.First();
+
+                        foreach (var categoryId in selectedCategories)
+                        {
+                            _context.ProductCategories.Add(new ProductCategory
+                            {
+                                ProductId = product.Id,
+                                CategoryId = categoryId
+                            });
+                        }
+                    }
+
                     _context.Update(product);
                     await _context.SaveChangesAsync();
                     TempData["success"] = "Cập nhật sản phẩm thành công";
@@ -172,7 +238,9 @@ namespace _204Store.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", product.CategoryId);
+            ViewData["Categories"] = await GetHierarchicalCategories();
+            ViewData["AllCategories"] = await _context.Categories.ToListAsync();
+            ViewData["SelectedCategories"] = selectedCategories ?? new List<int>();
             return View(product);
         }
 
@@ -182,7 +250,6 @@ namespace _204Store.Areas.Admin.Controllers
             var image = await _context.ProductImages.FindAsync(imageId);
             if (image == null) return Json(new { success = false, message = "Không tìm thấy ảnh" });
 
-            // Xóa file vật lý
             string wwwRootPath = _webHostEnvironment.WebRootPath;
             var oldImagePath = Path.Combine(wwwRootPath, image.Url.TrimStart('\\'));
             if (System.IO.File.Exists(oldImagePath))

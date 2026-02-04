@@ -83,6 +83,8 @@ namespace _204Store.Controllers
             var productsQuery = _context.Products
                 //.Where(p => p.IsActive)
                 .Include(p => p.Category)
+                .Include(p => p.ProductCategories)
+                    .ThenInclude(pc => pc.Category)
                 .Include(p => p.ProductDetails)
                 .AsQueryable();
 
@@ -98,6 +100,7 @@ namespace _204Store.Controllers
                 {
                     pageTitle = selectedCat.Name;
 
+                    // Lấy danh sách ID gồm category hiện tại + các danh mục con
                     var categoryIds = new List<int> { category.Value };
                     var childIds = await _context.Categories
                         .Where(c => c.ParentId == category.Value)
@@ -106,7 +109,10 @@ namespace _204Store.Controllers
 
                     categoryIds.AddRange(childIds);
 
-                    productsQuery = productsQuery.Where(p => categoryIds.Contains(p.CategoryId));
+                    // Lọc theo ProductCategories (nhiều-nhiều) HOẶC CategoryId (tương thích ngược)
+                    productsQuery = productsQuery.Where(p => 
+                        p.ProductCategories.Any(pc => categoryIds.Contains(pc.CategoryId)) ||
+                        categoryIds.Contains(p.CategoryId));
                 }
             }
 
@@ -138,16 +144,37 @@ namespace _204Store.Controllers
                 viewModel.BestSellerProducts = allProducts.OrderByDescending(p => p.Sold).Take(8).ToList();
                 viewModel.SaleProducts = allProducts.Where(p => p.DiscountRate > 0).OrderByDescending(p => p.DiscountRate).Take(8).ToList();
 
-                viewModel.AppleProducts = allProducts.Where(p => (p.Category?.Name?.Contains("Apple") == true) || (p.Category?.Name?.Contains("iPhone") == true)).OrderByDescending(p => p.Id).Take(4).ToList();
-                viewModel.SamsungProducts = allProducts.Where(p => (p.Category?.Name?.Contains("Samsung") == true) || (p.Category?.Name?.Contains("Galaxy") == true)).OrderByDescending(p => p.Id).Take(4).ToList();
+                // Lọc theo ProductCategories hoặc Category
+                viewModel.AppleProducts = allProducts.Where(p => 
+                    p.ProductCategories.Any(pc => pc.Category?.Name?.Contains("Apple") == true || pc.Category?.Name?.Contains("iPhone") == true) ||
+                    p.Category?.Name?.Contains("Apple") == true || 
+                    p.Category?.Name?.Contains("iPhone") == true
+                ).OrderByDescending(p => p.Id).Take(4).ToList();
+
+                viewModel.SamsungProducts = allProducts.Where(p => 
+                    p.ProductCategories.Any(pc => pc.Category?.Name?.Contains("Samsung") == true || pc.Category?.Name?.Contains("Galaxy") == true) ||
+                    p.Category?.Name?.Contains("Samsung") == true || 
+                    p.Category?.Name?.Contains("Galaxy") == true
+                ).OrderByDescending(p => p.Id).Take(4).ToList();
+
                 viewModel.LaptopProducts = allProducts
-                    .Where(p => (p.Category?.Name?.Contains("Laptop") == true) || (p.Category?.Name?.Contains("MacBook") == true))
+                    .Where(p => 
+                        p.ProductCategories.Any(pc => pc.Category?.Name?.Contains("Laptop") == true || pc.Category?.Name?.Contains("MacBook") == true) ||
+                        p.Category?.Name?.Contains("Laptop") == true || 
+                        p.Category?.Name?.Contains("MacBook") == true)
                     .OrderByDescending(p => p.Id)
                     .Take(8)
                     .ToList();
 
                 viewModel.AccessoryProducts = allProducts
-                    .Where(p => (p.Category?.Name?.Contains("Phụ kiện") == true) || (p.Category?.Name?.Contains("Tai nghe") == true) || (p.Category?.Name?.Contains("Sạc") == true))
+                    .Where(p => 
+                        p.ProductCategories.Any(pc => 
+                            pc.Category?.Name?.Contains("Phụ kiện") == true || 
+                            pc.Category?.Name?.Contains("Tai nghe") == true || 
+                            pc.Category?.Name?.Contains("Sạc") == true) ||
+                        p.Category?.Name?.Contains("Phụ kiện") == true || 
+                        p.Category?.Name?.Contains("Tai nghe") == true || 
+                        p.Category?.Name?.Contains("Sạc") == true)
                     .OrderByDescending(p => p.Id)
                     .Take(8)
                     .ToList();
@@ -176,15 +203,27 @@ namespace _204Store.Controllers
         {
             var product = await _context.Products
                 .Include(p => p.Category)
+                .Include(p => p.ProductCategories)
+                    .ThenInclude(pc => pc.Category)
                 .Include(p => p.ProductDetails)
                 .Include(p => p.ProductImages)
                 .FirstOrDefaultAsync(p => p.Id == productId);
 
             if (product == null) return NotFound();
 
+            // Lấy sản phẩm liên quan dựa trên ProductCategories hoặc CategoryId
+            var productCategoryIds = product.ProductCategories?.Select(pc => pc.CategoryId).ToList() ?? new List<int>();
+            if (product.CategoryId > 0 && !productCategoryIds.Contains(product.CategoryId))
+            {
+                productCategoryIds.Add(product.CategoryId);
+            }
+
             var relatedProducts = await _context.Products
-                .Where(p => p.CategoryId == product.CategoryId && p.Id != productId)
                 .Include(p => p.ProductDetails)
+                .Include(p => p.ProductCategories)
+                .Where(p => p.Id != productId && 
+                    (p.ProductCategories.Any(pc => productCategoryIds.Contains(pc.CategoryId)) ||
+                     productCategoryIds.Contains(p.CategoryId)))
                 .Take(4)
                 .ToListAsync();
 

@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "Thêm sản phẩm mới";
+    var categories = ViewData["Categories"] as List<_204Store.Models.Category> ?? new List<_204Store.Models.Category>();
+    var allCategories = ViewData["AllCategories"] as List<_204Store.Models.Category> ?? new List<_204Store.Models.Category>();
 }
 
 <style>
@@ -98,6 +100,19 @@
             background: #f1f5f9;
             border-radius: 6px;
         }
+
+    .category-parent {
+        background-color: #f1f5f9;
+        border-radius: 8px;
+        padding: 8px 12px;
+        margin-bottom: 4px;
+    }
+
+    .category-child {
+        padding-left: 28px;
+        border-left: 2px solid #e2e8f0;
+        margin-left: 12px;
+    }
 </style>
 
 <div class="container-xl py-4">
@@ -179,11 +194,61 @@
                     </div>
                     <div class="card-body p-4">
                         <div class="mb-4">
-                            <label asp-for="CategoryId" class="form-label-custom">Danh mục</label>
-                            <select asp-for="CategoryId" class="form-select input-modern" asp-items="ViewBag.CategoryId">
-                                <option disabled selected>-- Chọn danh mục --</option>
-                            </select>
-                            <span asp-validation-for="CategoryId" class="text-danger small mt-1"></span>
+                            <label class="form-label-custom">Danh mục</label>
+                            <div class="border rounded-3 p-3 bg-white" style="max-height: 280px; overflow-y: auto;">
+                                @{
+                                    var parentCategories = allCategories.Where(c => c.ParentId == null || c.ParentId == 0).OrderBy(c => c.DisplayOrder);
+                                }
+                                @foreach (var parent in parentCategories)
+                                {
+                                    <div class="category-parent">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="selectedCategories"
+                                                   value="@parent.Id"
+                                                   id="cat_@parent.Id" />
+                                            <label class="form-check-label fw-bold text-dark" for="cat_@parent.Id">
+                                                @if (!string.IsNullOrEmpty(parent.Icon))
+                                                {
+                                                    <i class="@parent.Icon me-1 text-primary"></i>
+                                                }
+                                                else
+                                                {
+                                                    <i class="bi bi-folder-fill me-1 text-primary"></i>
+                                                }
+                                                @parent.Name
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    var children = allCategories.Where(c => c.ParentId == parent.Id).OrderBy(c => c.DisplayOrder);
+                                    @foreach (var child in children)
+                                    {
+                                        <div class="category-child">
+                                            <div class="form-check py-1">
+                                                <input class="form-check-input" type="checkbox"
+                                                       name="selectedCategories"
+                                                       value="@child.Id"
+                                                       id="cat_@child.Id" />
+                                                <label class="form-check-label text-secondary" for="cat_@child.Id">
+                                                    @if (!string.IsNullOrEmpty(child.Icon))
+                                                    {
+                                                        <i class="@child.Icon me-1"></i>
+                                                    }
+                                                    else
+                                                    {
+                                                        <i class="bi bi-circle me-1" style="font-size: 0.5rem;"></i>
+                                                    }
+                                                    @child.Name
+                                                </label>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                            <div class="form-text small mt-2">
+                                <i class="bi bi-info-circle me-1"></i>Chọn một hoặc nhiều danh mục
+                            </div>
                         </div>
 
                         <div class="p-3 bg-light rounded-3 mb-3 border border-light">

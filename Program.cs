@@ -84,6 +84,39 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
+// Migrate dữ liệu từ CategoryId sang ProductCategories (chạy 1 lần)
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+
+    try
+    {
+        // Lấy các sản phẩm có CategoryId nhưng chưa có trong ProductCategories
+        var productsToMigrate = await context.Products
+            .Where(p => p.CategoryId > 0 && !p.ProductCategories.Any())
+            .ToListAsync();
+
+        if (productsToMigrate.Any())
+        {
+            foreach (var product in productsToMigrate)
+            {
+                context.ProductCategories.Add(new ProductCategory
+                {
+                    ProductId = product.Id,
+                    CategoryId = product.CategoryId
+                });
+            }
+            await context.SaveChangesAsync();
+            logger.LogInformation($"Đã migrate {productsToMigrate.Count} sản phẩm sang ProductCategories");
+        }
+    }
+    catch (Exception ex)
+    {
+        logger.LogWarning($"Chưa thể migrate ProductCategories: {ex.Message}");
+    }
+}
+
 //using (var scope = app.Services.CreateScope())
 //{
 //    var services = scope.ServiceProvider;
