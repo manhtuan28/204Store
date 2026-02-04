@@ -134,7 +134,7 @@ namespace _204Store.Controllers
             {
                 var allProducts = await productsQuery.ToListAsync();
 
-                viewModel.FeaturedProducts = allProducts.Where(p => p.IsFeatured).Take(8).ToList();
+                viewModel.FeaturedProducts = allProducts.Where(p => p.IsFeatured).Take(10).ToList();
                 viewModel.BestSellerProducts = allProducts.OrderByDescending(p => p.Sold).Take(8).ToList();
                 viewModel.SaleProducts = allProducts.Where(p => p.DiscountRate > 0).OrderByDescending(p => p.DiscountRate).Take(8).ToList();
 
