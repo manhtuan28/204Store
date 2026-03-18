@@ -1,4 +1,4 @@
-﻿@using System.Globalization
+@using System.Globalization
 @using Newtonsoft.Json
 @model _204Store.Models.Product
 @{
@@ -79,36 +79,82 @@
             cursor: zoom-in;
         }
 
+    .thumb-slider-wrap {
+        position: relative;
+        padding: 0;
+        margin-top: 15px;
+    }
+
     .thumb-list {
         display: flex;
-        gap: 12px;
-        justify-content: center;
-        flex-wrap: wrap;
+        gap: 10px;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        padding: 4px;
+        scroll-snap-type: x mandatory;
+    }
+
+    .thumb-list::-webkit-scrollbar {
+        display: none;
     }
 
     .thumb-item {
-        width: 70px;
-        height: 70px;
-        border-radius: 14px;
-        padding: 4px;
+        width: 65px;
+        height: 65px;
+        flex-shrink: 0;
+        border-radius: 10px;
+        padding: 2px;
         cursor: pointer;
         background: white;
-        border: 2px solid transparent;
-        box-shadow: 0 4px 6px -2px rgba(0,0,0,0.05);
+        border: 2px solid #e2e8f0;
         transition: 0.2s;
+        scroll-snap-align: start;
     }
 
         .thumb-item:hover, .thumb-item.active {
-            border-color: var(--primary);
-            transform: translateY(-3px);
+            border-color: #dc2626;
         }
 
         .thumb-item img {
             width: 100%;
             height: 100%;
             object-fit: contain;
-            border-radius: 8px;
+            border-radius: 6px;
         }
+
+    .thumb-nav-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.95);
+        border: 1px solid #e2e8f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        z-index: 2;
+        color: #333;
+        transition: 0.2s;
+    }
+
+    .thumb-nav-btn:hover {
+        background: white;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .thumb-nav-btn.thumb-prev {
+        left: -12px;
+    }
+
+    .thumb-nav-btn.thumb-next {
+        right: -12px;
+    }
 
     .product-title {
         font-size: 2rem;
@@ -445,17 +491,21 @@
 
                 @if (Model.ProductImages != null && Model.ProductImages.Any())
                 {
-                    <div class="thumb-list">
-                        <div class="thumb-item active" onclick="changeImage('@mainImage', this)">
-                            <img src="@mainImage" onerror="this.src='https://placehold.co/100'" />
-                        </div>
-                        @foreach (var img in Model.ProductImages)
-                        {
-                            var url = img.Url?.Replace("\\", "/");
-                            <div class="thumb-item" onclick="changeImage('@url', this)">
-                                <img src="@url" onerror="this.src='https://placehold.co/100'" />
+                    <div class="thumb-slider-wrap">
+                        <button class="thumb-nav-btn thumb-prev" onclick="scrollThumbs(-1)"><i class="bi bi-chevron-left"></i></button>
+                        <div class="thumb-list" id="thumb-list">
+                            <div class="thumb-item active" onclick="changeImage('@mainImage', this)">
+                                <img src="@mainImage" onerror="this.src='https://placehold.co/100'" />
                             </div>
-                        }
+                            @foreach (var img in Model.ProductImages)
+                            {
+                                var url = img.Url?.Replace("\\", "/");
+                                <div class="thumb-item" onclick="changeImage('@url', this)">
+                                    <img src="@url" onerror="this.src='https://placehold.co/100'" />
+                                </div>
+                            }
+                        </div>
+                        <button class="thumb-nav-btn thumb-next" onclick="scrollThumbs(1)"><i class="bi bi-chevron-right"></i></button>
                     </div>
                 }
             </div>
@@ -697,6 +747,14 @@
                 setTimeout(function(){ img.attr('src', src).css('opacity', 1); }, 150);
             }
             if(el) { $('.thumb-item').removeClass('active'); $(el).addClass('active'); }
+        }
+
+        function scrollThumbs(direction) {
+            var el = document.getElementById('thumb-list');
+            if (el) {
+                var scrollAmount = 150; // Khoảng 2 ảnh
+                el.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+            }
         }
 
         function selectOption(type, el) {
