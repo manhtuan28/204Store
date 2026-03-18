@@ -1,4 +1,4 @@
-﻿// Sản phẩm
+// Sản phẩm
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -20,6 +20,9 @@ namespace _204Store.Models
         [Display(Name = "Giảm giá (%)")]
         [Range(0, 100, ErrorMessage = "Giảm giá từ 0% đến 100%")]
         public double DiscountRate { get; set; } = 0;
+
+        [Display(Name = "Flash Sale")]
+        public bool IsFlashSale { get; set; } = false;
 
         [Display(Name = "Danh mục")]
         public int CategoryId { get; set; }

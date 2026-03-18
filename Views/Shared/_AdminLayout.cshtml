@@ -1,4 +1,4 @@
-﻿﻿@{
+﻿@{
 var currentCtrl = ViewContext.RouteData.Values["Controller"]?.ToString();
 
 bool isUserGroupActive = currentCtrl == "User" || currentCtrl == "Customers";
@@ -213,6 +213,7 @@ bool isInventoryGroupActive = currentCtrl == "Categories" || currentCtrl == "Pro
                 </div>
                 <div class="sidebar-label">Hệ thống</div>
                 <a asp-area="Admin" asp-controller="Order" asp-action="Index" class="list-group-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Order" ? "active-menu" : "")"><i class="bi bi-receipt-cutoff"></i> Đơn hàng</a>
+                <a asp-area="Admin" asp-controller="Settings" asp-action="Index" class="list-group-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Settings" ? "active-menu" : "")"><i class="bi bi-gear-fill"></i> Cấu hình</a>
                 @* <a asp-area="Admin" asp-controller="Crawler" asp-action="Index" class="list-group-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Crawler" ? "active-menu" : "")"><i class="bi bi-layer-backward"></i> Crawl</a> *@
 
                 <a href="#userCollapse" data-bs-toggle="collapse"

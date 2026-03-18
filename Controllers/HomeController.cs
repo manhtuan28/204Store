@@ -1,4 +1,4 @@
-﻿using _204Store.Data;
+using _204Store.Data;
 using _204Store.Models;
 using _204Store.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -138,11 +138,14 @@ namespace _204Store.Controllers
             }
             else
             {
+                var flashSaleSetting = await _context.SystemSettings.FirstOrDefaultAsync(s => s.Key == "FlashSaleEndTime");
+                ViewBag.FlashSaleEndTime = flashSaleSetting?.Value;
+
                 var allProducts = await productsQuery.ToListAsync();
 
                 viewModel.FeaturedProducts = allProducts.Where(p => p.IsFeatured).Take(10).ToList();
                 viewModel.BestSellerProducts = allProducts.OrderByDescending(p => p.Sold).Take(8).ToList();
-                viewModel.SaleProducts = allProducts.Where(p => p.DiscountRate > 0).OrderByDescending(p => p.DiscountRate).Take(8).ToList();
+                viewModel.SaleProducts = allProducts.Where(p => p.IsFlashSale || p.DiscountRate > 0).OrderByDescending(p => p.IsFlashSale).ThenByDescending(p => p.DiscountRate).Take(8).ToList();
 
                 // Lọc theo ProductCategories hoặc Category
                 viewModel.AppleProducts = allProducts.Where(p => 
@@ -366,6 +369,26 @@ namespace _204Store.Controllers
                 .OrderByDescending(p => p.Id)
                 .ToListAsync();
 
+            return View(products);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> FlashSale()
+        {
+            var flashSaleSetting = await _context.SystemSettings.FirstOrDefaultAsync(s => s.Key == "FlashSaleEndTime");
+            ViewBag.FlashSaleEndTime = flashSaleSetting?.Value;
+
+            var products = await _context.Products
+                .Include(p => p.Category)
+                .Include(p => p.ProductCategories)
+                    .ThenInclude(pc => pc.Category)
+                .Include(p => p.ProductDetails)
+                .Where(p => p.IsFlashSale || p.DiscountRate > 0)
+                .OrderByDescending(p => p.IsFlashSale)
+                .ThenByDescending(p => p.DiscountRate)
+                .ToListAsync();
+
+            ViewData["PageTitle"] = "⚡ FLASH SALE NGÀY HÔM NAY ⚡";
             return View(products);
         }
 

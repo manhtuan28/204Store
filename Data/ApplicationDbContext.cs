@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using _204Store.Models;
 
@@ -22,6 +22,7 @@ namespace _204Store.Data
         public DbSet<LoginHistory> LoginHistories { get; set; }
         public DbSet<Subscriber> Subscribers { get; set; }
         public DbSet<ProductCategory> ProductCategories { get; set; }
+        public DbSet<SystemSetting> SystemSettings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
