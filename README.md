@@ -1,4 +1,4 @@
-﻿# 📱 204Store - Tech E-commerce Platform
+# 📱 204Store - Tech E-commerce Platform
 
 ![.NET Core](https://img.shields.io/badge/.NET%20Core-8.0-purple?style=for-the-badge&logo=dotnet)
 ![EF Core](https://img.shields.io/badge/Entity%20Framework-Core-blue?style=for-the-badge&logo=nuget)
@@ -39,14 +39,45 @@
 
 ---
 
-## 🚀 Hướng dẫn cài đặt & Chạy (Getting Started)
+## 🐳 Hướng dẫn chạy nhanh bằng Docker (Recommended)
 
-Dành cho Developer clone dự án về máy local.
+Chỉ cần cài đặt [Docker Desktop](https://www.docker.com/products/docker-desktop/) (hoặc Docker Engine & Docker Compose trên Linux/macOS).
+
+### Khởi chạy toàn bộ hệ thống (Web App + SQL Server)
+
+1. **Khởi động containers:**
+   ```bash
+   docker compose up -d --build
+   ```
+
+2. **Truy cập ứng dụng:**
+   - Mở trình duyệt và truy cập: **`http://localhost:5000`**
+   - Ứng dụng sẽ tự động áp dụng Migration và tạo sẵn dữ liệu/tài khoản Admin mẫu trong lần đầu khởi chạy.
+
+3. **Một số lệnh hữu ích:**
+   - Xem logs ứng dụng:
+     ```bash
+     docker compose logs -f web
+     ```
+   - Dừng toàn bộ hệ thống:
+     ```bash
+     docker compose down
+     ```
+   - Dừng và xóa toàn bộ dữ liệu volumes (nếu muốn reset database từ đầu):
+     ```bash
+     docker compose down -v
+     ```
+
+---
+
+## 🚀 Hướng dẫn cài đặt thủ công (Manual Local Setup)
+
+Dành cho Developer muốn phát triển trực tiếp trên máy local không qua Docker.
 
 ### 1. Yêu cầu hệ thống (Prerequisites)
 * [.NET SDK 8.0](https://dotnet.microsoft.com/download)
 * [SQL Server](https://www.microsoft.com/sql-server/) (Bản Express hoặc Full)
-* Visual Studio 2022 (Workload: *ASP.NET and web development*)
+* Visual Studio 2022 (Workload: *ASP.NET and web development*) hoặc VS Code / Rider
 
 ### 2. Các bước cài đặt (Installation)
 
@@ -70,10 +101,16 @@ Mở **Visual Studio** -> **Tools** -> **NuGet Package Manager** -> **Package Ma
 ```powershell
 Update-Database
 ```
-*Lệnh này sẽ tự động sinh ra database `204Store`, tạo bảng và nạp dữ liệu mẫu.*
+*Hoặc dùng .NET CLI:*
+```bash
+dotnet ef database update
+```
 
 **Bước 4: Chạy dự án**
-Nhấn `F5` hoặc `Ctrl + F5` để khởi chạy website.
+```bash
+dotnet run
+```
+*Hoặc nhấn `F5` / `Ctrl + F5` trong Visual Studio.*
 
 ---
 

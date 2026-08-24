@@ -1,4 +1,4 @@
-﻿using _204Store.Data;
+using _204Store.Data;
 using _204Store.Models;
 using _204Store.Services;
 using _204Store.Models.Momo;
@@ -72,15 +72,65 @@ var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-    var roles = new[] { "Admin", "User", "Manager" };
+    var services = scope.ServiceProvider;
+    var logger = services.GetRequiredService<ILogger<Program>>();
 
-    foreach (var role in roles)
+    try
     {
-        if (!await roleManager.RoleExistsAsync(role))
+        var context = services.GetRequiredService<ApplicationDbContext>();
+        if (context.Database.IsRelational())
         {
-            await roleManager.CreateAsync(new IdentityRole(role));
+            logger.LogInformation("Đang kiểm tra và áp dụng EF Core Migrations...");
+            await context.Database.MigrateAsync();
+            logger.LogInformation("Đã hoàn tất kiểm tra Migration cơ sở dữ liệu.");
         }
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "Đã xảy ra lỗi khi thực thi Database Migration.");
+    }
+
+    try
+    {
+        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+        var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+        var roles = new[] { "Admin", "User", "Manager" };
+
+        foreach (var role in roles)
+        {
+            if (!await roleManager.RoleExistsAsync(role))
+            {
+                await roleManager.CreateAsync(new IdentityRole(role));
+            }
+        }
+
+        // Khởi tạo tài khoản Admin mặc định nếu chưa tồn tại
+        var adminEmail = "admin@gmail.com";
+        var adminUser = await userManager.FindByEmailAsync(adminEmail);
+        if (adminUser == null)
+        {
+            adminUser = new ApplicationUser
+            {
+                UserName = adminEmail,
+                Email = adminEmail,
+                FullName = "Administrator",
+                EmailConfirmed = true
+            };
+            var createAdminResult = await userManager.CreateAsync(adminUser, "Admin@123");
+            if (createAdminResult.Succeeded)
+            {
+                await userManager.AddToRoleAsync(adminUser, "Admin");
+                logger.LogInformation("Đã tạo thành công tài khoản Admin mặc định: admin@gmail.com / Admin@123");
+            }
+            else
+            {
+                logger.LogWarning("Chưa thể tạo tài khoản Admin: {Errors}", string.Join(", ", createAdminResult.Errors.Select(e => e.Description)));
+            }
+        }
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "Đã xảy ra lỗi khi khởi tạo Roles và tài khoản Admin.");
     }
 }
 
